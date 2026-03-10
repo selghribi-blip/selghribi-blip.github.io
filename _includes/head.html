@@ -1,0 +1,115 @@
+<!-- head.html | رأس الصفحة - Meta Tags + SEO + Open Graph -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- العنوان والوصف | Title & Description -->
+<title>
+  {%- if page.title -%}
+    {{ page.title }} | {{ site.title }}
+  {%- else -%}
+    {{ site.title }}
+  {%- endif -%}
+</title>
+<meta name="description" content="{{ page.description | default: site.description | strip_html | truncate: 160 }}">
+<meta name="author" content="{{ site.author.name }}">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+
+<!-- Open Graph / Social Media -->
+<meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+<meta property="og:title" content="{{ page.title | default: site.title }}">
+<meta property="og:description" content="{{ page.description | default: site.description | strip_html | truncate: 200 }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:site_name" content="{{ site.title }}">
+<meta property="og:locale" content="{{ page.lang | default: site.lang | default: 'ar_MA' }}">
+{% if page.image %}
+<meta property="og:image" content="{{ page.image | absolute_url }}">
+<meta property="og:image:alt" content="{{ page.title | default: site.title }}">
+{% else %}
+<meta property="og:image" content="{{ '/assets/images/og/default.png' | absolute_url }}">
+{% endif %}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page.title | default: site.title }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | strip_html | truncate: 200 }}">
+{% if site.author.social.twitter %}
+<meta name="twitter:site" content="@{{ site.author.social.twitter }}">
+<meta name="twitter:creator" content="@{{ site.author.social.twitter }}">
+{% endif %}
+{% if page.image %}
+<meta name="twitter:image" content="{{ page.image | absolute_url }}">
+{% endif %}
+
+<!-- مقالة | Article Meta -->
+{% if page.layout == 'post' %}
+<meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+<meta property="article:author" content="{{ site.author.name }}">
+{% for tag in page.tags %}
+<meta property="article:tag" content="{{ tag }}">
+{% endfor %}
+{% for category in page.categories %}
+<meta property="article:section" content="{{ category }}">
+{% endfor %}
+{% endif %}
+
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  {% if page.layout == 'post' %}
+  "@type": "BlogPosting",
+  "headline": {{ page.title | jsonify }},
+  "description": {{ page.description | default: site.description | jsonify }},
+  "datePublished": "{{ page.date | date_to_xmlschema }}",
+  "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+  "author": {
+    "@type": "Person",
+    "name": {{ site.author.name | jsonify }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ site.title | jsonify }}
+  },
+  {% if page.image %}
+  "image": {{ page.image | absolute_url | jsonify }},
+  {% endif %}
+  "url": {{ page.url | absolute_url | jsonify }},
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ page.url | absolute_url | jsonify }}
+  }
+  {% else %}
+  "@type": "WebSite",
+  "name": {{ site.title | jsonify }},
+  "description": {{ site.description | jsonify }},
+  "url": {{ site.url | jsonify }},
+  "author": {
+    "@type": "Person",
+    "name": {{ site.author.name | jsonify }},
+    "url": {{ site.url | jsonify }}
+  }
+  {% endif %}
+}
+</script>
+
+<!-- Google Fonts - الخطوط -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Amiri:wght@400;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- CSS الرئيسي | Main CSS -->
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+
+<!-- RSS Feed -->
+<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+<link rel="icon" type="image/png" href="{{ '/assets/images/favicon.png' | relative_url }}">
+<link rel="apple-touch-icon" href="{{ '/assets/images/apple-touch-icon.png' | relative_url }}">
+
+<!-- Jekyll SEO Tag Plugin -->
+{% seo %}

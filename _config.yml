@@ -1,0 +1,74 @@
+# إعدادات Jekyll الرئيسية | Jekyll Main Configuration
+# =====================================================
+
+title: "selghribi | مطور ويب مغربي"
+description: "مدونة تقنية عربية + بورتفوليو احترافي + قوالب ومشاريع مفتوحة المصدر"
+url: "https://artsmoroccan.me"
+baseurl: ""
+
+# معلومات المالك | Author Information
+author:
+  name: "selghribi"
+  email: ""
+  bio: "طالب ومطور ويب مغربي | أبني مشاريع مفتوحة المصدر وأشارك رحلتي التقنية"
+  avatar: "/assets/images/avatar.png"
+  social:
+    github: "selghribi-blip"
+    twitter: ""
+    linkedin: ""
+
+# الإضافات | Plugins
+theme: null
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# إعدادات Markdown | Markdown Settings
+markdown: kramdown
+highlighter: rouge
+permalink: /blog/:year/:month/:day/:title/
+
+# الإعدادات الافتراضية | Default Settings
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      comments: true
+  - scope:
+      path: "pages"
+    values:
+      layout: "page"
+
+# المجموعات | Collections
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+
+# إعدادات Sass | Sass Settings
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# ملفات مستثناة | Excluded Files
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - scripts/
+  - "*.py"
+  - README.md
+
+# إعدادات الخلاصة | Feed Settings
+feed:
+  posts_limit: 20
+
+# اللغة الافتراضية | Default Language
+lang: ar

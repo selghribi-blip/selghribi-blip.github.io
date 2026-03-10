@@ -1,0 +1,103 @@
+# auto-og-images.yml
+# إنشاء صور Open Graph تلقائياً | Auto-generate Open Graph images
+# يعمل عند إضافة مقالة جديدة | Triggers when new post is added
+
+name: 🖼️ Auto OG Images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '_posts/**'  # عند تغيير المقالات فقط | Only when posts change
+  workflow_dispatch:
+    inputs:
+      generate_all:
+        description: 'إنشاء لجميع المقالات | Generate for all posts'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write  # للـ commit التلقائي | For auto-commit
+
+jobs:
+  # ============================================================
+  # إنشاء صور OG | Generate OG Images
+  # ============================================================
+  generate-og-images:
+    name: 🖼️ Generate OG Images
+    runs-on: ubuntu-latest
+
+    steps:
+      # استنساخ الكود | Checkout
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # إعداد Python | Setup Python
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # تثبيت Pillow | Install Pillow
+      - name: 📦 Install Pillow
+        run: pip install Pillow
+
+      # إنشاء مجلد الصور | Create images directory
+      - name: 📁 Create images directory
+        run: mkdir -p assets/images/og
+
+      # إنشاء صور OG | Generate OG images
+      - name: 🖼️ Generate OG images
+        run: |
+          if [ "${{ github.event.inputs.generate_all }}" == "true" ]; then
+            echo "🖼️ إنشاء لجميع المقالات | Generating for all posts..."
+            python scripts/generate_og_image.py --all --output assets/images/og
+          else
+            # الحصول على المقالات الجديدة فقط | Get only new posts
+            NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- '_posts/*.md' || echo "")
+            if [ -n "$NEW_POSTS" ]; then
+              echo "$NEW_POSTS" | while read -r POST; do
+                if [ -f "$POST" ]; then
+                  echo "🖼️ إنشاء صورة لـ: $POST"
+                  python scripts/generate_og_image.py --post "$POST" --output assets/images/og
+                fi
+              done
+            else
+              echo "ℹ️  لا توجد مقالات جديدة | No new posts"
+            fi
+          fi
+
+      # التحقق من وجود تغييرات | Check for changes
+      - name: 🔍 Check for new images
+        id: check-changes
+        run: |
+          if git diff --quiet HEAD -- assets/images/og/; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  لا توجد صور جديدة | No new images"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "✅ توجد صور جديدة | New images found"
+            git status assets/images/og/
+          fi
+
+      # Commit الصور الجديدة | Commit new images
+      - name: 💾 Commit OG images
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions Bot"
+          git add assets/images/og/
+          git commit -m "🖼️ Auto-generate OG images [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ملخص | Summary
+      - name: 📊 Job summary
+        run: |
+          echo "## 🖼️ نتيجة إنشاء صور OG | OG Images Generation Result" >> $GITHUB_STEP_SUMMARY
+          ls assets/images/og/ | wc -l | xargs -I{} echo "- **عدد الصور | Total images:** {}" >> $GITHUB_STEP_SUMMARY

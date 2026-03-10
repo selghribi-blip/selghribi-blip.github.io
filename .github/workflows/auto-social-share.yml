@@ -1,0 +1,119 @@
+# auto-social-share.yml
+# مشاركة المقالات الجديدة على السوشال ميديا | Share new posts on social media
+# يعمل عند إضافة ملف جديد في _posts/ | Triggers when new file added to _posts/
+
+name: 📣 Auto Social Share
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '_posts/**'  # يعمل فقط عند تغيير المقالات | Only triggers for posts changes
+  workflow_dispatch:
+    inputs:
+      post_path:
+        description: 'مسار المقالة | Post path (e.g., _posts/2026-03-10-welcome.md)'
+        required: false
+        type: string
+      platform:
+        description: 'المنصة | Platform'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - twitter
+          - linkedin
+
+jobs:
+  # ============================================================
+  # اكتشاف المقالات الجديدة | Detect New Posts
+  # ============================================================
+  detect-new-posts:
+    name: 🔍 Detect New Posts
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      new_posts: ${{ steps.detect.outputs.new_posts }}
+      has_new_posts: ${{ steps.detect.outputs.has_new_posts }}
+
+    steps:
+      # استنساخ الكود مع التاريخ الكامل | Checkout with full history
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # نحتاج آخر commit للمقارنة
+
+      # اكتشاف الملفات الجديدة | Detect new files
+      - name: 🔍 Detect new post files
+        id: detect
+        run: |
+          # الحصول على قائمة الملفات المضافة في آخر commit
+          if [ "${{ github.event.inputs.post_path }}" != "" ]; then
+            NEW_POSTS="${{ github.event.inputs.post_path }}"
+          else
+            NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- '_posts/*.md' || echo "")
+          fi
+
+          echo "new_posts=${NEW_POSTS}" >> $GITHUB_OUTPUT
+
+          if [ -n "$NEW_POSTS" ]; then
+            echo "has_new_posts=true" >> $GITHUB_OUTPUT
+            echo "📝 مقالات جديدة | New posts: $NEW_POSTS"
+          else
+            echo "has_new_posts=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  لا توجد مقالات جديدة | No new posts"
+          fi
+
+  # ============================================================
+  # النشر على السوشال ميديا | Post to Social Media
+  # ============================================================
+  share-posts:
+    name: 📣 Share on Social Media
+    runs-on: ubuntu-latest
+    needs: detect-new-posts
+    if: needs.detect-new-posts.outputs.has_new_posts == 'true'
+    permissions:
+      contents: read
+
+    steps:
+      # استنساخ الكود | Checkout
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      # إعداد Python | Setup Python
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # تثبيت المتطلبات | Install requirements
+      - name: 📦 Install dependencies
+        run: pip install tweepy requests
+
+      # النشر على السوشال ميديا | Post to social media
+      - name: 📣 Post to social media
+        env:
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_SECRET: ${{ secrets.TWITTER_ACCESS_SECRET }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_USER_ID: ${{ secrets.LINKEDIN_USER_ID }}
+        run: |
+          PLATFORM="${{ github.event.inputs.platform || 'all' }}"
+
+          # نشر كل مقالة جديدة | Post each new article
+          echo "${{ needs.detect-new-posts.outputs.new_posts }}" | while read -r POST; do
+            if [ -n "$POST" ] && [ -f "$POST" ]; then
+              echo "📣 نشر: $POST"
+              python scripts/social_poster.py --post "$POST" --platform "$PLATFORM"
+            fi
+          done
+
+      # تسجيل نتيجة النشر | Log posting result
+      - name: 📝 Log result
+        if: always()
+        run: echo "✅ اكتملت عملية النشر الاجتماعي | Social posting completed"

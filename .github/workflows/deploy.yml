@@ -1,0 +1,72 @@
+# deploy.yml
+# نشر تلقائي على GitHub Pages | Auto-deploy to GitHub Pages
+# يعمل عند push على main | Triggers on push to main
+
+name: 🚀 Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # تشغيل يدوي | Manual trigger
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # ============================================================
+  # بناء الموقع | Build Site
+  # ============================================================
+  build:
+    name: 🏗️ Build Jekyll Site
+    runs-on: ubuntu-latest
+
+    steps:
+      # استنساخ الكود | Checkout code
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      # إعداد Ruby | Setup Ruby
+      - name: 💎 Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true  # تخزين مؤقت للـ gems
+
+      # إعداد GitHub Pages | Setup GitHub Pages
+      - name: 🔧 Setup GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      # بناء الموقع بـ Jekyll | Build with Jekyll
+      - name: 🔨 Build with Jekyll
+        env:
+          JEKYLL_ENV: production
+        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+
+      # رفع الملفات | Upload artifact
+      - name: 📤 Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+  # ============================================================
+  # النشر | Deploy
+  # ============================================================
+  deploy:
+    name: 🌐 Deploy to Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      # نشر على GitHub Pages | Deploy to GitHub Pages
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

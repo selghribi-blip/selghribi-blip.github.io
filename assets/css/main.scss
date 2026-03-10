@@ -1,0 +1,11 @@
+---
+# ملف SCSS الرئيسي | Main SCSS File
+# يستورد جميع الملفات الأخرى | Imports all other files
+---
+
+// الاستيراد | Imports (using @use with sass:color for modern Dart Sass compatibility)
+@import "variables";
+@import "base";
+@import "layout";
+@import "components";
+@import "rtl";

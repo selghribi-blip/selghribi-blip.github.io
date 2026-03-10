@@ -1,0 +1,331 @@
+---
+layout: default
+title: "selghribi | مطور ويب مغربي"
+description: "مطور ويب مغربي يبني مشاريع مفتوحة المصدر ويشارك رحلته التقنية - Arts Moroccan وأكثر"
+lang: ar
+---
+
+<!-- ============================================================ -->
+<!-- قسم الهيرو | Hero Section                                     -->
+<!-- ============================================================ -->
+<section class="hero moroccan-pattern" id="hero">
+  <div class="container">
+    <!-- المحتوى النصي | Text Content -->
+    <div class="hero-content fade-on-scroll">
+      <div class="hero-badge">
+        🇲🇦 مطور ويب مغربي | Moroccan Web Developer
+      </div>
+
+      <h1 class="hero-title">
+        مرحباً، أنا<br>
+        <span>selghribi</span> 👋
+      </h1>
+
+      <p class="hero-subtitle">
+        مطور ويب | مصمم | صانع محتوى تقني<br>
+        <small style="font-size: 0.85em; opacity: 0.8;">Web Developer | Designer | Tech Content Creator</small>
+      </p>
+
+      <div class="hero-actions">
+        <a href="{{ '/pages/portfolio' | relative_url }}" class="btn btn-primary btn-lg">
+          🎨 اكتشف أعمالي
+        </a>
+        <a href="{{ '/pages/blog' | relative_url }}" class="btn btn-outline-light btn-lg">
+          📝 اقرأ المدونة
+        </a>
+      </div>
+    </div>
+
+    <!-- البطاقة البصرية | Visual Card -->
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div style="text-align:center; margin-bottom:16px;">
+          <div style="width:80px; height:80px; background: linear-gradient(135deg, #c0674a, #d4a843); border-radius:50%; margin:0 auto; display:flex; align-items:center; justify-content:center; font-size:2rem;">
+            🏺
+          </div>
+          <h3 style="color:#fff; margin-top:12px; font-size:1.1rem;">Arts Moroccan</h3>
+          <p style="color:rgba(255,255,255,0.7); font-size:0.85rem;">artsmoroccan.me</p>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">مجاني بالكامل</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">6</div>
+            <div class="stat-label">Workflows</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">4</div>
+            <div class="stat-label">Python Scripts</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">∞</div>
+            <div class="stat-label">إمكانيات</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ماذا أفعل | What I Do                                        -->
+<!-- ============================================================ -->
+<section class="section" id="services-preview" style="background: #fdf6ec;">
+  <div class="container">
+    <div class="section-title fade-on-scroll">
+      <h2>ماذا أفعل؟</h2>
+      <p>أجمع بين الإبداع والتقنية لبناء مشاريع رقمية أصيلة ومؤثرة</p>
+    </div>
+
+    <div class="grid grid-4">
+      <!-- تطوير الويب -->
+      <div class="card fade-on-scroll" style="text-align:center;">
+        <div class="card-body">
+          <div style="font-size:2.5rem; margin-bottom:16px;">💻</div>
+          <h3 style="font-size:1.1rem; color:#1a3a5c;">تطوير الويب</h3>
+          <p style="font-size:0.9rem; color:#5a5a5a;">HTML, CSS, JavaScript, Jekyll, GitHub Pages</p>
+        </div>
+      </div>
+
+      <!-- التصميم -->
+      <div class="card fade-on-scroll" style="text-align:center;">
+        <div class="card-body">
+          <div style="font-size:2.5rem; margin-bottom:16px;">🎨</div>
+          <h3 style="font-size:1.1rem; color:#1a3a5c;">التصميم</h3>
+          <p style="font-size:0.9rem; color:#5a5a5a;">UI/UX مستوحى من الفنون المغربية التقليدية</p>
+        </div>
+      </div>
+
+      <!-- الفنون المغربية -->
+      <div class="card fade-on-scroll" style="text-align:center;">
+        <div class="card-body">
+          <div style="font-size:2.5rem; margin-bottom:16px;">🏺</div>
+          <h3 style="font-size:1.1rem; color:#1a3a5c;">فنون مغربية</h3>
+          <p style="font-size:0.9rem; color:#5a5a5a;">مشروع Arts Moroccan للتجارة الإلكترونية</p>
+        </div>
+      </div>
+
+      <!-- المحتوى التقني -->
+      <div class="card fade-on-scroll" style="text-align:center;">
+        <div class="card-body">
+          <div style="font-size:2.5rem; margin-bottom:16px;">✍️</div>
+          <h3 style="font-size:1.1rem; color:#1a3a5c;">محتوى تقني</h3>
+          <p style="font-size:0.9rem; color:#5a5a5a;">مقالات عربية عن البرمجة وأدوات GitHub</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- آخر المقالات | Latest Posts                                   -->
+<!-- ============================================================ -->
+<section class="section" id="latest-posts">
+  <div class="container">
+    <div class="section-title fade-on-scroll">
+      <h2>آخر المقالات</h2>
+      <p>مقالات تقنية بالعربية عن البرمجة والأتمتة وأدوات المطورين</p>
+    </div>
+
+    <div class="grid grid-3">
+      {% for post in site.posts limit:3 %}
+      <article class="post-card fade-on-scroll" lang="{{ post.lang | default: 'ar' }}">
+        <!-- صورة الغلاف | Cover -->
+        <div class="post-card-image" aria-hidden="true">
+          {% if post.image %}
+          <img src="{{ post.image }}" alt="{{ post.title }}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
+          {% else %}
+          🏺
+          {% endif %}
+        </div>
+
+        <div class="post-card-body">
+          <!-- التصنيف | Category -->
+          {% if post.categories.first %}
+          <span class="post-card-category">{{ post.categories.first }}</span>
+          {% endif %}
+
+          <!-- العنوان | Title -->
+          <h3 class="post-card-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h3>
+
+          <!-- المقتطف | Excerpt -->
+          <p class="post-card-excerpt">
+            {{ post.description | default: post.excerpt | strip_html | truncate: 120 }}
+          </p>
+
+          <!-- الفوتر | Footer -->
+          <div class="post-card-footer">
+            <time datetime="{{ post.date | date_to_xmlschema }}" style="display:flex; align-items:center; gap:4px;">
+              📅 {{ post.date | date: "%d %B %Y" }}
+            </time>
+            <a href="{{ post.url | relative_url }}" class="post-card-read-more">
+              اقرأ المزيد ←
+            </a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+
+      <!-- رسالة إذا لم توجد مقالات -->
+      {% if site.posts.size == 0 %}
+      <div style="grid-column: 1/-1; text-align:center; padding:60px 0; color:#888;">
+        <p style="font-size:3rem; margin-bottom:16px;">✍️</p>
+        <p>المقالات قادمة قريباً — ترقب التحديثات!</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- زر عرض الكل | View All Button -->
+    {% if site.posts.size > 0 %}
+    <div style="text-align:center; margin-top:40px;" class="fade-on-scroll">
+      <a href="{{ '/pages/blog' | relative_url }}" class="btn btn-secondary btn-lg">
+        عرض جميع المقالات →
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- المشاريع | Projects                                          -->
+<!-- ============================================================ -->
+<section class="section" id="projects" style="background: #fdf6ec;">
+  <div class="container">
+    <div class="section-title fade-on-scroll">
+      <h2>مشاريعي</h2>
+      <p>مشاريع حقيقية تحل مشاكل حقيقية</p>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- Arts Moroccan - المشروع الرئيسي -->
+      <div class="project-card featured fade-on-scroll" data-tech="html css javascript">
+        <div class="project-featured-badge">⭐ مميز</div>
+        <div class="project-image">
+          <div style="height:220px; background:linear-gradient(135deg, #1a3a5c, #c0674a); display:flex; align-items:center; justify-content:center; position:relative;">
+            <div style="text-align:center; color:#fdf6ec;">
+              <div style="font-size:3rem; margin-bottom:8px;">🏺</div>
+              <div style="font-family:'Playfair Display', serif; font-size:1.2rem; font-weight:700;">Arts Moroccan</div>
+              <div style="font-size:0.8rem; opacity:0.8; margin-top:4px;">artsmoroccan.me</div>
+            </div>
+            <!-- Overlay -->
+            <div class="project-overlay">
+              <a href="https://artsmoroccan.me" target="_blank" rel="noopener" class="btn btn-primary btn-sm">🌐 زيارة</a>
+              <a href="https://github.com/selghribi-blip" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">💻 كود</a>
+            </div>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">Arts Moroccan 🏺</h3>
+          <p style="font-size:0.9rem; color:#5a5a5a; margin-bottom:12px;">
+            موقع تجارة إلكترونية للفنون والحرف المغربية التقليدية — مبني بـ HTML/CSS/JS خالص
+          </p>
+          <div class="project-tech">
+            <span class="tech-tag">HTML5</span>
+            <span class="tech-tag">CSS3</span>
+            <span class="tech-tag">JavaScript</span>
+            <span class="tech-tag">E-Commerce</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- مصنع المحتوى -->
+      <div class="project-card fade-on-scroll" data-tech="jekyll github-actions python">
+        <div class="project-image">
+          <div style="height:220px; background:linear-gradient(135deg, #2d6a4f, #1a3a5c); display:flex; align-items:center; justify-content:center; position:relative;">
+            <div style="text-align:center; color:#fdf6ec;">
+              <div style="font-size:3rem; margin-bottom:8px;">🏭</div>
+              <div style="font-family:'Playfair Display', serif; font-size:1.2rem; font-weight:700;">Content Factory</div>
+              <div style="font-size:0.8rem; opacity:0.8; margin-top:4px;">مصنع المحتوى</div>
+            </div>
+            <div class="project-overlay">
+              <a href="{{ '/' | relative_url }}" class="btn btn-primary btn-sm">🌐 زيارة</a>
+              <a href="https://github.com/selghribi-blip/selghribi-blip.github.io" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">💻 كود</a>
+            </div>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">مصنع المحتوى 🏭</h3>
+          <p style="font-size:0.9rem; color:#5a5a5a; margin-bottom:12px;">
+            مدونة تقنية عربية مع أتمتة كاملة عبر GitHub Actions — مجاني 100%
+          </p>
+          <div class="project-tech">
+            <span class="tech-tag">Jekyll</span>
+            <span class="tech-tag">GitHub Actions</span>
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">SCSS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px;" class="fade-on-scroll">
+      <a href="{{ '/pages/portfolio' | relative_url }}" class="btn btn-secondary btn-lg">
+        عرض جميع المشاريع →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- الشهادات | Testimonials                                       -->
+<!-- ============================================================ -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-title fade-on-scroll">
+      <h2>ماذا يقولون عني؟</h2>
+      <p>آراء العملاء والمتعاملين</p>
+    </div>
+
+    <div class="grid grid-3">
+      <!-- بطاقة شهادة فارغة - جاهزة للتعبئة -->
+      <div class="testimonial-card fade-on-scroll">
+        <p class="testimonial-text">
+          "تصميم احترافي ورائع، تعامل ممتاز وسريع في التسليم. أنصح بالتعامل معه بشدة!"
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar-placeholder">م</div>
+          <div>
+            <div class="author-name">محمد — عميل سعيد</div>
+            <div class="author-title">صاحب موقع تجاري</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card fade-on-scroll">
+        <p class="testimonial-text">
+          "ساعدني في بناء موقعي من الصفر بأسعار معقولة جداً. النتيجة فاقت توقعاتي!"
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar-placeholder">س</div>
+          <div>
+            <div class="author-name">سارة — مدوّنة</div>
+            <div class="author-title">مبدعة محتوى</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card fade-on-scroll">
+        <p class="testimonial-text">
+          "مطور متميز يفهم احتياجاتك ويعمل بجد لتحقيقها. مشروعنا أصبح أفضل بكثير."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar-placeholder">ع</div>
+          <div>
+            <div class="author-name">علي — رائد أعمال</div>
+            <div class="author-title">مؤسس شركة ناشئة</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- قسم الاشتراك بالنشرة | Newsletter Section                    -->
+<!-- ============================================================ -->
+{% include newsletter-form.html %}

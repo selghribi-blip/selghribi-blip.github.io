@@ -1,0 +1,696 @@
+// ==============================================
+// المكونات | Components
+// ==============================================
+
+// بطاقة المقالة | Post Card
+.post-card {
+  background: $text-inverse;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+  transition: all $transition-normal;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid $border-color;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-xl;
+    border-color: rgba($gold, 0.3);
+  }
+
+  &-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    background: linear-gradient(135deg, $deep-blue, $emerald);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $gold;
+    font-size: $text-4xl;
+    min-height: 180px;
+  }
+
+  &-body {
+    padding: $space-6;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-category {
+    font-size: $text-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $terracotta;
+    font-weight: 600;
+    margin-bottom: $space-3;
+  }
+
+  &-title {
+    font-size: $text-lg;
+    font-weight: 700;
+    color: $deep-blue;
+    margin-bottom: $space-3;
+    line-height: 1.4;
+
+    a {
+      color: inherit;
+      &:hover { color: $terracotta; }
+    }
+  }
+
+  &-excerpt {
+    font-size: $text-sm;
+    color: $text-secondary;
+    line-height: 1.7;
+    flex: 1;
+    margin-bottom: $space-4;
+  }
+
+  &-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: $space-4;
+    border-top: 1px solid $border-color;
+    font-size: $text-xs;
+    color: $text-light;
+  }
+
+  &-read-more {
+    color: $terracotta;
+    font-weight: 600;
+    font-size: $text-sm;
+
+    &:hover {
+      color: mix(black, $terracotta, 15%);
+    }
+  }
+}
+
+// بطاقة الخدمة | Service Card
+.service-card {
+  background: $text-inverse;
+  border-radius: $radius-lg;
+  padding: $space-8;
+  text-align: center;
+  border: 2px solid $border-color;
+  transition: all $transition-normal;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $terracotta, $gold);
+    transform: scaleX(0);
+    transition: transform $transition-normal;
+  }
+
+  &:hover {
+    border-color: $gold;
+    box-shadow: $shadow-lg;
+
+    &::before {
+      transform: scaleX(1);
+    }
+  }
+
+  &.featured {
+    border-color: $gold;
+    box-shadow: $shadow-lg;
+
+    &::before {
+      transform: scaleX(1);
+    }
+
+    .service-badge {
+      display: block;
+    }
+  }
+
+  .service-badge {
+    display: none;
+    position: absolute;
+    top: $space-4;
+    inset-inline-end: $space-4;
+    background: $gold;
+    color: $deep-blue;
+    font-size: $text-xs;
+    font-weight: 700;
+    padding: $space-1 $space-3;
+    border-radius: $radius-full;
+  }
+
+  &-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, rgba($deep-blue, 0.08), rgba($terracotta, 0.08));
+    border-radius: $radius-xl;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $text-3xl;
+    margin: 0 auto $space-5;
+  }
+
+  &-title {
+    font-size: $text-xl;
+    font-weight: 700;
+    color: $deep-blue;
+    margin-bottom: $space-3;
+  }
+
+  &-price {
+    font-size: $text-3xl;
+    font-weight: 700;
+    color: $terracotta;
+    margin: $space-4 0;
+
+    span {
+      font-size: $text-sm;
+      color: $text-secondary;
+      font-weight: 400;
+    }
+  }
+
+  &-features {
+    list-style: none;
+    padding: 0;
+    margin: $space-5 0;
+    text-align: start;
+
+    li {
+      padding: $space-2 0;
+      font-size: $text-sm;
+      color: $text-secondary;
+      border-bottom: 1px solid $border-color;
+
+      &::before {
+        content: '✓';
+        color: $emerald;
+        font-weight: 700;
+        margin-inline-end: $space-2;
+      }
+
+      &.not-included {
+        color: $text-light;
+        text-decoration: line-through;
+
+        &::before {
+          content: '✗';
+          color: $text-light;
+        }
+      }
+
+      &:last-child { border-bottom: none; }
+    }
+  }
+}
+
+// بطاقة المشروع | Project Card
+.project-card {
+  background: $text-inverse;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-md;
+  transition: all $transition-normal;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-xl;
+
+    .project-overlay {
+      opacity: 1;
+    }
+  }
+
+  &.featured {
+    border: 2px solid $gold;
+
+    .project-featured-badge {
+      display: block;
+    }
+  }
+
+  .project-featured-badge {
+    display: none;
+    position: absolute;
+    top: $space-4;
+    inset-inline-start: $space-4;
+    z-index: 2;
+    background: $gold;
+    color: $deep-blue;
+    font-size: $text-xs;
+    font-weight: 700;
+    padding: $space-1 $space-3;
+    border-radius: $radius-full;
+  }
+
+  &-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform $transition-slow;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+  }
+
+  .project-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba($deep-blue, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-4;
+    opacity: 0;
+    transition: opacity $transition-normal;
+  }
+
+  &-body {
+    padding: $space-5;
+  }
+
+  &-title {
+    font-size: $text-lg;
+    font-weight: 700;
+    color: $deep-blue;
+    margin-bottom: $space-2;
+  }
+
+  &-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+    margin-top: $space-4;
+  }
+
+  .tech-tag {
+    background: rgba($deep-blue, 0.07);
+    color: $deep-blue;
+    padding: $space-1 $space-3;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: 500;
+  }
+}
+
+// شهادات | Testimonials
+.testimonial-card {
+  background: $text-inverse;
+  border-radius: $radius-lg;
+  padding: $space-8;
+  box-shadow: $shadow-md;
+  position: relative;
+
+  &::before {
+    content: '"';
+    font-family: $font-heading;
+    font-size: 80px;
+    line-height: 1;
+    color: $gold;
+    opacity: 0.3;
+    position: absolute;
+    top: $space-4;
+    inset-inline-start: $space-6;
+  }
+
+  .testimonial-text {
+    color: $text-secondary;
+    font-style: italic;
+    line-height: 1.8;
+    margin-bottom: $space-6;
+    position: relative;
+    z-index: 1;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+
+    img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .author-avatar-placeholder {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, $terracotta, $gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $text-inverse;
+      font-weight: 700;
+      font-size: $text-lg;
+    }
+
+    .author-name {
+      font-weight: 700;
+      color: $deep-blue;
+      font-size: $text-sm;
+    }
+
+    .author-title {
+      font-size: $text-xs;
+      color: $text-secondary;
+    }
+  }
+}
+
+// نموذج | Form
+.form-group {
+  margin-bottom: $space-5;
+
+  label {
+    display: block;
+    font-size: $text-sm;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: $space-2;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: $space-3 $space-4;
+    border: 2px solid $border-color;
+    border-radius: $radius-md;
+    font-family: $font-body;
+    font-size: $text-base;
+    color: $text-primary;
+    background: $text-inverse;
+    transition: border-color $transition-fast;
+    direction: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: $deep-blue;
+    }
+
+    &::placeholder {
+      color: $text-light;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+}
+
+// روابط السوشال | Social Links
+.social-links {
+  display: flex;
+  gap: $space-3;
+  flex-wrap: wrap;
+
+  .social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: $text-base;
+    transition: all $transition-fast;
+    text-decoration: none;
+
+    &:hover {
+      background: $gold;
+      color: $deep-blue;
+    }
+  }
+
+  &.dark .social-link {
+    background: rgba($deep-blue, 0.08);
+    color: $deep-blue;
+
+    &:hover {
+      background: $deep-blue;
+      color: $text-inverse;
+    }
+  }
+}
+
+// مهارات | Skills
+.skill-item {
+  margin-bottom: $space-5;
+
+  .skill-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: $space-2;
+    font-size: $text-sm;
+    font-weight: 600;
+    color: $deep-blue;
+  }
+
+  .skill-bar {
+    height: 8px;
+    background: rgba($deep-blue, 0.1);
+    border-radius: $radius-full;
+    overflow: hidden;
+
+    .skill-progress {
+      height: 100%;
+      background: linear-gradient(90deg, $terracotta, $gold);
+      border-radius: $radius-full;
+      transition: width 1s ease-in-out;
+    }
+  }
+}
+
+// نشرة بريدية | Newsletter
+.newsletter-section {
+  background: linear-gradient(135deg, $deep-blue, $emerald);
+  padding: $space-16 0;
+  text-align: center;
+  color: $text-inverse;
+
+  h2 {
+    color: $text-inverse;
+    margin-bottom: $space-4;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 500px;
+    margin: 0 auto $space-8;
+  }
+
+  .newsletter-form {
+    display: flex;
+    max-width: 480px;
+    margin: 0 auto;
+    gap: 0;
+
+    input {
+      flex: 1;
+      padding: $space-4;
+      border: none;
+      border-radius: $radius-full 0 0 $radius-full;
+      font-size: $text-base;
+      outline: none;
+
+      &[dir="rtl"] {
+        border-radius: 0 $radius-full $radius-full 0;
+      }
+    }
+
+    button {
+      background: $terracotta;
+      color: $text-inverse;
+      border: none;
+      padding: $space-4 $space-8;
+      border-radius: 0 $radius-full $radius-full 0;
+      font-size: $text-base;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background $transition-fast;
+      white-space: nowrap;
+
+      &:hover {
+        background: mix(black, $terracotta, 10%);
+      }
+
+      &[dir="rtl"] {
+        border-radius: $radius-full 0 0 $radius-full;
+      }
+    }
+
+    @media (max-width: $bp-sm) {
+      flex-direction: column;
+
+      input, button {
+        border-radius: $radius-full;
+      }
+    }
+  }
+}
+
+// رسالة نجاح/خطأ | Alert
+.alert {
+  padding: $space-4 $space-6;
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+  font-size: $text-sm;
+  font-weight: 500;
+
+  &-success {
+    background: rgba($emerald, 0.1);
+    color: $emerald;
+    border: 1px solid rgba($emerald, 0.3);
+  }
+
+  &-error {
+    background: rgba($terracotta, 0.1);
+    color: $terracotta;
+    border: 1px solid rgba($terracotta, 0.3);
+  }
+
+  &-info {
+    background: rgba($deep-blue, 0.08);
+    color: $deep-blue;
+    border: 1px solid rgba($deep-blue, 0.2);
+  }
+}
+
+// تقسيم الصفحة مع سايدبار | Layout with Sidebar
+.content-with-sidebar {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: $space-8;
+  align-items: start;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// زر التمرير لأعلى | Back to Top
+.back-to-top {
+  position: fixed;
+  bottom: $space-8;
+  inset-inline-end: $space-8;
+  width: 44px;
+  height: 44px;
+  background: $deep-blue;
+  color: $text-inverse;
+  border: none;
+  border-radius: $radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all $transition-normal;
+  box-shadow: $shadow-md;
+  font-size: $text-lg;
+  z-index: 999;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &:hover {
+    background: $terracotta;
+    transform: translateY(-3px);
+  }
+}
+
+// تقدم القراءة | Reading Progress
+.reading-progress {
+  position: fixed;
+  top: $header-height;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, $terracotta, $gold);
+  z-index: 999;
+  transition: width 0.1s;
+}
+
+// صورة الغلاف | Cover Image
+.cover-image-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, $deep-blue, $emerald);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $gold;
+  font-size: 4rem;
+  border-radius: $radius-lg;
+  margin-bottom: $space-8;
+}
+
+// تصفح المقالات | Post Navigation
+.post-navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+  margin-top: $space-12;
+  padding-top: $space-8;
+  border-top: 2px solid $border-color;
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-prev,
+  .nav-next {
+    padding: $space-4 $space-5;
+    background: $text-inverse;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    transition: all $transition-fast;
+
+    &:hover {
+      border-color: $gold;
+      box-shadow: $shadow-md;
+    }
+  }
+
+  .nav-next { text-align: end; }
+
+  .nav-label {
+    font-size: $text-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $text-light;
+    display: block;
+    margin-bottom: $space-2;
+  }
+
+  .nav-title {
+    font-weight: 700;
+    color: $deep-blue;
+    font-size: $text-sm;
+  }
+}

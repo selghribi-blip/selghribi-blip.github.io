@@ -1,0 +1,91 @@
+# weekly-newsletter.yml
+# نشرة بريدية أسبوعية تلقائية | Automatic weekly newsletter
+# يعمل كل أحد الساعة 9 صباحاً بتوقيت المغرب (UTC+1) | Every Sunday 9 AM Morocco time (UTC+1)
+
+name: 📬 Weekly Newsletter
+
+on:
+  schedule:
+    # كل أحد الساعة 08:00 UTC = 09:00 المغرب | Every Sunday 08:00 UTC = 09:00 Morocco
+    - cron: '0 8 * * 0'
+  workflow_dispatch:  # تشغيل يدوي | Manual trigger
+    inputs:
+      days:
+        description: 'عدد الأيام الماضية | Days to look back'
+        required: false
+        default: '7'
+        type: string
+      send:
+        description: 'إرسال النشرة فعلياً | Actually send newsletter'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  # ============================================================
+  # بناء وإرسال النشرة | Build and Send Newsletter
+  # ============================================================
+  send-newsletter:
+    name: 📬 Build & Send Newsletter
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # استنساخ الكود | Checkout
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      # إعداد Python | Setup Python
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # تثبيت المتطلبات | Install requirements
+      - name: 📦 Install dependencies
+        run: pip install requests python-dateutil
+
+      # بناء النشرة | Build newsletter
+      - name: 📰 Build newsletter HTML
+        run: |
+          DAYS="${{ github.event.inputs.days || '7' }}"
+          python scripts/newsletter_builder.py \
+            --since "$DAYS" \
+            --output newsletter_output.html \
+            --base-url "https://artsmoroccan.me"
+
+      # رفع النشرة كـ artifact | Upload newsletter as artifact
+      - name: 📤 Upload newsletter artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-newsletter-${{ github.run_number }}
+          path: newsletter_output.html
+          retention-days: 30
+
+      # إرسال النشرة (إذا مفعّل) | Send newsletter (if enabled)
+      - name: 📧 Send newsletter
+        if: ${{ github.event.inputs.send == 'true' || github.event_name == 'schedule' }}
+        env:
+          EMAIL_API_KEY: ${{ secrets.EMAIL_API_KEY }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_LIST_ID: ${{ secrets.EMAIL_LIST_ID }}
+        run: |
+          if [ -n "$EMAIL_API_KEY" ]; then
+            python scripts/newsletter_builder.py \
+              --since "${{ github.event.inputs.days || '7' }}" \
+              --output newsletter_output.html \
+              --send
+            echo "✅ تم إرسال النشرة | Newsletter sent"
+          else
+            echo "⚠️  EMAIL_API_KEY غير محدد | EMAIL_API_KEY not set, skipping send"
+          fi
+
+      # ملخص | Summary
+      - name: 📊 Job summary
+        run: |
+          echo "## 📬 نتيجة النشرة الأسبوعية | Weekly Newsletter Result" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **التاريخ | Date:** $(date +'%Y-%m-%d')" >> $GITHUB_STEP_SUMMARY
+          echo "- **الأيام المغطاة | Days covered:** ${{ github.event.inputs.days || '7' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **الحالة | Status:** ✅ تم البناء بنجاح | Build successful" >> $GITHUB_STEP_SUMMARY
