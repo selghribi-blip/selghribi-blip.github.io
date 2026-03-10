@@ -1,0 +1,45 @@
+<!-- header.html | شريط التنقل -->
+<header class="site-header" role="banner">
+  <div class="container">
+    <!-- الشعار | Logo -->
+    <a href="{{ '/' | relative_url }}" class="site-logo" aria-label="{{ site.title }}">
+      <div class="logo-icon" aria-hidden="true">🏺</div>
+      <span>selghribi<span style="color: var(--gold, #d4a843)">.</span></span>
+    </a>
+
+    <!-- التنقل | Navigation -->
+    <nav class="site-nav" id="site-nav" role="navigation" aria-label="القائمة الرئيسية">
+      <a href="{{ '/' | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">
+        الرئيسية
+      </a>
+      <a href="{{ '/pages/about' | relative_url }}" class="nav-link {% if page.url contains 'about' %}active{% endif %}">
+        عني
+      </a>
+      <a href="{{ '/pages/blog' | relative_url }}" class="nav-link {% if page.url contains 'blog' %}active{% endif %}">
+        المدونة
+      </a>
+      <a href="{{ '/pages/portfolio' | relative_url }}" class="nav-link {% if page.url contains 'portfolio' %}active{% endif %}">
+        الأعمال
+      </a>
+      <a href="{{ '/pages/services' | relative_url }}" class="nav-link {% if page.url contains 'services' %}active{% endif %}">
+        الخدمات
+      </a>
+      <a href="{{ '/pages/contact' | relative_url }}" class="nav-cta">
+        تواصل معي
+      </a>
+
+      <!-- تبديل اللغة | Language Toggle -->
+      <div class="lang-toggle" style="margin-inline-start: 8px;">
+        <button data-lang="ar" class="active" aria-label="العربية">AR</button>
+        <button data-lang="en" aria-label="English">EN</button>
+      </div>
+    </nav>
+
+    <!-- زر الجوال | Mobile Button -->
+    <button class="menu-toggle" id="menu-toggle" aria-controls="site-nav" aria-expanded="false" aria-label="فتح القائمة">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>

@@ -1,0 +1,121 @@
+---
+layout: default
+---
+
+<!-- تخطيط المقالات | Post Layout -->
+<article class="post" lang="{{ page.lang | default: 'ar' }}" dir="{{ page.lang | default: 'ar' | replace: 'ar', 'rtl' | replace: 'en', 'ltr' }}">
+
+  <!-- رأس المقالة | Post Header -->
+  <header class="post-header {% if page.lang == 'ar' or page.lang == nil %}arabic{% endif %}">
+
+    <!-- التصنيف | Category -->
+    {% if page.categories %}
+    <div class="post-category-row" style="display:flex; gap:8px; justify-content:center; margin-bottom:16px;">
+      {% for cat in page.categories limit:2 %}
+      <a href="{{ '/pages/blog' | relative_url }}?category={{ cat }}" class="badge badge-terracotta">
+        {{ cat }}
+      </a>
+      {% endfor %}
+      {% if page.lang %}
+      <span class="lang-badge lang-badge-{{ page.lang }}">{{ page.lang }}</span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- العنوان | Title -->
+    <h1 class="post-title">{{ page.title }}</h1>
+
+    <!-- وصف مختصر | Description -->
+    {% if page.description %}
+    <p style="color: #5a5a5a; font-size: 1.1rem; margin-bottom: 16px; max-width:600px; margin-inline: auto;">
+      {{ page.description }}
+    </p>
+    {% endif %}
+
+    <!-- معلومات المقالة | Post Meta -->
+    <div class="post-meta">
+      <span>
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" style="vertical-align:middle; margin-inline-end:4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        {{ site.author.name }}
+      </span>
+      <span>·</span>
+      <time datetime="{{ page.date | date_to_xmlschema }}">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" style="vertical-align:middle; margin-inline-end:4px;"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+        {{ page.date | date: "%d %B %Y" }}
+      </time>
+      {% if page.read_time %}
+      <span>·</span>
+      <span>⏱ {{ page.read_time }} دقائق قراءة</span>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- صورة الغلاف | Cover Image -->
+  {% if page.image %}
+  <img src="{{ page.image }}" alt="{{ page.title }}" class="post-cover" loading="lazy">
+  {% else %}
+  <div class="cover-image-placeholder" aria-hidden="true">🏺</div>
+  {% endif %}
+
+  <!-- محتوى المقالة | Post Content -->
+  <div class="post-content {% if page.lang == 'ar' or page.lang == nil %}arabic{% endif %}">
+    {{ content }}
+  </div>
+
+  <!-- الوسوم | Tags -->
+  {% if page.tags %}
+  <div class="post-tags">
+    <span style="font-size: 0.85rem; color: #888; margin-inline-end: 8px;">وسوم:</span>
+    {% for tag in page.tags %}
+    <a href="{{ '/pages/blog' | relative_url }}?tag={{ tag }}" class="badge badge-primary" style="text-decoration:none;">
+      #{{ tag }}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- مشاركة المقالة | Share Post -->
+  <div style="margin-top: 48px; padding: 24px; background: #fdf6ec; border-radius: 12px; text-align: center;">
+    <p style="font-weight:700; color: #1a3a5c; margin-bottom: 12px;">شارك هذه المقالة | Share this post</p>
+    <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+      <a href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ page.url | absolute_url | url_encode }}"
+         target="_blank" rel="noopener"
+         class="btn btn-primary btn-sm">
+        🐦 Twitter/X
+      </a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | url_encode }}"
+         target="_blank" rel="noopener"
+         class="btn btn-secondary btn-sm">
+        💼 LinkedIn
+      </a>
+      <a href="https://wa.me/?text={{ page.title | url_encode }}%20{{ page.url | absolute_url | url_encode }}"
+         target="_blank" rel="noopener"
+         class="btn btn-gold btn-sm">
+        💬 WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <!-- تنقل بين المقالات | Post Navigation -->
+  {% if page.previous or page.next %}
+  <nav class="post-navigation" aria-label="تنقل بين المقالات">
+    {% if page.next %}
+    <a href="{{ page.next.url | relative_url }}" class="nav-prev">
+      <span class="nav-label">← المقالة السابقة</span>
+      <span class="nav-title">{{ page.next.title | truncate: 50 }}</span>
+    </a>
+    {% else %}<div></div>{% endif %}
+
+    {% if page.previous %}
+    <a href="{{ page.previous.url | relative_url }}" class="nav-next">
+      <span class="nav-label">المقالة التالية →</span>
+      <span class="nav-title">{{ page.previous.title | truncate: 50 }}</span>
+    </a>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+</article>
+
+<!-- قسم الاشتراك | Newsletter Section -->
+{% include newsletter-form.html %}

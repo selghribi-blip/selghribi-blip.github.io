@@ -1,0 +1,198 @@
+// ==============================================
+// دعم اللغة العربية | Arabic RTL Support
+// ==============================================
+
+// تفعيل RTL عند وجود dir="rtl" أو class="rtl"
+[dir="rtl"],
+.rtl {
+  direction: rtl;
+  text-align: right;
+
+  // الخطوط العربية | Arabic Fonts
+  body,
+  p,
+  span,
+  a,
+  li,
+  td,
+  th {
+    font-family: $font-arabic;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: $font-arabic;
+    font-weight: 700;
+  }
+
+  // التنقل | Navigation
+  .site-nav {
+    .nav-cta {
+      margin-inline-start: $space-2;
+      margin-inline-end: 0;
+    }
+  }
+
+  // الاقتباسات | Blockquotes
+  blockquote {
+    border-inline-start: 4px solid $gold;
+    border-inline-end: none;
+    border-radius: $radius-md 0 0 $radius-md;
+  }
+
+  // القوائم | Lists
+  ul, ol {
+    padding-right: $space-6;
+    padding-left: 0;
+  }
+
+  // النموذج | Form
+  .newsletter-form {
+    input {
+      border-radius: 0 $radius-full $radius-full 0;
+    }
+
+    button {
+      border-radius: $radius-full 0 0 $radius-full;
+    }
+  }
+
+  // الكود | Code blocks stay LTR
+  code, pre {
+    direction: ltr;
+    text-align: left;
+    font-family: $font-mono;
+  }
+
+  // الأيقونات | Icons positioning
+  .btn svg,
+  .btn i {
+    margin-left: 0;
+    margin-right: $space-2;
+  }
+}
+
+// مقالة عربية | Arabic Post
+.post-content.arabic,
+.post-content[lang="ar"] {
+  direction: rtl;
+  text-align: right;
+  font-family: $font-arabic;
+  font-size: 1.1rem;
+  line-height: 2;
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: $font-arabic;
+    text-align: right;
+  }
+
+  ul, ol {
+    padding-right: $space-6;
+    padding-left: 0;
+  }
+
+  blockquote {
+    border-right: 4px solid $gold;
+    border-left: none;
+    padding-right: $space-6;
+    padding-left: 0;
+  }
+
+  code, pre {
+    direction: ltr;
+    text-align: left;
+    font-family: $font-mono;
+  }
+}
+
+// ترويسة المقالة بالعربي | Arabic Post Header
+.post-header[lang="ar"],
+.post-header.arabic {
+  direction: rtl;
+  text-align: right;
+
+  .post-title {
+    font-family: $font-arabic;
+    text-align: right;
+  }
+
+  .post-meta {
+    flex-direction: row-reverse;
+  }
+}
+
+// بطاقة عربية | Arabic Card
+.post-card[lang="ar"],
+.post-card.arabic {
+  direction: rtl;
+  text-align: right;
+
+  .post-card-title,
+  .post-card-excerpt,
+  .post-card-category {
+    text-align: right;
+    font-family: $font-arabic;
+  }
+
+  .post-card-footer {
+    flex-direction: row-reverse;
+  }
+}
+
+// مؤشر اللغة | Language Indicator
+.lang-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &-ar {
+    background: rgba($terracotta, 0.1);
+    color: $terracotta;
+    border: 1px solid rgba($terracotta, 0.3);
+  }
+
+  &-en {
+    background: rgba($deep-blue, 0.08);
+    color: $deep-blue;
+    border: 1px solid rgba($deep-blue, 0.2);
+  }
+
+  &-fr {
+    background: rgba($emerald, 0.08);
+    color: $emerald;
+    border: 1px solid rgba($emerald, 0.2);
+  }
+}
+
+// زر تبديل اللغة | Language Toggle
+.lang-toggle {
+  display: flex;
+  gap: $space-2;
+  align-items: center;
+
+  button {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+    padding: $space-1 $space-3;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &.active,
+    &:hover {
+      background: rgba($gold, 0.2);
+      border-color: $gold;
+      color: $gold;
+    }
+  }
+}
+
+// ترتيب الأرقام في العربية | Arabic Numerals
+// unicode-range for Arabic-Indic digits: U+0660-U+0669
+// Note: @font-face with unicode-range is declared in head.html if needed

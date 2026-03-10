@@ -1,0 +1,140 @@
+# quality-check.yml
+# فحص جودة المحتوى عند فتح PR | Quality check on PR
+# يفحص الروابط المكسورة، تنسيق Markdown، وبناء الموقع
+
+name: ✅ Quality Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # ============================================================
+  # فحص البناء | Build Check
+  # ============================================================
+  build-check:
+    name: 🏗️ Build Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # استنساخ الكود | Checkout
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      # إعداد Ruby | Setup Ruby
+      - name: 💎 Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      # بناء الموقع للتأكد من عدم وجود أخطاء | Build to check for errors
+      - name: 🔨 Build Jekyll site
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: test
+
+  # ============================================================
+  # فحص Markdown | Markdown Check
+  # ============================================================
+  markdown-check:
+    name: 📝 Markdown Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # استنساخ الكود | Checkout
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      # فحص تنسيق Markdown | Check Markdown format
+      - name: 🔍 Lint Markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: |
+            _posts/**/*.md
+            pages/**/*.md
+          config: |
+            {
+              "default": true,
+              "MD013": false,
+              "MD033": false,
+              "MD041": false,
+              "MD007": { "indent": 2 }
+            }
+        continue-on-error: true  # لا يوقف الـ workflow عند وجود تحذيرات
+
+  # ============================================================
+  # فحص YAML | YAML Check
+  # ============================================================
+  yaml-check:
+    name: 📋 YAML Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # استنساخ الكود | Checkout
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      # فحص ملفات YAML | Check YAML files
+      - name: 🔍 Lint YAML files
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: '.github/workflows/'
+          config_data: |
+            extends: default
+            rules:
+              line-length:
+                max: 120
+              truthy:
+                allowed-values: ['true', 'false', 'on', 'off', 'yes', 'no']
+        continue-on-error: true
+
+  # ============================================================
+  # التعليق على PR | PR Comment
+  # ============================================================
+  comment-results:
+    name: 💬 Comment Results
+    runs-on: ubuntu-latest
+    needs: [build-check, markdown-check, yaml-check]
+    if: always()  # يعمل دائماً حتى لو فشل شيء
+    permissions:
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: 💬 Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const buildResult = '${{ needs.build-check.result }}';
+            const mdResult = '${{ needs.markdown-check.result }}';
+            const yamlResult = '${{ needs.yaml-check.result }}';
+
+            const emoji = (r) => r === 'success' ? '✅' : r === 'failure' ? '❌' : '⚠️';
+
+            const body = `## نتائج فحص الجودة | Quality Check Results
+
+            | الفحص | Check | النتيجة | Result |
+            |-------|-------|---------|--------|
+            | بناء الموقع | Build | ${emoji(buildResult)} ${buildResult} |
+            | تنسيق Markdown | Markdown | ${emoji(mdResult)} ${mdResult} |
+            | ملفات YAML | YAML | ${emoji(yamlResult)} ${yamlResult} |
+
+            ${buildResult === 'success' ? '🎉 الموقع يُبنى بنجاح!' : '⚠️ تحقق من أخطاء البناء قبل المراجعة.'}
+
+            ---
+            *تم الفحص تلقائياً بـ GitHub Actions | Auto-checked by GitHub Actions*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });

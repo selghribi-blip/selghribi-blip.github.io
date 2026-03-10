@@ -1,0 +1,503 @@
+// ==============================================
+// تخطيطات الصفحة | Page Layouts
+// ==============================================
+
+// الجسم الرئيسي | Main Body
+.site-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.site-main {
+  flex: 1;
+  padding-top: $header-height;
+}
+
+// الهيدر | Header
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $header-height;
+  background: rgba($deep-blue, 0.97);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+  transition: all $transition-normal;
+
+  &.scrolled {
+    height: 60px;
+    background: rgba($deep-blue, 0.99);
+  }
+
+  .container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+// الشعار | Logo
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  color: $text-inverse;
+  font-family: $font-heading;
+  font-size: $text-xl;
+  font-weight: 700;
+  text-decoration: none;
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, $terracotta, $gold);
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $text-lg;
+  }
+
+  &:hover {
+    color: $gold;
+  }
+}
+
+// التنقل | Navigation
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  @media (max-width: $bp-md) {
+    display: none;
+    position: absolute;
+    top: $header-height;
+    left: 0;
+    right: 0;
+    background: $deep-blue;
+    flex-direction: column;
+    padding: $space-4;
+    gap: 0;
+
+    &.active {
+      display: flex;
+    }
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    padding: $space-2 $space-3;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-weight: 500;
+    transition: all $transition-fast;
+
+    &:hover,
+    &.active {
+      color: $gold;
+      background: rgba($gold, 0.1);
+    }
+  }
+
+  .nav-cta {
+    @extend .btn;
+    @extend .btn-primary;
+    padding: $space-2 $space-4;
+    font-size: $text-xs;
+    margin-inline-start: $space-2;
+  }
+}
+
+// زر الهامبرغر | Hamburger Button
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: $text-inverse;
+  cursor: pointer;
+  padding: $space-2;
+
+  @media (max-width: $bp-md) {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: currentColor;
+    transition: all $transition-fast;
+  }
+
+  &.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  &.active span:nth-child(2) { opacity: 0; }
+  &.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+}
+
+// قسم الهيرو | Hero Section
+.hero {
+  min-height: calc(100vh - #{$header-height});
+  background: linear-gradient(135deg, $deep-blue 0%, $light-blue 50%, $emerald 100%);
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a843' fill-opacity='0.06'%3E%3Cpath d='M40 40l20-20v40l-20-20zm0 0l-20-20v40l20-20zm0 0l20 20H20l20-20zm0 0l-20 20h40l-20-20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-12;
+    align-items: center;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+  }
+
+  &-content {
+    color: $text-inverse;
+  }
+
+  &-badge {
+    display: inline-block;
+    background: rgba($gold, 0.2);
+    color: $gold;
+    border: 1px solid rgba($gold, 0.4);
+    padding: $space-2 $space-4;
+    border-radius: $radius-full;
+    font-size: $text-sm;
+    margin-bottom: $space-6;
+  }
+
+  &-title {
+    font-size: $text-5xl;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: $space-4;
+    color: $text-inverse;
+
+    span {
+      color: $gold;
+    }
+
+    @media (max-width: $bp-lg) {
+      font-size: $text-4xl;
+    }
+
+    @media (max-width: $bp-sm) {
+      font-size: $text-3xl;
+    }
+  }
+
+  &-subtitle {
+    font-size: $text-xl;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: $space-8;
+
+    @media (max-width: $bp-sm) {
+      font-size: $text-lg;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    gap: $space-4;
+    flex-wrap: wrap;
+
+    @media (max-width: $bp-md) {
+      justify-content: center;
+    }
+  }
+
+  &-visual {
+    display: flex;
+    justify-content: center;
+
+    @media (max-width: $bp-md) {
+      display: none;
+    }
+  }
+
+  &-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $radius-xl;
+    padding: $space-8;
+    color: $text-inverse;
+    max-width: 380px;
+    width: 100%;
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $space-4;
+      margin-top: $space-6;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: $space-4;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: $radius-md;
+
+      .stat-value {
+        font-size: $text-3xl;
+        font-weight: 700;
+        color: $gold;
+        font-family: $font-heading;
+      }
+
+      .stat-label {
+        font-size: $text-xs;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: $space-1;
+      }
+    }
+  }
+}
+
+// بطاقة | Card
+.card {
+  background: $text-inverse;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-md;
+  transition: transform $transition-normal, box-shadow $transition-normal;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-xl;
+  }
+
+  &-body {
+    padding: $space-6;
+  }
+
+  &-footer {
+    padding: $space-4 $space-6;
+    border-top: 1px solid $border-color;
+    background: rgba($cream, 0.5);
+  }
+
+  &-img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+  }
+}
+
+// شبكة | Grid
+.grid {
+  display: grid;
+  gap: $space-6;
+
+  &-2 { grid-template-columns: repeat(2, 1fr); }
+  &-3 { grid-template-columns: repeat(3, 1fr); }
+  &-4 { grid-template-columns: repeat(4, 1fr); }
+
+  @media (max-width: $bp-md) {
+    &-2, &-3, &-4 { grid-template-columns: 1fr; }
+  }
+
+  @media (min-width: $bp-md) and (max-width: $bp-lg) {
+    &-3, &-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+}
+
+// صفحة المقالة | Post Page
+.post {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: $space-12 $space-4;
+
+  &-header {
+    text-align: center;
+    margin-bottom: $space-12;
+    padding-bottom: $space-8;
+    border-bottom: 2px solid $border-color;
+  }
+
+  &-title {
+    font-size: $text-4xl;
+    color: $deep-blue;
+    margin-bottom: $space-4;
+
+    @media (max-width: $bp-sm) {
+      font-size: $text-3xl;
+    }
+  }
+
+  &-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-4;
+    flex-wrap: wrap;
+    color: $text-secondary;
+    font-size: $text-sm;
+  }
+
+  &-content {
+    h2, h3, h4 {
+      margin-top: $space-10;
+      margin-bottom: $space-4;
+    }
+
+    img {
+      border-radius: $radius-md;
+      box-shadow: $shadow-md;
+      margin: $space-6 auto;
+    }
+
+    ul, ol {
+      margin-bottom: $space-4;
+      padding-inline-start: $space-6;
+
+      li {
+        margin-bottom: $space-2;
+      }
+    }
+  }
+
+  &-cover {
+    width: 100%;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-lg;
+    margin-bottom: $space-8;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+  }
+
+  &-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+    margin-top: $space-8;
+    padding-top: $space-6;
+    border-top: 1px solid $border-color;
+  }
+}
+
+// الفوتر | Footer
+.site-footer {
+  background: $deep-blue;
+  color: rgba(255, 255, 255, 0.8);
+  padding: $space-16 0 $space-8;
+
+  &-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: $space-8;
+    margin-bottom: $space-12;
+
+    @media (max-width: $bp-lg) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: $bp-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &-brand {
+    .logo {
+      color: $text-inverse;
+      font-family: $font-heading;
+      font-size: $text-2xl;
+      font-weight: 700;
+      margin-bottom: $space-4;
+
+      span { color: $gold; }
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: $text-sm;
+      line-height: 1.8;
+    }
+  }
+
+  &-col {
+    h4 {
+      color: $text-inverse;
+      font-family: $font-heading;
+      font-size: $text-base;
+      margin-bottom: $space-4;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: $space-2;
+
+        a {
+          color: rgba(255, 255, 255, 0.6);
+          font-size: $text-sm;
+          transition: color $transition-fast;
+
+          &:hover {
+            color: $gold;
+          }
+        }
+      }
+    }
+  }
+
+  &-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: $space-6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: $space-4;
+
+    p {
+      font-size: $text-sm;
+      color: rgba(255, 255, 255, 0.5);
+      margin: 0;
+    }
+  }
+}
+
+// الشريط الجانبي | Sidebar
+.sidebar {
+  .widget {
+    background: $text-inverse;
+    border-radius: $radius-lg;
+    padding: $space-6;
+    margin-bottom: $space-6;
+    box-shadow: $shadow-sm;
+
+    &-title {
+      font-size: $text-base;
+      font-weight: 700;
+      color: $deep-blue;
+      margin-bottom: $space-4;
+      padding-bottom: $space-3;
+      border-bottom: 2px solid $gold;
+    }
+  }
+}

@@ -1,0 +1,42 @@
+<!-- newsletter-form.html | نموذج الاشتراك بالنشرة البريدية -->
+<!-- الاستخدام | Usage: include newsletter-form.html -->
+
+<section class="newsletter-section" id="newsletter">
+  <div class="container">
+    <h2>📬 اشترك في النشرة الأسبوعية</h2>
+    <p>
+      أحدث المقالات التقنية، نصائح عملية، ومشاريع جديدة — مباشرة إلى بريدك كل أحد صباحاً.
+    </p>
+
+    <!-- نموذج الاشتراك | Subscription Form -->
+    <!-- يعمل مع Formspree المجاني | Works with free Formspree -->
+    <form
+      class="newsletter-form"
+      id="newsletter-form"
+      action=""
+      method="POST"
+      novalidate
+    >
+      <!-- استبدل الـ action بعنوان Formspree الخاص بك -->
+      <!-- Replace action with your Formspree endpoint: -->
+      <!-- action="https://formspree.io/f/YOUR_FORM_ID" -->
+
+      <input
+        type="email"
+        name="email"
+        placeholder="بريدك الإلكتروني | your@email.com"
+        required
+        autocomplete="email"
+        aria-label="البريد الإلكتروني"
+        dir="ltr"
+      >
+      <button type="submit" data-original-text="اشترك مجاناً">
+        اشترك مجاناً 🚀
+      </button>
+    </form>
+
+    <p style="font-size: 0.8rem; margin-top: 12px; opacity: 0.7;">
+      🔒 لن نشارك بريدك مع أحد. يمكنك إلغاء الاشتراك في أي وقت.
+    </p>
+  </div>
+</section>

@@ -1,0 +1,147 @@
+# welcome-contributors.yml
+# ترحيب تلقائي بالمساهمين الجدد | Auto-welcome new contributors
+# يعمل عند أول PR أو Issue | Triggers on first PR or Issue
+
+name: 👋 Welcome Contributors
+
+on:
+  pull_request_target:
+    types: [opened]
+  issues:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  # ============================================================
+  # ترحيب بـ PR الجديدة | Welcome New PRs
+  # ============================================================
+  welcome-pr:
+    name: 👋 Welcome PR Author
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_target'
+
+    steps:
+      - name: 👋 Welcome new contributor
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const author = context.payload.pull_request.user.login;
+
+            // التحقق إذا كان هذا أول PR | Check if this is first PR
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+            });
+
+            const authorPRs = prs.data.filter(pr => pr.user.login === author);
+            const isFirstPR = authorPRs.length <= 1;
+
+            if (isFirstPR) {
+              const message = `## 🎉 أهلاً وسهلاً ${author}! | Welcome ${author}!
+
+              شكراً جزيلاً على مساهمتك في هذا المشروع! 🙏
+
+              Thank you so much for your contribution to this project! 🙏
+
+              ---
+
+              ### 📋 ما يحدث الآن | What happens now:
+
+              1. ✅ **فحص تلقائي** | Automatic quality check is running
+              2. 👀 **المراجعة** | The PR will be reviewed soon
+              3. 🚀 **النشر** | If approved, changes will be deployed automatically
+
+              ---
+
+              ### 🌟 نصائح للمساهمة | Contribution tips:
+
+              - تأكد من قراءة [دليل المساهمة](../PULL_REQUEST_TEMPLATE.md)
+              - Make sure your PR description is clear
+              - اطرح أي أسئلة في التعليقات | Ask any questions in the comments
+
+              ---
+
+              نحن سعداء بانضمامك! 🇲🇦 | We're happy to have you! 🎊`;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: message
+              });
+
+              // إضافة label | Add label
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number,
+                  labels: ['first-contribution']
+                });
+              } catch {
+                // تجاهل إذا لم يكن الـ label موجوداً | Ignore if label doesn't exist
+                console.log('Label "first-contribution" not found, skipping...');
+              }
+            }
+
+  # ============================================================
+  # ترحيب بـ Issues الجديدة | Welcome New Issues
+  # ============================================================
+  welcome-issue:
+    name: 💬 Welcome Issue Author
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+
+    steps:
+      - name: 💬 Welcome issue author
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const author = context.payload.issue.user.login;
+
+            // التحقق من أول issue | Check if first issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              creator: author,
+            });
+
+            const isFirstIssue = issues.data.filter(i => !i.pull_request).length <= 1;
+
+            if (isFirstIssue) {
+              const isArabicTitle = /[\u0600-\u06FF]/.test(context.payload.issue.title);
+
+              const message = isArabicTitle
+                ? `## 👋 شكراً على تفاعلك ${author}!
+
+              تم استلام تقريرك بنجاح وسيتم مراجعته في أقرب وقت ممكن.
+
+              **للتذكير:**
+              - 🐛 إذا كان هذا بلاغ خطأ، أضف أكثر تفاصيل ممكن
+              - 💡 إذا كانت فكرة مقالة، شكراً لاقتراحك!
+              - ⏰ وقت الرد المعتاد: 24-48 ساعة
+
+              نحن نقدر مساهمتك! 🙏`
+                : `## 👋 Thanks for your issue ${author}!
+
+              Your issue has been received and will be reviewed soon.
+
+              **Reminder:**
+              - 🐛 If this is a bug report, please add as many details as possible
+              - 💡 If this is an article idea, thanks for the suggestion!
+              - ⏰ Typical response time: 24-48 hours
+
+              We appreciate your contribution! 🙏`;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                body: message
+              });
+            }

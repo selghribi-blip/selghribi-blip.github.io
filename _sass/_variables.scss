@@ -1,0 +1,92 @@
+// ==============================================
+// المتغيرات الرئيسية | Main Variables
+// مستوحاة من Arts Moroccan | Inspired by Arts Moroccan
+// ==============================================
+
+// الألوان الرئيسية | Primary Colors
+$deep-blue: #1a3a5c;
+$terracotta: #c0674a;
+$gold: #d4a843;
+$emerald: #2d6a4f;
+$cream: #fdf6ec;
+$dark-text: #2c2c2c;
+
+// ألوان مساعدة | Secondary Colors
+$light-blue: #2a5a8c;
+$light-gold: #e8c06a;
+$pale-cream: #fefaf4;
+$border-color: #e8ddd0;
+$shadow-color: rgba(26, 58, 92, 0.1);
+
+// الخلفية والنصوص | Background & Text
+$bg-primary: $cream;
+$bg-secondary: $pale-cream;
+$bg-dark: $deep-blue;
+$text-primary: $dark-text;
+$text-secondary: #5a5a5a;
+$text-light: #888;
+$text-inverse: #fff;
+
+// الخطوط | Typography
+$font-heading: 'Playfair Display', Georgia, serif;
+$font-arabic: 'Amiri', 'Traditional Arabic', serif;
+$font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-mono: 'Courier New', Courier, monospace;
+
+// أحجام الخطوط | Font Sizes
+$text-xs: 0.75rem;   // 12px
+$text-sm: 0.875rem;  // 14px
+$text-base: 1rem;    // 16px
+$text-lg: 1.125rem;  // 18px
+$text-xl: 1.25rem;   // 20px
+$text-2xl: 1.5rem;   // 24px
+$text-3xl: 1.875rem; // 30px
+$text-4xl: 2.25rem;  // 36px
+$text-5xl: 3rem;     // 48px
+
+// المسافات | Spacing
+$space-1: 0.25rem;
+$space-2: 0.5rem;
+$space-3: 0.75rem;
+$space-4: 1rem;
+$space-5: 1.25rem;
+$space-6: 1.5rem;
+$space-8: 2rem;
+$space-10: 2.5rem;
+$space-12: 3rem;
+$space-16: 4rem;
+$space-20: 5rem;
+$space-24: 6rem;
+
+// الحدود | Borders
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+$radius-full: 9999px;
+
+// الظلال | Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 12px rgba(26, 58, 92, 0.12);
+$shadow-lg: 0 8px 24px rgba(26, 58, 92, 0.16);
+$shadow-xl: 0 16px 48px rgba(26, 58, 92, 0.2);
+
+// التحولات | Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// نقاط التقاطع | Breakpoints
+$bp-sm: 576px;
+$bp-md: 768px;
+$bp-lg: 992px;
+$bp-xl: 1200px;
+$bp-2xl: 1400px;
+
+// حاوي المحتوى | Container
+$container-max: 1140px;
+$container-padding: $space-4;
+
+// Header
+$header-height: 70px;
+$header-height-mobile: 60px;

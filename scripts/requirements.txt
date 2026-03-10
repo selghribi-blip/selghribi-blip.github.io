@@ -1,0 +1,23 @@
+# متطلبات Python | Python Requirements
+# تثبيت | Install: pip install -r scripts/requirements.txt
+
+# إنشاء صور OG | OG image generation
+Pillow>=10.0.0
+
+# نشر على تويتر | Twitter posting
+tweepy>=4.14.0
+
+# معالجة YAML | YAML processing
+PyYAML>=6.0
+
+# HTTP requests
+requests>=2.31.0
+
+# معالجة JSON | JSON processing (included in stdlib, listed for clarity)
+# json (stdlib)
+
+# معالجة HTML | HTML processing
+beautifulsoup4>=4.12.0
+
+# معالجة تواريخ | Date processing
+python-dateutil>=2.8.2
