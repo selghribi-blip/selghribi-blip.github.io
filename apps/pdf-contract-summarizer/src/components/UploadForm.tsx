@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { PLAN_LIMITS } from "@/lib/limits";
 
 interface UploadFormProps {
   onResult: (result: {
@@ -30,9 +31,12 @@ export default function UploadForm({ onResult, isPro }: UploadFormProps) {
       return;
     }
 
-    const MAX_SIZE = 20 * 1024 * 1024;
+    // Client-side file size check based on the user's plan
+    const planKey = isPro ? "pro" : "free";
+    const MAX_SIZE = PLAN_LIMITS[planKey].maxPdfBytes;
+    const maxMb = MAX_SIZE / (1024 * 1024);
     if (file.size > MAX_SIZE) {
-      setError("File is too large (max 20 MB).");
+      setError(`File is too large (max ${maxMb} MB for your plan).`);
       return;
     }
 

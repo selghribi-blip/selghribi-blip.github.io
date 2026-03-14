@@ -14,6 +14,9 @@ dev.db
 *.db
 *.db-journal
 
+# TypeScript build info
+tsconfig.tsbuildinfo
+
 # Misc
 .DS_Store
 *.pem
