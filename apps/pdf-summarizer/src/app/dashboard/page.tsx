@@ -10,13 +10,17 @@ import prisma from '@/lib/prisma';
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: { success?: string };
+  // In Next.js 15, searchParams is a Promise — must be awaited before use
+  searchParams: Promise<{ success?: string }>;
 }) {
   const session = await getServerAuthSession();
 
   if (!session?.user?.id) {
     redirect('/api/auth/signin?callbackUrl=/dashboard');
   }
+
+  // Await searchParams before reading values (Next.js 15 requirement)
+  const resolvedSearchParams = await searchParams;
 
   // Fetch subscription and recent summaries in parallel
   const [subscription, summaries] = await Promise.all([
@@ -39,7 +43,7 @@ export default async function DashboardPage({
   ]);
 
   const isActive = subscription?.status === 'ACTIVE';
-  const successMessage = searchParams.success === 'true';
+  const successMessage = resolvedSearchParams.success === 'true';
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
