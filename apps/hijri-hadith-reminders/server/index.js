@@ -21,15 +21,15 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Rate limiting
+// Global rate limiting — applied to all routes
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
   message: { error: 'طلبات كثيرة جداً، يرجى المحاولة لاحقاً' }
 });
-app.use('/api/', limiter);
+app.use(limiter);
 
-// Auth rate limiting (stricter)
+// Stricter rate limiting for auth endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
@@ -45,7 +45,7 @@ app.use('/api/preferences', preferencesRoutes);
 // Serve React client in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
-  app.get('*', (req, res) => {
+  app.get('*', limiter, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
   });
 }
