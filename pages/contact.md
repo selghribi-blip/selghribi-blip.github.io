@@ -107,7 +107,7 @@ permalink: /pages/contact/
       <p style="color:rgba(255,255,255,0.8); font-size:0.9rem; margin-bottom:12px;">
         تريد استشارة سريعة؟
       </p>
-      <a href="mailto:?subject=استشارة تقنية - selghribi" class="btn btn-gold btn-sm">
+      <a href="mailto:WYNM72627@GMAIL.COM?subject=استشارة تقنية - selghribi" class="btn btn-gold btn-sm">
         📅 احجز استشارة مجانية
       </a>
     </div>
