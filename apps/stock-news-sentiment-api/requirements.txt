@@ -1,0 +1,6 @@
+fastapi>=0.111.0,<1.0.0
+uvicorn[standard]>=0.29.0,<1.0.0
+sqlmodel>=0.0.18,<1.0.0
+feedparser>=6.0.11,<7.0.0
+textblob>=0.18.0,<1.0.0
+python-dotenv>=1.0.1,<2.0.0
