@@ -252,7 +252,7 @@ class TestRateLimiting:
 
             # Clear the limiter state
             from app import rate_limiter
-            rate_limiter._windows.clear()
+            rate_limiter._rate_limit_windows.clear()
 
             from app.main import app
             with TestClient(app, raise_server_exceptions=False) as c:
@@ -267,7 +267,7 @@ class TestRateLimiting:
                     r3 = c.get("/v1/news?ticker=TSLA", headers=headers)
 
             get_settings.cache_clear()
-            rate_limiter._windows.clear()
+            rate_limiter._rate_limit_windows.clear()
 
         assert r1.status_code == 200
         assert r2.status_code == 200

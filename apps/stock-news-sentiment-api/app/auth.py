@@ -12,7 +12,6 @@ development).  Set at least one key in production.
 from __future__ import annotations
 
 from fastapi import Depends, Header, HTTPException, Query, status
-from fastapi.security import api_key
 
 from app.config import Settings, get_settings
 

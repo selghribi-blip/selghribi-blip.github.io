@@ -20,7 +20,7 @@ from app.auth import verify_api_key
 from app.config import Settings, get_settings
 
 # (api_key, window_bucket) → request_count
-_windows: Dict[Tuple[str, int], int] = defaultdict(int)
+_rate_limit_windows: Dict[Tuple[str, int], int] = defaultdict(int)
 _lock = Lock()
 
 
@@ -50,14 +50,14 @@ def check_rate_limit(
     key = (api_key, bucket)
 
     with _lock:
-        _windows[key] += 1
-        count = _windows[key]
+        _rate_limit_windows[key] += 1
+        count = _rate_limit_windows[key]
 
         # Evict old buckets to prevent unbounded growth
         old_bucket = bucket - 2
-        stale = [k for k in _windows if k[1] <= old_bucket]
+        stale = [k for k in _rate_limit_windows if k[1] <= old_bucket]
         for k in stale:
-            del _windows[k]
+            del _rate_limit_windows[k]
 
     if count > limit:
         retry_after = window - (int(time.time()) % window)
