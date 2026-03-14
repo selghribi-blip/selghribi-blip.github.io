@@ -1,0 +1,933 @@
+---
+layout: none
+permalink: /csv-cleaner/
+---
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- SEO: Title & Description -->
+  <title>Arabic/English CSV Cleaner — Data-Cleaning Tool for Freelancers</title>
+  <meta name="description" content="Clean messy CSV files with Arabic and English data in seconds. Remove duplicates, fix encoding, trim spaces. Free CLI tool + Pro upgrade. Perfect for freelancers.">
+  <meta name="author" content="selghribi">
+  <meta name="keywords" content="CSV cleaner, Arabic data cleaning, Excel cleaner, Python CSV tool, freelance data tool, data cleaning script">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://artsmoroccan.me/csv-cleaner/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Arabic/English CSV Cleaner — For Freelancers">
+  <meta property="og:description" content="Clean messy CSV & Excel files with Arabic/English data in seconds. Remove duplicates, fix encoding, trim spaces. Free to use.">
+  <meta property="og:url" content="https://artsmoroccan.me/csv-cleaner/">
+  <meta property="og:site_name" content="selghribi | CSV Cleaner">
+  <meta property="og:image" content="https://artsmoroccan.me/assets/images/og/csv-cleaner-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Arabic/English CSV Cleaner tool preview">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Arabic/English CSV Cleaner — For Freelancers">
+  <meta name="twitter:description" content="Clean messy CSV & Excel files with Arabic/English data in seconds. Free CLI tool.">
+  <meta name="twitter:image" content="https://artsmoroccan.me/assets/images/og/csv-cleaner-og.png">
+  <meta name="twitter:image:alt" content="Arabic/English CSV Cleaner">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Arabic/English CSV Cleaner",
+    "description": "A data-cleaning Python script for freelancers. Cleans CSV and Excel files with Arabic and English data: removes duplicates, trims spaces, fixes encoding issues.",
+    "url": "https://artsmoroccan.me/csv-cleaner/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Windows, macOS, Linux",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Free",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      {
+        "@type": "Offer",
+        "name": "Pro",
+        "price": "9",
+        "priceCurrency": "USD"
+      }
+    ],
+    "author": {
+      "@type": "Person",
+      "name": "selghribi",
+      "url": "https://artsmoroccan.me"
+    }
+  }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+
+  <!-- Google Fonts (lightweight subset) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =============================================
+       CSS RESET & VARIABLES (mobile-first)
+       ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --clr-primary:   #2563eb;
+      --clr-primary-d: #1d4ed8;
+      --clr-accent:    #10b981;
+      --clr-accent-d:  #059669;
+      --clr-bg:        #ffffff;
+      --clr-bg-alt:    #f8fafc;
+      --clr-border:    #e2e8f0;
+      --clr-text:      #1e293b;
+      --clr-muted:     #64748b;
+      --clr-white:     #ffffff;
+      --radius:        0.75rem;
+      --shadow-sm:     0 1px 3px rgba(0,0,0,.08);
+      --shadow-md:     0 4px 16px rgba(0,0,0,.10);
+      --font:          'Inter', system-ui, sans-serif;
+      --max-w:         1100px;
+      --nav-h:         64px;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: var(--font); color: var(--clr-text); background: var(--clr-bg); line-height: 1.65; }
+    img  { max-width: 100%; height: auto; display: block; }
+    a    { color: var(--clr-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container { width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 1.25rem; }
+    .section    { padding: 4rem 0; }
+    .section-alt { background: var(--clr-bg-alt); }
+
+    /* =============================================
+       NAV
+       ============================================= */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--clr-border);
+      height: var(--nav-h);
+      display: flex; align-items: center;
+    }
+    .nav__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 1.25rem;
+    }
+    .nav__brand { font-weight: 700; font-size: 1.1rem; color: var(--clr-text); display: flex; align-items: center; gap: .4rem; }
+    .nav__brand:hover { text-decoration: none; }
+    .nav__links { display: none; gap: 1.5rem; }
+    .nav__links a { font-size: .9rem; color: var(--clr-muted); font-weight: 500; }
+    .nav__links a:hover { color: var(--clr-primary); text-decoration: none; }
+    .nav__cta { font-size: .85rem; }
+
+    @media (min-width: 640px) { .nav__links { display: flex; } }
+
+    /* =============================================
+       BUTTONS
+       ============================================= */
+    .btn {
+      display: inline-block; padding: .65rem 1.4rem;
+      border-radius: var(--radius); font-weight: 600; font-size: .9rem;
+      cursor: pointer; border: 2px solid transparent;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      line-height: 1.4;
+    }
+    .btn:hover { text-decoration: none; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary  { background: var(--clr-primary); color: #fff; border-color: var(--clr-primary); }
+    .btn-primary:hover  { background: var(--clr-primary-d); border-color: var(--clr-primary-d); color: #fff; }
+    .btn-accent   { background: var(--clr-accent); color: #fff; border-color: var(--clr-accent); }
+    .btn-accent:hover   { background: var(--clr-accent-d); border-color: var(--clr-accent-d); color: #fff; }
+    .btn-outline  { background: transparent; color: var(--clr-primary); border-color: var(--clr-primary); }
+    .btn-outline:hover  { background: var(--clr-primary); color: #fff; }
+    .btn-lg { padding: .85rem 2rem; font-size: 1rem; }
+
+    /* =============================================
+       HERO
+       ============================================= */
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #0ea5e9 100%);
+      color: var(--clr-white);
+      padding: 5rem 0 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      pointer-events: none;
+    }
+    .hero__badge {
+      display: inline-block; background: rgba(255,255,255,.15);
+      color: #fff; font-size: .8rem; font-weight: 600;
+      padding: .3rem .85rem; border-radius: 99px; margin-bottom: 1.25rem;
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 700;
+      line-height: 1.2; margin-bottom: 1rem;
+    }
+    .hero h1 span { color: #93c5fd; }
+    .hero__sub {
+      font-size: clamp(1rem, 2.5vw, 1.2rem); opacity: .9;
+      max-width: 600px; margin: 0 auto 1rem;
+    }
+    .hero__sub-ar {
+      font-size: .95rem; opacity: .75; margin-bottom: 2rem;
+      direction: rtl; font-style: italic;
+    }
+    .hero__actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 2.5rem; }
+    .hero__note { font-size: .8rem; opacity: .6; }
+
+    /* Code snippet in hero */
+    .hero__code {
+      background: rgba(0,0,0,.35); border-radius: var(--radius);
+      padding: 1rem 1.25rem; font-family: 'Courier New', monospace;
+      font-size: .82rem; text-align: left; display: inline-block;
+      max-width: 520px; width: 100%; margin-top: 1.5rem;
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    .hero__code .kw  { color: #93c5fd; }
+    .hero__code .str { color: #86efac; }
+    .hero__code .cmt { color: rgba(255,255,255,.45); }
+
+    /* =============================================
+       PROBLEM / SOLUTION STRIP
+       ============================================= */
+    .problem-strip {
+      background: #fef3c7;
+      border-top: 3px solid #f59e0b;
+      padding: 1.5rem 0;
+    }
+    .problem-strip__inner {
+      display: flex; flex-wrap: wrap; gap: 2rem;
+      align-items: flex-start; justify-content: center;
+    }
+    .problem-strip__col { flex: 1; min-width: 240px; max-width: 360px; }
+    .problem-strip__col h3 { font-size: 1rem; margin-bottom: .5rem; }
+    .problem-strip__col ul { padding-left: 1.2rem; font-size: .9rem; color: var(--clr-muted); }
+    .problem-strip__col li { margin-bottom: .35rem; }
+    .badge-problem { color: #b45309; }
+    .badge-solution { color: #065f46; }
+
+    /* =============================================
+       FEATURES
+       ============================================= */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem; margin-top: 2.5rem;
+    }
+    .feature-card {
+      background: var(--clr-bg); border: 1px solid var(--clr-border);
+      border-radius: var(--radius); padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s, transform .2s;
+    }
+    .feature-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .feature-card__icon { font-size: 2rem; margin-bottom: .75rem; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: .4rem; }
+    .feature-card p  { font-size: .875rem; color: var(--clr-muted); }
+
+    /* =============================================
+       SECTION HEADERS
+       ============================================= */
+    .section-header { text-align: center; margin-bottom: 1rem; }
+    .section-header h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700;
+      margin-bottom: .5rem;
+    }
+    .section-header p { color: var(--clr-muted); font-size: .95rem; max-width: 560px; margin: 0 auto; }
+    .section-header__ar { direction: rtl; font-size: .85rem; color: var(--clr-muted); margin-top: .25rem; }
+
+    /* =============================================
+       PRICING
+       ============================================= */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 2.5rem; max-width: 720px; margin-left: auto; margin-right: auto;
+    }
+    .price-card {
+      border: 2px solid var(--clr-border); border-radius: var(--radius);
+      padding: 2rem 1.5rem; text-align: center; background: var(--clr-bg);
+      position: relative; transition: box-shadow .2s;
+    }
+    .price-card:hover { box-shadow: var(--shadow-md); }
+    .price-card--featured { border-color: var(--clr-primary); }
+    .price-card__badge {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--clr-primary); color: #fff;
+      font-size: .75rem; font-weight: 700; padding: .2rem .85rem;
+      border-radius: 99px; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .price-card__name  { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .price-card__price { font-size: 2.5rem; font-weight: 800; color: var(--clr-primary); line-height: 1; margin-bottom: .25rem; }
+    .price-card__price sup { font-size: 1.1rem; vertical-align: super; }
+    .price-card__period { font-size: .8rem; color: var(--clr-muted); margin-bottom: 1.25rem; }
+    .price-card__features { text-align: left; margin-bottom: 1.5rem; }
+    .price-card__features li {
+      list-style: none; padding: .35rem 0;
+      border-bottom: 1px solid var(--clr-border); font-size: .875rem;
+      display: flex; align-items: flex-start; gap: .5rem;
+    }
+    .price-card__features li:last-child { border-bottom: none; }
+    .check { color: var(--clr-accent); flex-shrink: 0; }
+    .cross { color: #ef4444; flex-shrink: 0; }
+
+    /* =============================================
+       CONTACT
+       ============================================= */
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr;
+      gap: 2rem; margin-top: 2.5rem;
+    }
+    @media (min-width: 640px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
+
+    .contact-info h3  { font-size: 1.1rem; margin-bottom: 1rem; }
+    .contact-info p   { font-size: .9rem; color: var(--clr-muted); margin-bottom: 1rem; }
+    .contact-info a   { color: var(--clr-primary); }
+    .contact-links    { display: flex; flex-direction: column; gap: .6rem; margin-top: 1rem; }
+    .contact-links a  { display: flex; align-items: center; gap: .5rem; font-size: .9rem; }
+
+    .contact-form { display: flex; flex-direction: column; gap: .75rem; }
+    .form-group label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .3rem; }
+    .form-group input,
+    .form-group textarea {
+      width: 100%; border: 1px solid var(--clr-border);
+      border-radius: .5rem; padding: .6rem .85rem;
+      font-family: var(--font); font-size: .9rem; color: var(--clr-text);
+      transition: border-color .15s;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none; border-color: var(--clr-primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
+    .form-group input.error, .form-group textarea.error { border-color: #ef4444; }
+    .form-group .field-error { font-size: .78rem; color: #ef4444; margin-top: .2rem; }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-success { display: none; background: #d1fae5; border: 1px solid #6ee7b7; border-radius: .5rem; padding: .75rem 1rem; font-size: .9rem; color: #065f46; }
+
+    /* =============================================
+       FAQ
+       ============================================= */
+    .faq-list { margin-top: 2rem; }
+    .faq-item {
+      border: 1px solid var(--clr-border); border-radius: var(--radius);
+      margin-bottom: .75rem; overflow: hidden;
+    }
+    .faq-item__question {
+      width: 100%; background: var(--clr-bg); border: none; cursor: pointer;
+      text-align: left; padding: 1rem 1.25rem;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .95rem; font-weight: 600; color: var(--clr-text);
+      transition: background .15s;
+    }
+    .faq-item__question:hover { background: var(--clr-bg-alt); }
+    .faq-item__icon { font-size: 1.2rem; transition: transform .25s; flex-shrink: 0; margin-left: 1rem; }
+    .faq-item--open .faq-item__icon { transform: rotate(45deg); }
+    .faq-item__answer {
+      display: none; padding: 0 1.25rem 1rem;
+      font-size: .9rem; color: var(--clr-muted); line-height: 1.7;
+    }
+    .faq-item--open .faq-item__answer { display: block; }
+    .faq-item__answer code {
+      background: var(--clr-bg-alt); border: 1px solid var(--clr-border);
+      border-radius: .25rem; padding: .1em .35em; font-size: .85em;
+    }
+
+    /* =============================================
+       FOOTER
+       ============================================= */
+    .footer {
+      background: var(--clr-text); color: rgba(255,255,255,.7);
+      padding: 2.5rem 0; text-align: center;
+    }
+    .footer a { color: rgba(255,255,255,.85); }
+    .footer a:hover { color: #fff; }
+    .footer__top { margin-bottom: 1rem; font-size: .9rem; }
+    .footer__links { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 1.25rem; }
+    .footer__copy  { font-size: .8rem; opacity: .55; }
+
+    /* =============================================
+       SKIP LINK (A11Y)
+       ============================================= */
+    .skip-link {
+      position: absolute; top: -40px; left: 1rem;
+      background: var(--clr-primary); color: #fff;
+      padding: .5rem 1rem; border-radius: 0 0 .5rem .5rem;
+      font-size: .85rem; z-index: 999;
+      transition: top .2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* =============================================
+       UTILITY
+       ============================================= */
+    .text-center { text-align: center; }
+    .mt-1 { margin-top: .5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mt-3 { margin-top: 1.5rem; }
+    .tag {
+      display: inline-block; background: #dbeafe; color: #1d4ed8;
+      font-size: .75rem; font-weight: 600; padding: .2rem .6rem;
+      border-radius: 99px; margin: .15rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- A11Y: Skip to main content -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="#hero" class="nav__brand" aria-label="CSV Cleaner home">
+        🧹 CSV Cleaner
+      </a>
+      <div class="nav__links" role="list">
+        <a href="#features" role="listitem">Features</a>
+        <a href="#pricing" role="listitem">Pricing</a>
+        <a href="#faq" role="listitem">FAQ</a>
+        <a href="#contact" role="listitem">Contact</a>
+      </div>
+      <a href="https://github.com/selghribi-blip/selghribi-blip.github.io/tree/main/projects/csv-cleaner"
+         target="_blank" rel="noopener noreferrer"
+         class="btn btn-primary nav__cta"
+         aria-label="Download CSV Cleaner on GitHub">
+        ⬇ Download Free
+      </a>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero" id="hero" aria-labelledby="hero-heading">
+    <div class="container">
+      <div class="hero__badge">🆓 100% Free · Open Source</div>
+
+      <h1 id="hero-heading">
+        Stop wasting hours on<br>
+        <span>messy CSV files</span>
+      </h1>
+
+      <p class="hero__sub">
+        A simple Python script that cleans Arabic &amp; English CSV/Excel files —
+        removes duplicates, fixes encoding, trims spaces. Done in seconds.
+      </p>
+      <p class="hero__sub-ar" dir="rtl">
+        أداة بسيطة لتنظيف ملفات CSV وExcel بالعربية والإنجليزية — سريعة، مجانية، تعمل على أي نظام
+      </p>
+
+      <div class="hero__actions">
+        <a href="https://github.com/selghribi-blip/selghribi-blip.github.io/tree/main/projects/csv-cleaner"
+           target="_blank" rel="noopener noreferrer"
+           class="btn btn-accent btn-lg"
+           aria-label="Download CSV Cleaner from GitHub">
+          ⬇ Download Free (GitHub)
+        </a>
+        <a href="#features" class="btn btn-outline btn-lg" style="color:#fff; border-color:rgba(255,255,255,.6);">
+          See Features ↓
+        </a>
+      </div>
+
+      <p class="hero__note">No account needed · Works on Windows, macOS &amp; Linux · Python 3.10+</p>
+
+      <!-- Quick-start code snippet -->
+      <div class="hero__code" role="region" aria-label="Quick start command example">
+        <div><span class="cmt"># Install &amp; run in 3 steps</span></div>
+        <div><span class="kw">pip</span> install <span class="str">pandas openpyxl</span></div>
+        <div><span class="kw">python</span> cli.py <span class="str">-i data.csv -o clean.csv</span></div>
+        <div class="cmt"># → Done! Clean CSV + report saved</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROBLEM / SOLUTION
+       ============================================================ -->
+  <div class="problem-strip" role="region" aria-label="Problem and solution overview">
+    <div class="container">
+      <div class="problem-strip__inner">
+        <div class="problem-strip__col">
+          <h3 class="badge-problem">⚠ The Problem</h3>
+          <ul>
+            <li>Duplicate rows wasting your time</li>
+            <li>Arabic text showing as garbled symbols (encoding issues)</li>
+            <li>Extra spaces inside cells breaking formulas</li>
+            <li>Empty rows scattered throughout the file</li>
+            <li>Column names inconsistent or duplicated</li>
+          </ul>
+        </div>
+        <div class="problem-strip__col">
+          <h3 class="badge-solution">✅ The Solution</h3>
+          <ul>
+            <li>Auto-detects &amp; fixes encoding (UTF-8, cp1256, latin1…)</li>
+            <li>Removes duplicate &amp; empty rows instantly</li>
+            <li>Trims all spaces in every cell</li>
+            <li>Outputs UTF-8-SIG — Arabic opens correctly in Excel</li>
+            <li>Generates a clean report (JSON + TXT)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main id="main-content">
+
+    <!-- FEATURES -->
+    <section class="section" id="features" aria-labelledby="features-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="features-heading">Everything you need to clean your data</h2>
+          <p>Built for freelancers who work with Arabic &amp; English data every day.</p>
+          <p class="section-header__ar">مصمّمة للمستقلين الذين يعملون يومياً مع بيانات عربية وإنجليزية</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">🔡</div>
+            <h3>Encoding Auto-Fix</h3>
+            <p>Automatically tries UTF-8, UTF-8-SIG, cp1256, and latin1. Your Arabic text will never show as garbled symbols again.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">🗑</div>
+            <h3>Remove Duplicates</h3>
+            <p>Detects and removes exact duplicate rows in one pass. Keep your first occurrence or skip deduplication with one flag.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">✂️</div>
+            <h3>Trim &amp; Normalize</h3>
+            <p>Strips leading/trailing spaces and replaces non-breaking spaces (NBSP) in every cell — safe for Arabic and English.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">📊</div>
+            <h3>XLSX + CSV Support</h3>
+            <p>Reads <code>.csv</code> and <code>.xlsx</code> files. Reads the first sheet automatically or pick a specific one with <code>--sheet</code>.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">📄</div>
+            <h3>Clean Report</h3>
+            <p>Every run produces a <code>.report.json</code> and <code>.report.txt</code> — rows in, rows out, duplicates removed. Great for clients.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">🔧</div>
+            <h3>Easy to Customize</h3>
+            <p>All logic lives in small, well-commented Python functions. Add phone normalization, email validation, or column mapping in minutes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS (mini) -->
+    <section class="section section-alt" id="how-it-works" aria-labelledby="how-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="how-heading">How it works</h2>
+          <p>Three commands. Clean data in hand.</p>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1.5rem; margin-top:2rem; text-align:center;">
+          <div>
+            <div style="font-size:2.5rem; margin-bottom:.5rem;">1️⃣</div>
+            <h3 style="font-size:1rem; margin-bottom:.4rem;">Install</h3>
+            <p style="font-size:.85rem; color:var(--clr-muted);">
+              <code style="background:var(--clr-bg); border:1px solid var(--clr-border); padding:.15em .4em; border-radius:.25rem;">pip install pandas openpyxl</code>
+            </p>
+          </div>
+          <div>
+            <div style="font-size:2.5rem; margin-bottom:.5rem;">2️⃣</div>
+            <h3 style="font-size:1rem; margin-bottom:.4rem;">Run</h3>
+            <p style="font-size:.85rem; color:var(--clr-muted);">
+              <code style="background:var(--clr-bg); border:1px solid var(--clr-border); padding:.15em .4em; border-radius:.25rem;">python cli.py -i data.csv -o clean.csv</code>
+            </p>
+          </div>
+          <div>
+            <div style="font-size:2.5rem; margin-bottom:.5rem;">3️⃣</div>
+            <h3 style="font-size:1rem; margin-bottom:.4rem;">Get results</h3>
+            <p style="font-size:.85rem; color:var(--clr-muted);">Your clean CSV + report files are ready to send to your client.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section" id="pricing" aria-labelledby="pricing-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-heading">Simple, honest pricing</h2>
+          <p>Start free. Upgrade when you need more.</p>
+          <p class="section-header__ar">ابدأ مجاناً — ادفع فقط إذا احتجت أكثر</p>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- FREE -->
+          <div class="price-card">
+            <div class="price-card__name">🆓 Free</div>
+            <div class="price-card__price"><sup></sup>$0</div>
+            <div class="price-card__period">Forever free · Open source</div>
+            <ul class="price-card__features">
+              <li><span class="check" aria-hidden="true">✓</span> CSV &amp; XLSX cleaning</li>
+              <li><span class="check" aria-hidden="true">✓</span> Remove duplicates &amp; empty rows</li>
+              <li><span class="check" aria-hidden="true">✓</span> Encoding auto-fix</li>
+              <li><span class="check" aria-hidden="true">✓</span> JSON + TXT report</li>
+              <li><span class="check" aria-hidden="true">✓</span> Command-line interface</li>
+              <li><span class="cross" aria-hidden="true">✗</span> GUI / drag &amp; drop</li>
+              <li><span class="cross" aria-hidden="true">✗</span> Email support</li>
+              <li><span class="cross" aria-hidden="true">✗</span> Custom cleaning rules</li>
+            </ul>
+            <a href="https://github.com/selghribi-blip/selghribi-blip.github.io/tree/main/projects/csv-cleaner"
+               target="_blank" rel="noopener noreferrer"
+               class="btn btn-outline" style="width:100%;">
+              Download on GitHub
+            </a>
+          </div>
+
+          <!-- PRO -->
+          <div class="price-card price-card--featured">
+            <div class="price-card__badge">Most Popular</div>
+            <div class="price-card__name">⚡ Pro</div>
+            <div class="price-card__price"><sup>$</sup>9</div>
+            <div class="price-card__period">One-time payment · Lifetime</div>
+            <ul class="price-card__features">
+              <li><span class="check" aria-hidden="true">✓</span> Everything in Free</li>
+              <li><span class="check" aria-hidden="true">✓</span> Simple GUI (drag &amp; drop)</li>
+              <li><span class="check" aria-hidden="true">✓</span> Batch folder cleaning</li>
+              <li><span class="check" aria-hidden="true">✓</span> Custom column rules</li>
+              <li><span class="check" aria-hidden="true">✓</span> Phone / email validation</li>
+              <li><span class="check" aria-hidden="true">✓</span> Priority email support</li>
+              <li><span class="check" aria-hidden="true">✓</span> Future updates included</li>
+              <li><span class="check" aria-hidden="true">✓</span> Invoice for freelance use</li>
+            </ul>
+            <a href="mailto:selghribi@artsmoroccan.me?subject=CSV%20Cleaner%20Pro%20Purchase"
+               class="btn btn-primary" style="width:100%;">
+              Get Pro — $9
+            </a>
+          </div>
+        </div>
+
+        <p class="text-center mt-3" style="font-size:.85rem; color:var(--clr-muted);">
+          💬 Need a custom data cleaning job? <a href="#contact">Contact me</a> for freelance rates.
+        </p>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section section-alt" id="contact" aria-labelledby="contact-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="contact-heading">Get in touch</h2>
+          <p>Questions about the tool, a custom data project, or just want to say hi?</p>
+          <p class="section-header__ar">سؤال عن الأداة؟ مشروع بيانات مخصص؟ تواصل معي</p>
+        </div>
+
+        <div class="contact-grid">
+          <!-- Info column -->
+          <div class="contact-info">
+            <h3>Let's work together</h3>
+            <p>I offer custom CSV &amp; data cleaning services for freelancers, small businesses, and agencies. Fast turnaround, bilingual (Arabic/English) output.</p>
+            <p>Available for one-time gigs or recurring monthly cleaning.</p>
+            <div class="contact-links">
+              <a href="mailto:selghribi@artsmoroccan.me?subject=CSV%20Cleaner%20Inquiry" aria-label="Send email">
+                📧 selghribi@artsmoroccan.me
+              </a>
+              <a href="https://github.com/selghribi-blip" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+                💻 github.com/selghribi-blip
+              </a>
+              <a href="https://artsmoroccan.me" target="_blank" rel="noopener noreferrer" aria-label="Personal website">
+                🌐 artsmoroccan.me
+              </a>
+            </div>
+          </div>
+
+          <!-- Form column -->
+          <form class="contact-form" id="contact-form" novalidate aria-label="Contact form">
+            <div class="form-group">
+              <label for="cf-name">Your name *</label>
+              <input type="text" id="cf-name" name="name" placeholder="John / محمد" required autocomplete="name">
+              <div class="field-error" id="err-name" role="alert" aria-live="polite"></div>
+            </div>
+            <div class="form-group">
+              <label for="cf-email">Email address *</label>
+              <input type="email" id="cf-email" name="email" placeholder="you@example.com" required autocomplete="email">
+              <div class="field-error" id="err-email" role="alert" aria-live="polite"></div>
+            </div>
+            <div class="form-group">
+              <label for="cf-message">Message *</label>
+              <textarea id="cf-message" name="message" placeholder="Describe your data cleaning needs…" required></textarea>
+              <div class="field-error" id="err-message" role="alert" aria-live="polite"></div>
+            </div>
+            <div class="form-success" id="form-success" role="status" aria-live="polite">
+              ✅ Thanks! Your message has been sent. I'll reply within 24 hours.
+            </div>
+            <button type="submit" class="btn btn-primary" id="cf-submit">
+              Send Message →
+            </button>
+            <p style="font-size:.78rem; color:var(--clr-muted); margin-top:.5rem;">
+              Or email directly: <a href="mailto:selghribi@artsmoroccan.me">selghribi@artsmoroccan.me</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq" aria-labelledby="faq-heading">
+      <div class="container" style="max-width: 760px;">
+        <div class="section-header">
+          <h2 id="faq-heading">Frequently asked questions</h2>
+          <p>Can't find your answer? <a href="#contact">Ask me directly.</a></p>
+        </div>
+
+        <div class="faq-list" role="list">
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a1" id="faq-q1">
+              Do I need to know Python to use this tool?
+              <span class="faq-item__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-item__answer" id="faq-a1" role="region" aria-labelledby="faq-q1">
+              No deep Python knowledge required. You just need Python 3.10+ installed, run
+              <code>pip install pandas openpyxl</code> once, then run the script from your terminal with
+              <code>python cli.py -i yourfile.csv -o cleaned.csv</code>. That's it.
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a2" id="faq-q2">
+              Does it really support Arabic text without breaking it?
+              <span class="faq-item__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-item__answer" id="faq-a2" role="region" aria-labelledby="faq-q2">
+              Yes. The tool tries multiple encodings (UTF-8, UTF-8-SIG, cp1256, latin1) and always outputs
+              UTF-8-SIG — which is the encoding Excel on Windows uses to display Arabic correctly.
+              It does <strong>not</strong> change the Arabic text itself, only trims extra spaces.
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a3" id="faq-q3">
+              What file formats are supported?
+              <span class="faq-item__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-item__answer" id="faq-a3" role="region" aria-labelledby="faq-q3">
+              Currently: <code>.csv</code> (any separator — auto-detected or specify with <code>--sep ";"</code>)
+              and <code>.xlsx</code> Excel files. It reads the first sheet by default; use
+              <code>--sheet "Sheet2"</code> or <code>--sheet 1</code> to pick a different one.
+              Output is always a clean <code>.csv</code> file.
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a4" id="faq-q4">
+              Will it delete data I want to keep?
+              <span class="faq-item__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-item__answer" id="faq-a4" role="region" aria-labelledby="faq-q4">
+              No. The script only removes rows that are <strong>completely empty</strong> or
+              <strong>exact duplicates</strong>. If you want to keep duplicates, add
+              <code>--keep-duplicates</code> to the command. All other data is preserved — the tool
+              only trims spaces and fixes encoding.
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a5" id="faq-q5">
+              What's the difference between Free and Pro?
+              <span class="faq-item__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-item__answer" id="faq-a5" role="region" aria-labelledby="faq-q5">
+              The Free version is a CLI (command-line) tool — perfect for developers and power users.
+              Pro adds a simple GUI (no terminal needed), batch processing of entire folders, custom
+              cleaning rules (like phone normalization), and priority support. It's a one-time $9 payment
+              with lifetime updates.
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a6" id="faq-q6">
+              Can I use this for client work / sell the cleaned data?
+              <span class="faq-item__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-item__answer" id="faq-a6" role="region" aria-labelledby="faq-q6">
+              Absolutely. The Free version is MIT-licensed — use it for personal or commercial projects.
+              You can offer data-cleaning services on Fiverr, Upwork, or directly to clients and keep
+              100% of your earnings.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__top">
+        <strong>🧹 Arabic/English CSV Cleaner</strong> — A free tool by
+        <a href="https://artsmoroccan.me" target="_blank" rel="noopener noreferrer">selghribi</a>
+      </div>
+      <nav class="footer__links" aria-label="Footer navigation">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+        <a href="https://github.com/selghribi-blip/selghribi-blip.github.io" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://artsmoroccan.me" target="_blank" rel="noopener noreferrer">Website</a>
+      </nav>
+      <p class="footer__copy">
+        © <span id="footer-year">2026</span> selghribi · MIT License ·
+        Made with ❤️ in Morocco 🇲🇦
+      </p>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT (vanilla — no libraries)
+       ============================================================ -->
+  <script>
+    /* ---- 1. Update footer year dynamically ---- */
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    /* ---- 2. FAQ Accordion ---- */
+    document.querySelectorAll('.faq-item__question').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item = this.closest('.faq-item');
+        var isOpen = item.classList.contains('faq-item--open');
+
+        // Close all open items
+        document.querySelectorAll('.faq-item--open').forEach(function(openItem) {
+          openItem.classList.remove('faq-item--open');
+          openItem.querySelector('.faq-item__question').setAttribute('aria-expanded', 'false');
+        });
+
+        // Open clicked item if it was closed
+        if (!isOpen) {
+          item.classList.add('faq-item--open');
+          this.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    /* ---- 3. Smooth Scroll for nav links ---- */
+    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          var navH = document.querySelector('.nav') ? document.querySelector('.nav').offsetHeight : 0;
+          var top  = target.getBoundingClientRect().top + window.pageYOffset - navH - 8;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      });
+    });
+
+    /* ---- 4. Contact Form Validation ---- */
+    var form = document.getElementById('contact-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var nameEl    = document.getElementById('cf-name');
+        var emailEl   = document.getElementById('cf-email');
+        var msgEl     = document.getElementById('cf-message');
+        var errName   = document.getElementById('err-name');
+        var errEmail  = document.getElementById('err-email');
+        var errMsg    = document.getElementById('err-message');
+        var successEl = document.getElementById('form-success');
+        var submitBtn = document.getElementById('cf-submit');
+
+        var valid = true;
+
+        // Reset errors
+        [nameEl, emailEl, msgEl].forEach(function(el) { el.classList.remove('error'); });
+        [errName, errEmail, errMsg].forEach(function(el) { el.textContent = ''; });
+
+        // Validate name
+        if (!nameEl.value.trim()) {
+          nameEl.classList.add('error');
+          errName.textContent = 'Please enter your name.';
+          valid = false;
+        }
+
+        // Validate email
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailEl.value.trim() || !emailRegex.test(emailEl.value.trim())) {
+          emailEl.classList.add('error');
+          errEmail.textContent = 'Please enter a valid email address.';
+          valid = false;
+        }
+
+        // Validate message
+        if (!msgEl.value.trim() || msgEl.value.trim().length < 10) {
+          msgEl.classList.add('error');
+          errMsg.textContent = 'Please enter a message (at least 10 characters).';
+          valid = false;
+        }
+
+        if (!valid) return;
+
+        // Simulate send (no backend — open mailto instead)
+        var subject = encodeURIComponent('CSV Cleaner Inquiry from ' + nameEl.value.trim());
+        var body    = encodeURIComponent(
+          'Name: ' + nameEl.value.trim() + '\n' +
+          'Email: ' + emailEl.value.trim() + '\n\n' +
+          msgEl.value.trim()
+        );
+        window.location.href = 'mailto:selghribi@artsmoroccan.me?subject=' + subject + '&body=' + body;
+
+        // Show success message
+        successEl.style.display = 'block';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sent ✓';
+      });
+    }
+
+    /* ---- 5. Nav active link highlight on scroll ---- */
+    var sections = document.querySelectorAll('section[id], div[id="hero"]');
+    var navLinks  = document.querySelectorAll('.nav__links a');
+    function onScroll() {
+      var navH = document.querySelector('.nav') ? document.querySelector('.nav').offsetHeight : 0;
+      var scrollY = window.pageYOffset + navH + 20;
+      var current = '';
+      sections.forEach(function(sec) {
+        if (sec.offsetTop <= scrollY) { current = sec.id; }
+      });
+      navLinks.forEach(function(a) {
+        a.style.color = (a.getAttribute('href') === '#' + current)
+          ? 'var(--clr-primary)' : '';
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+  </script>
+
+</body>
+</html>
