@@ -8,7 +8,6 @@
  *  - Report overage usage records to Stripe (idempotent).
  *  - Return remaining quota to callers.
  */
-import { Plan, SubscriptionStatus } from "@prisma/client";
 import { prisma } from "./db";
 import { getUtcDayKey, getUtcMonthKey } from "./keys";
 import { PLAN_LIMITS, isProActive } from "./plans";
