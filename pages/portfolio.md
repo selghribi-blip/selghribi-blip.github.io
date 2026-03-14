@@ -50,6 +50,37 @@ permalink: /pages/portfolio/
     </div>
   </div>
 
+  <!-- CSV/Excel Cleaner -->
+  <div class="project-card" data-tech="python streamlit csv excel">
+    <div class="project-image">
+      <div style="height:220px; background:linear-gradient(135deg, #2d6a4f, #c0674a); display:flex; align-items:center; justify-content:center; position:relative;">
+        <div style="text-align:center; color:#fdf6ec;">
+          <div style="font-size:3rem; margin-bottom:8px;">🧹</div>
+          <div style="font-family:'Playfair Display', serif; font-size:1.2rem; font-weight:700;">CSV/Excel Cleaner</div>
+          <div style="font-size:0.8rem; opacity:0.8; margin-top:4px;">منظف البيانات</div>
+        </div>
+        <div class="project-overlay">
+          <a href="{{ '/pages/csv-cleaner' | relative_url }}" class="btn btn-primary btn-sm">🌐 معلومات</a>
+          <a href="https://github.com/selghribi-blip/selghribi-blip.github.io/tree/main/csv_cleaner" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">💻 الكود</a>
+        </div>
+      </div>
+    </div>
+    <div class="project-body">
+      <h3 class="project-title">منظف CSV/Excel 🧹</h3>
+      <p style="font-size:0.9rem; color:#5a5a5a; margin-bottom:12px; line-height:1.7;">
+        أداة مجانية لتنظيف ملفات البيانات — حذف التكرارات، الصفوف الفارغة، المسافات، وإصلاح التواريخ. واجهة ثنائية اللغة عربي/English دائماً. مبنية بـ Python + Streamlit.
+        <br><span style="font-size:0.82rem; color:#888;">Free data cleaning tool — duplicates, empty rows, spaces, date fixes. Always bilingual Arabic/English. Built with Python + Streamlit.</span>
+      </p>
+      <div class="project-tech">
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">Streamlit</span>
+        <span class="tech-tag">pandas</span>
+        <span class="tech-tag">CSV</span>
+        <span class="tech-tag">Excel</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Content Factory -->
   <div class="project-card" data-tech="jekyll github-actions python scss">
     <div class="project-image">
