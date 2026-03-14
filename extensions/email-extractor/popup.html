@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Email Extractor</title>
+  <link rel="stylesheet" href="tailwind.css" />
+</head>
+
+<body class="bg-slate-950 text-slate-100 transition-colors duration-200">
+  <div class="w-[360px] max-w-[360px] p-4">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <h1 class="text-lg font-bold leading-tight">Email Extractor</h1>
+        <p class="text-xs text-slate-400">Scan page or selection → copy or export</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <!-- Theme toggle -->
+        <button id="themeBtn" title="Toggle dark/light mode"
+          class="rounded-full p-1.5 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300">
+          <svg id="iconDark" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+          </svg>
+          <svg id="iconLight" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 hidden" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+
+        <!-- Status badge -->
+        <span id="statusBadge"
+          class="text-xs px-2 py-1 rounded-full bg-slate-800 text-slate-200 border border-slate-700 whitespace-nowrap">
+          Idle
+        </span>
+      </div>
+    </div>
+
+    <!-- Options -->
+    <div class="mt-3 flex items-center gap-2">
+      <label class="flex items-center gap-2 text-xs text-slate-300">
+        <input id="includeMailto" type="checkbox" class="accent-cyan-400" checked />
+        Include mailto links
+      </label>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="mt-3 grid grid-cols-2 gap-2">
+      <button id="scanPageBtn"
+        class="col-span-1 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-semibold py-2 hover:opacity-95 active:opacity-90 text-sm">
+        Scan page
+      </button>
+      <button id="scanSelectionBtn"
+        class="col-span-1 rounded-xl bg-gradient-to-r from-violet-400 to-purple-500 text-slate-950 font-semibold py-2 hover:opacity-95 active:opacity-90 text-sm">
+        Scan selection
+      </button>
+
+      <button id="copyBtn"
+        class="rounded-xl bg-slate-900 border border-slate-700 py-2 text-sm hover:bg-slate-800 disabled:opacity-40"
+        disabled>
+        Copy all
+      </button>
+      <button id="downloadCsvBtn"
+        class="rounded-xl bg-slate-900 border border-slate-700 py-2 text-sm hover:bg-slate-800 disabled:opacity-40"
+        disabled>
+        Download CSV
+      </button>
+      <button id="downloadJsonBtn"
+        class="rounded-xl bg-slate-900 border border-slate-700 py-2 text-sm hover:bg-slate-800 disabled:opacity-40"
+        disabled>
+        Download JSON
+      </button>
+      <button id="clearBtn"
+        class="rounded-xl bg-slate-900 border border-slate-700 py-2 text-sm hover:bg-slate-800">
+        Clear
+      </button>
+    </div>
+
+    <!-- Results panel -->
+    <div class="mt-4 rounded-2xl border border-slate-800 bg-slate-900/40 p-3">
+      <div class="flex items-center justify-between">
+        <p class="text-sm font-semibold">Results</p>
+        <p class="text-xs text-slate-400"><span id="count">0</span> emails</p>
+      </div>
+
+      <div class="mt-2">
+        <input id="filterInput"
+          class="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-sm outline-none focus:border-cyan-400"
+          placeholder="Filter (type to search)" />
+      </div>
+
+      <div class="mt-3 max-h-56 overflow-auto rounded-xl border border-slate-800 bg-slate-950">
+        <ul id="list" class="divide-y divide-slate-900"></ul>
+      </div>
+
+      <!-- Status / info message -->
+      <p id="note" class="mt-2 text-xs text-slate-400 min-h-[1.25rem]"></p>
+    </div>
+
+    <p class="mt-3 text-[11px] text-slate-500">
+      Tip: Highlight text before clicking "Scan selection" to extract only those emails.
+    </p>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
