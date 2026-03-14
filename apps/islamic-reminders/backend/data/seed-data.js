@@ -141,7 +141,7 @@ const hadithPlaceholders = [
   },
   // ── General – Patience ────────────────────────────────────────────────────
   {
-    source: 'Sahih al-Bukhari – Book of Patients (placeholder)',
+    source: 'Sahih al-Bukhari – Book of Patience (placeholder)',
     collection: 'bukhari',
     hadithNumber: '5641',
     text:
