@@ -50,6 +50,36 @@ permalink: /pages/portfolio/
     </div>
   </div>
 
+  <!-- CSV/Excel Data Cleaner -->
+  <div class="project-card" data-tech="python streamlit pandas">
+    <div class="project-image">
+      <div style="height:220px; background:linear-gradient(135deg, #1a3a5c, #2e7d32); display:flex; align-items:center; justify-content:center; position:relative;">
+        <div style="text-align:center; color:#fdf6ec;">
+          <div style="font-size:3rem; margin-bottom:8px;">🧹</div>
+          <div style="font-family:'Playfair Display', serif; font-size:1.2rem; font-weight:700;">CSV / Excel Cleaner</div>
+          <div style="font-size:0.8rem; opacity:0.8; margin-top:4px;">منظّف البيانات</div>
+        </div>
+        <div class="project-overlay">
+          <a href="{{ '/pages/csv-cleaner' | relative_url }}" class="btn btn-primary btn-sm">🌐 التفاصيل</a>
+          <a href="https://github.com/selghribi-blip/selghribi-blip.github.io/tree/main/csv_cleaner" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">💻 الكود</a>
+        </div>
+      </div>
+    </div>
+    <div class="project-body">
+      <h3 class="project-title">منظّف CSV و Excel 🧹</h3>
+      <p style="font-size:0.9rem; color:#5a5a5a; margin-bottom:12px; line-height:1.7;">
+        أداة Streamlit ثنائية اللغة (عربي + English) لتنظيف ملفات البيانات: حذف الصفوف الفارغة والمكررة، قص المسافات، معاينة قبل/بعد، وتحميل فوري بصيغة CSV أو Excel. تعمل محلياً 100% مع دعم RTL كامل.
+      </p>
+      <div class="project-tech">
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">Streamlit</span>
+        <span class="tech-tag">Pandas</span>
+        <span class="tech-tag">RTL</span>
+        <span class="tech-tag">Bilingual</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Content Factory -->
   <div class="project-card" data-tech="jekyll github-actions python scss">
     <div class="project-image">
