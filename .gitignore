@@ -22,3 +22,12 @@ __pycache__/
 
 # Node (if any)
 node_modules/
+
+# Next.js build output
+apps/pdf-contract-summarizer/.next/
+apps/pdf-contract-summarizer/out/
+
+# Environment files (never commit secrets)
+apps/pdf-contract-summarizer/.env
+apps/pdf-contract-summarizer/.env.local
+apps/pdf-contract-summarizer/.env.*.local
