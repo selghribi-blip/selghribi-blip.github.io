@@ -1,0 +1,523 @@
+/* تنسيقات عامة — اتجاه RTL وخط Cairo العربي */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --green-dark: #1a6b4a;
+  --green-mid: #2d9b6b;
+  --green-light: #e8f5f0;
+  --gold: #c9a227;
+  --gold-light: #fdf6e3;
+  --text-dark: #1a1a2e;
+  --text-mid: #4a4a6a;
+  --text-light: #8a8aaa;
+  --border: #d0e4da;
+  --white: #ffffff;
+  --error: #c0392b;
+  --error-bg: #fdecea;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+html {
+  font-size: 16px;
+  direction: rtl;
+}
+
+body {
+  font-family: 'Cairo', 'Segoe UI', sans-serif;
+  background-color: #f7faf8;
+  color: var(--text-dark);
+  direction: rtl;
+  text-align: right;
+  min-height: 100vh;
+  line-height: 1.7;
+}
+
+/* ─── أزرار ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  border: none;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--green-dark);
+  color: var(--white);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--green-mid);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--green-dark);
+  border: 1.5px solid var(--green-dark);
+}
+
+.btn-secondary:hover {
+  background: var(--green-light);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* ─── حقول الإدخال ─── */
+.form-group {
+  margin-bottom: 1.1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  margin-bottom: 0.35rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text-dark);
+  background: var(--white);
+  transition: border-color 0.2s;
+  direction: rtl;
+  text-align: right;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--green-mid);
+  box-shadow: 0 0 0 3px rgba(45, 155, 107, 0.15);
+}
+
+.form-input::placeholder {
+  color: var(--text-light);
+}
+
+.form-input.error {
+  border-color: var(--error);
+}
+
+/* ─── رسائل الخطأ والنجاح ─── */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: var(--error-bg);
+  color: var(--error);
+  border: 1px solid #f5c6c2;
+}
+
+.alert-success {
+  background: #eafaf1;
+  color: #1a7a4a;
+  border: 1px solid #a3e4c0;
+}
+
+/* ─── بطاقات ─── */
+.card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 1.4rem 1.6rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+/* ─── شريط تحميل ─── */
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+  color: var(--text-light);
+}
+
+/* ─── صفحة المصادقة ─── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e8f5f0 0%, #f7faf8 60%, #fdf6e3 100%);
+  padding: 1.5rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+}
+
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 0.3rem;
+}
+
+.auth-subtitle {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  margin-bottom: 1.8rem;
+}
+
+.auth-link-row {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text-mid);
+}
+
+.auth-link-row a {
+  color: var(--green-dark);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-link-row a:hover {
+  text-decoration: underline;
+}
+
+/* ─── شريط التنقل ─── */
+.navbar {
+  background: var(--green-dark);
+  color: var(--white);
+  padding: 0.8rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--white);
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  list-style: none;
+}
+
+.navbar-links a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.navbar-links a:hover,
+.navbar-links a.active {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-user {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.navbar-logout {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--white);
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.navbar-logout:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ─── صفحة لوحة التحكم ─── */
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 1.5rem;
+}
+
+/* ─── بطاقة التاريخ الهجري ─── */
+.hijri-card {
+  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+  color: var(--white);
+  border-radius: 14px;
+  padding: 1.8rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 18px rgba(26, 107, 74, 0.3);
+}
+
+.hijri-date-display {
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  font-feature-settings: 'kern' 1;
+}
+
+.gregorian-date-display {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* ─── بطاقة الحديث ─── */
+.hadith-card {
+  border-right: 4px solid var(--gold);
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1rem;
+  background: var(--white);
+  border-radius: 0 10px 10px 0;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hadith-text {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  line-height: 2;
+  margin-bottom: 0.8rem;
+}
+
+.hadith-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.hadith-source {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.hadith-category-badge {
+  font-size: 0.78rem;
+  background: var(--green-light);
+  color: var(--green-dark);
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ─── صفحة البحث ─── */
+.search-bar {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-bar .form-input {
+  flex: 1;
+}
+
+.filter-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.filter-chip {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-chip:hover {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+
+.filter-chip.active {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+  color: var(--white);
+}
+
+/* ─── صفحة التفضيلات ─── */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.category-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.category-toggle:hover {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+
+.category-toggle.selected {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+  color: var(--white);
+}
+
+/* ─── ترقيم الصفحات ─── */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.pagination button {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pagination button:hover:not(:disabled) {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+
+.pagination button.current {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+  color: var(--white);
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── تنبيه بيانات نموذجية ─── */
+.placeholder-notice {
+  background: #fffbea;
+  border-color: #f0d070;
+  margin-top: 2rem;
+}
+
+.placeholder-notice p {
+  font-size: 0.85rem;
+  color: #7a6000;
+}
+
+.placeholder-notice code {
+  direction: ltr;
+  display: inline-block;
+  background: #fff3c4;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.82rem;
+}
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-light);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+}
+
+/* ─── تجاوب مع الشاشات الصغيرة ─── */
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0.7rem 1rem;
+  }
+
+  .navbar-links {
+    gap: 0.5rem;
+  }
+
+  .page-container {
+    padding: 1.2rem 1rem;
+  }
+
+  .hijri-date-display {
+    font-size: 1.5rem;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
