@@ -17,6 +17,9 @@ prisma/client/
 .env.local
 .env.*.local
 
+# TypeScript build info
+*.tsbuildinfo
+
 # OS
 .DS_Store
 Thumbs.db
