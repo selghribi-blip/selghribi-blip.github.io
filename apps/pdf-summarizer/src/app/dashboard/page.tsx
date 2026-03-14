@@ -119,6 +119,11 @@ export default async function DashboardPage({
   );
 }
 
+/** Converts "ACTIVE" → "Active", "PAST_DUE" → "Past due", etc. for display */
+function formatStatus(status: string): string {
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase().replace(/_/g, ' ');
+}
+
 /** Visual badge for subscription status */
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
@@ -131,7 +136,7 @@ function StatusBadge({ status }: { status: string }) {
   const cls = styles[status] ?? styles.INACTIVE;
   return (
     <span className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ${cls}`}>
-      {status.charAt(0) + status.slice(1).toLowerCase()}
+      {formatStatus(status)}
     </span>
   );
 }

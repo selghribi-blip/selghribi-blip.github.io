@@ -21,7 +21,7 @@ export default function PdfUploader() {
   const [extractedPreview, setExtractedPreview] = useState('');
   const [fullText, setFullText] = useState('');
   const [summary, setSummary] = useState('');
-  const [showPreview, setShowPreview] = useState(false);
+  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   /** Validates that the chosen file is a PDF and within the 10 MB limit */
@@ -217,13 +217,13 @@ export default function PdfUploader() {
       {extractedPreview && (
         <div className="rounded-xl border border-gray-800 bg-gray-900 p-5">
           <button
-            onClick={() => setShowPreview((v) => !v)}
+            onClick={() => setIsPreviewExpanded((v) => !v)}
             className="flex w-full items-center justify-between text-sm font-medium text-gray-300 hover:text-white"
           >
             <span>Extracted text preview</span>
-            <span>{showPreview ? '▲ Hide' : '▼ Show'}</span>
+            <span>{isPreviewExpanded ? '▲ Hide' : '▼ Show'}</span>
           </button>
-          {showPreview && (
+          {isPreviewExpanded && (
             <p className="mt-3 whitespace-pre-wrap text-xs leading-relaxed text-gray-400">
               {extractedPreview}
               {fullText.length > 500 && (

@@ -1,12 +1,28 @@
 import Stripe from 'stripe';
 import prisma from '@/lib/prisma';
 
+/** Cached Stripe instance — created on first use to avoid build-time errors. */
+let _stripe: Stripe | null = null;
+
 /**
- * Singleton Stripe client initialised with the secret key from environment variables.
+ * Returns the singleton Stripe client, creating it on the first call.
+ * Using a getter prevents errors when STRIPE_SECRET_KEY is not set at build time.
  */
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
-  apiVersion: '2025-02-24.acacia',
-  typescript: true,
+export function getStripe(): Stripe {
+  if (!_stripe) {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
+      apiVersion: '2025-02-24.acacia',
+      typescript: true,
+    });
+  }
+  return _stripe;
+}
+
+/** Convenience export so existing callers can still do `stripe.customers.create(...)` */
+export const stripe = new Proxy({} as Stripe, {
+  get(_target, prop) {
+    return (getStripe() as unknown as Record<string | symbol, unknown>)[prop];
+  },
 });
 
 /**
