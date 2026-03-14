@@ -1,11 +1,12 @@
 import { signIn } from "@/lib/auth";
 
-export default function SignInPage({
+export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: { callbackUrl?: string };
+  searchParams: Promise<{ callbackUrl?: string }>;
 }) {
-  const callbackUrl = searchParams.callbackUrl ?? "/dashboard";
+  const { callbackUrl: rawCallbackUrl } = await searchParams;
+  const callbackUrl = rawCallbackUrl ?? "/dashboard";
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-4">

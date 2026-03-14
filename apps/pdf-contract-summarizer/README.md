@@ -5,7 +5,7 @@ Free plan includes 3 summaries/day. Pro plan includes 200 summaries/month with o
 
 ## Tech stack
 
-- **Next.js 14** (App Router)
+- **Next.js 15** (App Router)
 - **NextAuth v5** (GitHub + Google OAuth)
 - **Prisma + SQLite** (swap to PostgreSQL for production)
 - **Stripe** (subscriptions + metered overage billing)
