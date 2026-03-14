@@ -4,7 +4,7 @@ An AI-powered micro-SaaS that summarizes PDFs and analyzes contracts. Upload any
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (App Router) + TypeScript
+- **Framework**: Next.js 15 (App Router) + TypeScript
 - **Styling**: Tailwind CSS
 - **Database**: Prisma ORM + SQLite (dev) / PostgreSQL (prod)
 - **Auth**: NextAuth v5 (GitHub & Google OAuth)
