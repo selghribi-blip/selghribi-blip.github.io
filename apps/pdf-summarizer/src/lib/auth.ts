@@ -14,41 +14,48 @@ declare module 'next-auth' {
   }
 }
 
+/** Returns enabled auth providers based on available environment variables. */
+function buildProviders(): NextAuthOptions['providers'] {
+  const providers: NextAuthOptions['providers'] = [];
+
+  // GitHub OAuth — only enabled when credentials are present
+  if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+    providers.push(
+      GithubProvider({
+        clientId: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      })
+    );
+  }
+
+  // Email magic link — only enabled when SMTP credentials are present
+  if (process.env.EMAIL_SERVER_HOST && process.env.EMAIL_FROM) {
+    providers.push(
+      EmailProvider({
+        server: {
+          host: process.env.EMAIL_SERVER_HOST,
+          port: Number(process.env.EMAIL_SERVER_PORT ?? 587),
+          auth: {
+            user: process.env.EMAIL_SERVER_USER ?? '',
+            pass: process.env.EMAIL_SERVER_PASSWORD ?? '',
+          },
+        },
+        from: process.env.EMAIL_FROM,
+      })
+    );
+  }
+
+  return providers;
+}
+
 /**
  * NextAuth configuration.
- * Providers: GitHub OAuth (optional) and Email magic link (optional).
+ * Providers are selected dynamically based on available environment variables.
  * Session callback injects user.id and subscription status into the session.
  */
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  providers: [
-    // GitHub OAuth — only enabled when credentials are present
-    ...(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET
-      ? [
-          GithubProvider({
-            clientId: process.env.GITHUB_CLIENT_ID,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET,
-          }),
-        ]
-      : []),
-
-    // Email magic link — only enabled when SMTP credentials are present
-    ...(process.env.EMAIL_SERVER_HOST && process.env.EMAIL_FROM
-      ? [
-          EmailProvider({
-            server: {
-              host: process.env.EMAIL_SERVER_HOST,
-              port: Number(process.env.EMAIL_SERVER_PORT ?? 587),
-              auth: {
-                user: process.env.EMAIL_SERVER_USER ?? '',
-                pass: process.env.EMAIL_SERVER_PASSWORD ?? '',
-              },
-            },
-            from: process.env.EMAIL_FROM,
-          }),
-        ]
-      : []),
-  ],
+  providers: buildProviders(),
   session: {
     strategy: 'database',
   },

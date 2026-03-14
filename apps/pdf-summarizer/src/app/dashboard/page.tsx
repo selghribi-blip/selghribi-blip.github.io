@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getServerAuthSession } from '@/lib/auth';
 import prisma from '@/lib/prisma';
-import type { SummaryRecord } from '@/types';
 
 /**
  * Dashboard page — shows subscription status and the user's last 5 summaries.
@@ -100,7 +99,7 @@ export default async function DashboardPage({
         </p>
       ) : (
         <div className="flex flex-col gap-4">
-          {(summaries as SummaryRecord[]).map((s) => (
+          {summaries.map((s) => (
             <div
               key={s.id}
               className="rounded-xl border border-gray-800 bg-gray-900 p-5"
