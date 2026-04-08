@@ -22,3 +22,7 @@ __pycache__/
 
 # Node (if any)
 node_modules/
+
+# Islamic Reminders app build artifacts
+apps/islamic-reminders/frontend/dist/
+apps/islamic-reminders/backend/.env
