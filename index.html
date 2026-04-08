@@ -1,69 +1,481 @@
----
-layout: default
-title: "selghribi | مطور ويب مغربي"
-description: "مطور ويب مغربي يبني مشاريع مفتوحة المصدر ويشارك رحلته التقنية - Arts Moroccan وأكثر"
-lang: ar
----
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>CSV Cleaner — أداة تنظيف ملفات CSV بالعربية والإنجليزية</title>
+  <meta name="description" content="أداة مجانية لتنظيف ملفات CSV و Excel: حذف المكررات، تقليم المسافات، إصلاح الترميز — تدعم العربية والإنجليزية. Free CSV/Excel cleaning tool for Arabic and English data.">
+  <meta name="author" content="selghribi">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://selghribi-blip.github.io/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="CSV Cleaner — Arabic &amp; English Data Cleaning Tool">
+  <meta property="og:description" content="Free tool to clean CSV/Excel files: remove duplicates, trim spaces, fix encoding issues. Supports Arabic and English data.">
+  <meta property="og:url" content="https://selghribi-blip.github.io/">
+  <meta property="og:site_name" content="CSV Cleaner by selghribi">
+  <meta property="og:locale" content="ar_MA">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CSV Cleaner — Arabic &amp; English Data Cleaning Tool">
+  <meta name="twitter:description" content="Free CSV/Excel cleaning tool that removes duplicates, trims spaces, and fixes encoding for Arabic and English data.">
+
+  <!-- Favicon placeholder -->
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Open Sans', 'Amiri', Arial, sans-serif;
+      color: #1a2533;
+      background: #fff;
+      line-height: 1.7;
+      direction: rtl;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; }
+
+    /* ===== Layout ===== */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; }
+    .section-alt { background: #f8fafc; }
+    .section-title { text-align: center; margin-bottom: 56px; }
+    .section-title h2 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: #1a3a5c;
+      margin-bottom: 12px;
+      font-family: 'Amiri', serif;
+    }
+    .section-title p { color: #5a7a99; font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e8edf2;
+      padding: 14px 0;
+    }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .navbar-brand { font-size: 1.3rem; font-weight: 700; color: #1a3a5c; display: flex; align-items: center; gap: 8px; }
+    .navbar-brand span { color: #2ecc71; }
+    .navbar-links { display: flex; gap: 24px; list-style: none; flex-wrap: wrap; }
+    .navbar-links a { font-size: 0.95rem; color: #5a7a99; font-weight: 500; transition: color .2s; }
+    .navbar-links a:hover { color: #1a3a5c; }
+
+    /* ===== Buttons ===== */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: 8px; font-size: 1rem;
+      font-weight: 600; cursor: pointer; transition: all .2s;
+      border: 2px solid transparent; text-decoration: none;
+    }
+    .btn-primary { background: #2ecc71; color: #fff; border-color: #2ecc71; }
+    .btn-primary:hover { background: #27ae60; border-color: #27ae60; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,204,113,.35); }
+    .btn-outline { background: transparent; color: #1a3a5c; border-color: #1a3a5c; }
+    .btn-outline:hover { background: #1a3a5c; color: #fff; }
+    .btn-lg { padding: 16px 36px; font-size: 1.1rem; }
+
+    /* ===== Hero ===== */
+    .hero {
+      padding: 100px 0 80px;
+      background: linear-gradient(135deg, #1a3a5c 0%, #0d2137 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; position: relative; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(46,204,113,.15); color: #2ecc71;
+      padding: 6px 16px; border-radius: 20px; font-size: .85rem;
+      font-weight: 600; margin-bottom: 20px; border: 1px solid rgba(46,204,113,.3);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 700;
+      color: #fff; line-height: 1.25; margin-bottom: 20px;
+      font-family: 'Amiri', serif;
+    }
+    .hero h1 em { font-style: normal; color: #2ecc71; }
+    .hero-sub { color: rgba(255,255,255,.75); font-size: 1.1rem; margin-bottom: 36px; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-code {
+      background: #0a1929; border-radius: 16px; padding: 28px;
+      font-family: 'Courier New', monospace; font-size: .9rem;
+      color: #a8d8a8; border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    }
+    .hero-code .comment { color: #5a8a5a; }
+    .hero-code .cmd { color: #2ecc71; }
+    .hero-code .out { color: #7ec8a0; margin-top: 12px; display: block; }
+
+    /* ===== Features ===== */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
+    .feature-card {
+      background: #fff; border-radius: 16px; padding: 32px 24px;
+      border: 1px solid #e8edf2; text-align: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(26,58,92,.1); }
+    .feature-icon { font-size: 2.5rem; margin-bottom: 16px; }
+    .feature-card h3 { font-size: 1.05rem; font-weight: 700; color: #1a3a5c; margin-bottom: 10px; }
+    .feature-card p { font-size: .9rem; color: #5a7a99; }
+
+    /* ===== How it works ===== */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; }
+    .step { text-align: center; }
+    .step-num {
+      width: 56px; height: 56px; background: #2ecc71; color: #fff;
+      border-radius: 50%; font-size: 1.4rem; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 16px; box-shadow: 0 6px 20px rgba(46,204,113,.35);
+    }
+    .step h3 { font-size: 1rem; font-weight: 700; color: #1a3a5c; margin-bottom: 8px; }
+    .step p { font-size: .9rem; color: #5a7a99; }
+
+    /* ===== Pricing ===== */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; max-width: 800px; margin: 0 auto; }
+    .pricing-card {
+      background: #fff; border-radius: 20px; padding: 40px 32px;
+      border: 2px solid #e8edf2; text-align: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .pricing-card.featured {
+      border-color: #2ecc71;
+      box-shadow: 0 16px 48px rgba(46,204,113,.2);
+      transform: scale(1.02);
+    }
+    .pricing-badge {
+      background: #2ecc71; color: #fff; font-size: .75rem; font-weight: 700;
+      padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 20px;
+    }
+    .pricing-name { font-size: 1.2rem; font-weight: 700; color: #1a3a5c; margin-bottom: 12px; }
+    .pricing-price { font-size: 2.8rem; font-weight: 700; color: #1a3a5c; line-height: 1; margin-bottom: 4px; }
+    .pricing-price span { font-size: 1rem; color: #5a7a99; font-weight: 400; }
+    .pricing-desc { color: #5a7a99; font-size: .9rem; margin-bottom: 28px; }
+    .pricing-features { list-style: none; text-align: right; margin-bottom: 32px; }
+    .pricing-features li { padding: 8px 0; border-bottom: 1px solid #f0f4f8; font-size: .9rem; display: flex; align-items: center; gap: 10px; }
+    .pricing-features li .check { color: #2ecc71; font-weight: 700; flex-shrink: 0; }
+
+    /* ===== FAQ ===== */
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid #e8edf2; }
+    .faq-question {
+      width: 100%; background: none; border: none; text-align: right;
+      padding: 20px 0; font-size: 1rem; font-weight: 600; color: #1a3a5c;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; direction: rtl; font-family: inherit;
+    }
+    .faq-question::after { content: '+'; font-size: 1.4rem; color: #2ecc71; flex-shrink: 0; transition: transform .3s; }
+    .faq-question.open::after { transform: rotate(45deg); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .faq-answer p { padding: 0 0 20px; color: #5a7a99; font-size: .95rem; line-height: 1.8; }
+
+    /* ===== Contact ===== */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .contact-form { background: #fff; border-radius: 20px; padding: 40px; border: 1px solid #e8edf2; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 600; color: #1a3a5c; margin-bottom: 8px; font-size: .9rem; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%; padding: 12px 16px; border: 2px solid #e8edf2; border-radius: 10px;
+      font-size: .95rem; font-family: inherit; color: #1a2533; direction: rtl;
+      transition: border-color .2s; background: #fff;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { outline: none; border-color: #2ecc71; }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .contact-info { display: flex; flex-direction: column; gap: 20px; }
+    .contact-card {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: #f8fafc; border-radius: 14px; padding: 20px;
+      border: 1px solid #e8edf2;
+    }
+    .contact-card-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+    .contact-card-label { font-weight: 700; color: #1a3a5c; margin-bottom: 4px; font-size: .9rem; }
+    .contact-card-val { color: #5a7a99; font-size: .9rem; direction: ltr; text-align: left; }
+    .contact-card-val a { color: #2ecc71; }
+    .contact-direct {
+      background: linear-gradient(135deg, #1a3a5c, #0d2137);
+      border-radius: 16px; padding: 28px; text-align: center;
+    }
+    .contact-direct p { color: rgba(255,255,255,.8); margin-bottom: 16px; font-size: .95rem; }
+
+    /* ===== Footer ===== */
+    .site-footer {
+      background: #0d2137; color: rgba(255,255,255,.7); padding: 40px 0;
+      text-align: center; font-size: .9rem;
+    }
+    .site-footer a { color: #2ecc71; }
+    .site-footer p + p { margin-top: 8px; }
+
+    /* ===== Utilities ===== */
+    .btn-sm { padding: 10px 22px; font-size: .9rem; }
+    code.inline-code { background: #e8f5e9; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hero-code { display: none; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .navbar-links { display: none; }
+      .hero { padding: 70px 0 60px; }
+      .section { padding: 60px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- شريط التنقل | Navbar                                         -->
+<!-- ============================================================ -->
+<nav class="navbar" role="navigation" aria-label="التنقل الرئيسي">
+  <div class="container">
+    <div class="navbar-inner">
+      <a class="navbar-brand" href="#hero">
+        📊 CSV <span>Cleaner</span>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="#features">المزايا</a></li>
+        <li><a href="#how-it-works">كيف تعمل</a></li>
+        <li><a href="#pricing">الأسعار</a></li>
+        <li><a href="#faq">الأسئلة الشائعة</a></li>
+        <li><a href="#contact">تواصل معنا</a></li>
+      </ul>
+      <a href="#contact" class="btn btn-primary btn-sm">ابدأ الآن</a>
+    </div>
+  </div>
+</nav>
 
 <!-- ============================================================ -->
 <!-- قسم الهيرو | Hero Section                                     -->
 <!-- ============================================================ -->
-<section class="hero moroccan-pattern" id="hero">
+<section class="hero" id="hero">
   <div class="container">
-    <!-- المحتوى النصي | Text Content -->
-    <div class="hero-content fade-on-scroll">
-      <div class="hero-badge">
-        🇲🇦 مطور ويب مغربي | Moroccan Web Developer
+    <div class="hero-inner">
+      <!-- النص الرئيسي -->
+      <div class="hero-text">
+        <div class="hero-badge">🆓 مجاني تماماً — Free Forever</div>
+        <h1>
+          نظّف بياناتك<br>
+          <em>بضغطة واحدة</em>
+        </h1>
+        <p class="hero-sub">
+          أداة مجانية لتنظيف ملفات CSV و Excel: حذف المكررات، تقليم المسافات،
+          إصلاح مشاكل الترميز — تدعم العربية والإنجليزية.<br>
+          <small dir="ltr" style="font-size:.9em;">Free tool to clean CSV &amp; Excel files: remove duplicates, trim spaces, fix encoding — Arabic &amp; English.</small>
+        </p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary btn-lg">🚀 ابدأ الآن — Get Started</a>
+          <a href="#features" class="btn btn-outline btn-lg" style="color:#fff; border-color:rgba(255,255,255,.5);">المزايا ↓</a>
+        </div>
       </div>
+      <!-- مثال الكود -->
+      <div class="hero-code" role="img" aria-label="مثال تشغيل الأداة">
+        <div class="comment"># تنظيف ملف CSV أو Excel</div>
+        <div class="comment"># Clean a CSV or Excel file</div>
+        <br>
+        <div class="cmd">python cli.py -i customers.csv -o cleaned.csv</div>
+        <code class="out">✅ Done.
+Cleaned CSV → customers_cleaned.csv
+Rows in: 1,200
+Rows out: 1,147
+Duplicates removed: 43
+Empty rows removed: 10
+Encoding: UTF-8-SIG (Excel-ready)</code>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <h1 class="hero-title">
-        مرحباً، أنا<br>
-        <span>selghribi</span> 👋
-      </h1>
+<!-- ============================================================ -->
+<!-- المزايا | Features                                            -->
+<!-- ============================================================ -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-title">
+      <h2>لماذا CSV Cleaner؟</h2>
+      <p>كل ما تحتاجه لتنظيف بياناتك بسرعة وسهولة — بالعربية والإنجليزية.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🗑️</div>
+        <h3>حذف المكررات<br><small style="font-weight:400;color:#5a7a99;">Remove Duplicates</small></h3>
+        <p>يحذف الصفوف المكررة تلقائياً مع الحفاظ على أول نسخة منها.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✂️</div>
+        <h3>تقليم المسافات<br><small style="font-weight:400;color:#5a7a99;">Trim Spaces</small></h3>
+        <p>يزيل المسافات الزائدة في بداية ونهاية كل خلية، بما فيها مسافات NBSP.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔤</div>
+        <h3>إصلاح الترميز<br><small style="font-weight:400;color:#5a7a99;">Fix Encoding</small></h3>
+        <p>يحاول قراءة الملف بترميزات UTF-8 و cp1256 و latin1 تلقائياً.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>عربي + إنجليزي<br><small style="font-weight:400;color:#5a7a99;">Arabic &amp; English</small></h3>
+        <p>مصمم خصيصاً لملفات البيانات التي تحتوي على نصوص عربية وإنجليزية مختلطة.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Excel جاهز<br><small style="font-weight:400;color:#5a7a99;">Excel-Ready Output</small></h3>
+        <p>الإخراج بترميز UTF-8-SIG حتى يفتح Excel الأرقام والأحرف العربية صحيحاً.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>تقرير تفصيلي<br><small style="font-weight:400;color:#5a7a99;">Detailed Report</small></h3>
+        <p>يولد تقرير JSON + TXT يشرح كل ما تغيّر في الملف: الصفوف، المكررات، الترميز.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <p class="hero-subtitle">
-        مطور ويب | مصمم | صانع محتوى تقني<br>
-        <small style="font-size: 0.85em; opacity: 0.8;">Web Developer | Designer | Tech Content Creator</small>
-      </p>
+<!-- ============================================================ -->
+<!-- كيف تعمل | How It Works                                      -->
+<!-- ============================================================ -->
+<section class="section section-alt" id="how-it-works">
+  <div class="container">
+    <div class="section-title">
+      <h2>كيف تعمل الأداة؟</h2>
+      <p>ثلاث خطوات بسيطة — Three simple steps.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>ثبّت المتطلبات<br><small style="font-weight:400; color:#5a7a99;">Install</small></h3>
+        <p>Python 3.10+ ومكتبة pandas فقط. تشغيل <code class="inline-code">pip install pandas openpyxl</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>شغّل الأمر<br><small style="font-weight:400; color:#5a7a99;">Run</small></h3>
+        <p>مرّر الملف المطلوب: <code class="inline-code">python cli.py -i input.csv -o cleaned.csv</code></p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>احصل على النتيجة<br><small style="font-weight:400; color:#5a7a99;">Get Results</small></h3>
+        <p>ملف CSV منظّف + تقرير JSON + تقرير TXT جاهز للمشاركة مع العميل.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <div class="hero-actions">
-        <a href="{{ '/pages/portfolio' | relative_url }}" class="btn btn-primary btn-lg">
-          🎨 اكتشف أعمالي
+<!-- ============================================================ -->
+<!-- الأسعار | Pricing                                            -->
+<!-- ============================================================ -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-title">
+      <h2>الأسعار — Pricing</h2>
+      <p>ابدأ مجاناً. خطط احترافية قادمة قريباً.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card featured">
+        <div class="pricing-badge">✅ متاح الآن — Available Now</div>
+        <div class="pricing-name">النسخة المجانية — Free</div>
+        <div class="pricing-price">$0 <span>/ للأبد</span></div>
+        <div class="pricing-desc">مفتوح المصدر، بدون قيود.</div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> حذف المكررات</li>
+          <li><span class="check">✓</span> تقليم المسافات</li>
+          <li><span class="check">✓</span> إصلاح الترميز تلقائياً</li>
+          <li><span class="check">✓</span> دعم CSV و XLSX</li>
+          <li><span class="check">✓</span> تقرير JSON + TXT</li>
+          <li><span class="check">✓</span> إخراج Excel-ready</li>
+        </ul>
+        <a href="https://github.com/selghribi-blip/selghribi-blip.github.io/tree/main/projects/csv-cleaner" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%;justify-content:center;">
+          تحميل من GitHub ↗
         </a>
-        <a href="{{ '/pages/blog' | relative_url }}" class="btn btn-outline-light btn-lg">
-          📝 اقرأ المدونة
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-badge" style="background:#5a7a99;">🚧 قادم قريباً — Coming Soon</div>
+        <div class="pricing-name">النسخة الاحترافية — Pro</div>
+        <div class="pricing-price">$9 <span>/ شهرياً</span></div>
+        <div class="pricing-desc">للمحترفين وأصحاب الأعمال.</div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> جميع مزايا النسخة المجانية</li>
+          <li><span class="check">✓</span> واجهة رسومية (GUI)</li>
+          <li><span class="check">✓</span> معالجة دُفعات متعددة</li>
+          <li><span class="check">✓</span> تطبيع أرقام الهاتف</li>
+          <li><span class="check">✓</span> دعم فني مباشر</li>
+          <li><span class="check" style="color:#ccc;">✗</span> <span style="color:#ccc;">غير متاح بعد</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-outline" style="width:100%;justify-content:center;">
+          تواصل للحجز المسبق
         </a>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- البطاقة البصرية | Visual Card -->
-    <div class="hero-visual">
-      <div class="hero-card">
-        <div style="text-align:center; margin-bottom:16px;">
-          <div style="width:80px; height:80px; background: linear-gradient(135deg, #c0674a, #d4a843); border-radius:50%; margin:0 auto; display:flex; align-items:center; justify-content:center; font-size:2rem;">
-            🏺
-          </div>
-          <h3 style="color:#fff; margin-top:12px; font-size:1.1rem;">Arts Moroccan</h3>
-          <p style="color:rgba(255,255,255,0.7); font-size:0.85rem;">artsmoroccan.me</p>
+<!-- ============================================================ -->
+<!-- الأسئلة الشائعة | FAQ                                        -->
+<!-- ============================================================ -->
+<section class="section section-alt" id="faq">
+  <div class="container">
+    <div class="section-title">
+      <h2>أسئلة شائعة — FAQ</h2>
+      <p>إجابات على أكثر الأسئلة تكراراً.</p>
+    </div>
+    <div class="faq-list" role="list">
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false">
+          هل الأداة مجانية تماماً؟ — Is it completely free?
+        </button>
+        <div class="faq-answer" aria-hidden="true">
+          <p>نعم، النسخة الأساسية مفتوحة المصدر ومجانية للأبد. Yes, the core version is open source and free forever.</p>
         </div>
-
-        <div class="stat-grid">
-          <div class="stat-item">
-            <div class="stat-value">100%</div>
-            <div class="stat-label">مجاني بالكامل</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value">6</div>
-            <div class="stat-label">Workflows</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value">4</div>
-            <div class="stat-label">Python Scripts</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value">∞</div>
-            <div class="stat-label">إمكانيات</div>
-          </div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false">
+          هل تعمل مع ملفات Excel (.xlsx)؟ — Does it work with Excel files?
+        </button>
+        <div class="faq-answer" aria-hidden="true">
+          <p>نعم، تدعم الأداة ملفات CSV و XLSX. عند استخدام XLSX، يمكنك تحديد اسم الورقة أو رقمها، والافتراضي هو أول ورقة تلقائياً.</p>
+        </div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false">
+          ما هي متطلبات التشغيل؟ — What are the requirements?
+        </button>
+        <div class="faq-answer" aria-hidden="true">
+          <p>Python 3.10 أو أحدث + مكتبتا pandas و openpyxl فقط. يعمل على Windows و Mac و Linux.</p>
+        </div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false">
+          هل البيانات آمنة؟ — Is my data safe?
+        </button>
+        <div class="faq-answer" aria-hidden="true">
+          <p>نعم، تعمل الأداة محلياً على جهازك بالكامل. لا يتم رفع أي بيانات إلى أي خادم. Yes, the tool runs entirely on your machine — no data is uploaded anywhere.</p>
+        </div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false">
+          كيف أطلب تخصيصاً أو مزايا إضافية؟ — How to request customization?
+        </button>
+        <div class="faq-answer" aria-hidden="true">
+          <p>تواصل معنا عبر نموذج الاتصال أسفله أو راسلنا مباشرة على <a href="mailto:WYNM72627@GMAIL.COM" style="color:#2ecc71;">WYNM72627@GMAIL.COM</a>.</p>
         </div>
       </div>
     </div>
@@ -71,254 +483,93 @@ lang: ar
 </section>
 
 <!-- ============================================================ -->
-<!-- ماذا أفعل | What I Do                                        -->
+<!-- التواصل | Contact                                            -->
 <!-- ============================================================ -->
-<section class="section" id="services-preview" style="background: #fdf6ec;">
+<section class="section" id="contact">
   <div class="container">
-    <div class="section-title fade-on-scroll">
-      <h2>ماذا أفعل؟</h2>
-      <p>أجمع بين الإبداع والتقنية لبناء مشاريع رقمية أصيلة ومؤثرة</p>
+    <div class="section-title">
+      <h2>تواصل معنا — Contact</h2>
+      <p>استفسار؟ طلب تخصيص؟ نرد خلال 24-48 ساعة.</p>
     </div>
-
-    <div class="grid grid-4">
-      <!-- تطوير الويب -->
-      <div class="card fade-on-scroll" style="text-align:center;">
-        <div class="card-body">
-          <div style="font-size:2.5rem; margin-bottom:16px;">💻</div>
-          <h3 style="font-size:1.1rem; color:#1a3a5c;">تطوير الويب</h3>
-          <p style="font-size:0.9rem; color:#5a5a5a;">HTML, CSS, JavaScript, Jekyll, GitHub Pages</p>
-        </div>
-      </div>
-
-      <!-- التصميم -->
-      <div class="card fade-on-scroll" style="text-align:center;">
-        <div class="card-body">
-          <div style="font-size:2.5rem; margin-bottom:16px;">🎨</div>
-          <h3 style="font-size:1.1rem; color:#1a3a5c;">التصميم</h3>
-          <p style="font-size:0.9rem; color:#5a5a5a;">UI/UX مستوحى من الفنون المغربية التقليدية</p>
-        </div>
-      </div>
-
-      <!-- الفنون المغربية -->
-      <div class="card fade-on-scroll" style="text-align:center;">
-        <div class="card-body">
-          <div style="font-size:2.5rem; margin-bottom:16px;">🏺</div>
-          <h3 style="font-size:1.1rem; color:#1a3a5c;">فنون مغربية</h3>
-          <p style="font-size:0.9rem; color:#5a5a5a;">مشروع Arts Moroccan للتجارة الإلكترونية</p>
-        </div>
-      </div>
-
-      <!-- المحتوى التقني -->
-      <div class="card fade-on-scroll" style="text-align:center;">
-        <div class="card-body">
-          <div style="font-size:2.5rem; margin-bottom:16px;">✍️</div>
-          <h3 style="font-size:1.1rem; color:#1a3a5c;">محتوى تقني</h3>
-          <p style="font-size:0.9rem; color:#5a5a5a;">مقالات عربية عن البرمجة وأدوات GitHub</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ -->
-<!-- آخر المقالات | Latest Posts                                   -->
-<!-- ============================================================ -->
-<section class="section" id="latest-posts">
-  <div class="container">
-    <div class="section-title fade-on-scroll">
-      <h2>آخر المقالات</h2>
-      <p>مقالات تقنية بالعربية عن البرمجة والأتمتة وأدوات المطورين</p>
-    </div>
-
-    <div class="grid grid-3">
-      {% for post in site.posts limit:3 %}
-      <article class="post-card fade-on-scroll" lang="{{ post.lang | default: 'ar' }}">
-        <!-- صورة الغلاف | Cover -->
-        <div class="post-card-image" aria-hidden="true">
-          {% if post.image %}
-          <img src="{{ post.image }}" alt="{{ post.title }}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
-          {% else %}
-          🏺
-          {% endif %}
-        </div>
-
-        <div class="post-card-body">
-          <!-- التصنيف | Category -->
-          {% if post.categories.first %}
-          <span class="post-card-category">{{ post.categories.first }}</span>
-          {% endif %}
-
-          <!-- العنوان | Title -->
-          <h3 class="post-card-title">
-            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-          </h3>
-
-          <!-- المقتطف | Excerpt -->
-          <p class="post-card-excerpt">
-            {{ post.description | default: post.excerpt | strip_html | truncate: 120 }}
-          </p>
-
-          <!-- الفوتر | Footer -->
-          <div class="post-card-footer">
-            <time datetime="{{ post.date | date_to_xmlschema }}" style="display:flex; align-items:center; gap:4px;">
-              📅 {{ post.date | date: "%d %B %Y" }}
-            </time>
-            <a href="{{ post.url | relative_url }}" class="post-card-read-more">
-              اقرأ المزيد ←
-            </a>
+    <div class="contact-grid">
+      <!-- نموذج التواصل | Contact Form -->
+      <div class="contact-form">
+        <h3 style="font-size:1.1rem; font-weight:700; color:#1a3a5c; margin-bottom:24px;">📩 أرسل لنا رسالة</h3>
+        <form
+          id="contact-form"
+          action="mailto:WYNM72627@GMAIL.COM"
+          method="GET"
+          enctype="text/plain"
+          novalidate
+        >
+          <div class="form-group">
+            <label for="name">الاسم الكامل *</label>
+            <input type="text" id="name" name="name" placeholder="اسمك هنا..." required autocomplete="name">
           </div>
-        </div>
-      </article>
-      {% endfor %}
-
-      <!-- رسالة إذا لم توجد مقالات -->
-      {% if site.posts.size == 0 %}
-      <div style="grid-column: 1/-1; text-align:center; padding:60px 0; color:#888;">
-        <p style="font-size:3rem; margin-bottom:16px;">✍️</p>
-        <p>المقالات قادمة قريباً — ترقب التحديثات!</p>
-      </div>
-      {% endif %}
-    </div>
-
-    <!-- زر عرض الكل | View All Button -->
-    {% if site.posts.size > 0 %}
-    <div style="text-align:center; margin-top:40px;" class="fade-on-scroll">
-      <a href="{{ '/pages/blog' | relative_url }}" class="btn btn-secondary btn-lg">
-        عرض جميع المقالات →
-      </a>
-    </div>
-    {% endif %}
-  </div>
-</section>
-
-<!-- ============================================================ -->
-<!-- المشاريع | Projects                                          -->
-<!-- ============================================================ -->
-<section class="section" id="projects" style="background: #fdf6ec;">
-  <div class="container">
-    <div class="section-title fade-on-scroll">
-      <h2>مشاريعي</h2>
-      <p>مشاريع حقيقية تحل مشاكل حقيقية</p>
-    </div>
-
-    <div class="grid grid-2">
-      <!-- Arts Moroccan - المشروع الرئيسي -->
-      <div class="project-card featured fade-on-scroll" data-tech="html css javascript">
-        <div class="project-featured-badge">⭐ مميز</div>
-        <div class="project-image">
-          <div style="height:220px; background:linear-gradient(135deg, #1a3a5c, #c0674a); display:flex; align-items:center; justify-content:center; position:relative;">
-            <div style="text-align:center; color:#fdf6ec;">
-              <div style="font-size:3rem; margin-bottom:8px;">🏺</div>
-              <div style="font-family:'Playfair Display', serif; font-size:1.2rem; font-weight:700;">Arts Moroccan</div>
-              <div style="font-size:0.8rem; opacity:0.8; margin-top:4px;">artsmoroccan.me</div>
-            </div>
-            <!-- Overlay -->
-            <div class="project-overlay">
-              <a href="https://artsmoroccan.me" target="_blank" rel="noopener" class="btn btn-primary btn-sm">🌐 زيارة</a>
-              <a href="https://github.com/selghribi-blip" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">💻 كود</a>
-            </div>
+          <div class="form-group">
+            <label for="email">بريدك الإلكتروني *</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required autocomplete="email" dir="ltr">
           </div>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">Arts Moroccan 🏺</h3>
-          <p style="font-size:0.9rem; color:#5a5a5a; margin-bottom:12px;">
-            موقع تجارة إلكترونية للفنون والحرف المغربية التقليدية — مبني بـ HTML/CSS/JS خالص
-          </p>
-          <div class="project-tech">
-            <span class="tech-tag">HTML5</span>
-            <span class="tech-tag">CSS3</span>
-            <span class="tech-tag">JavaScript</span>
-            <span class="tech-tag">E-Commerce</span>
+          <div class="form-group">
+            <label for="subject">الموضوع — Subject</label>
+            <select id="subject" name="subject">
+              <option value="استفسار عام">استفسار عام</option>
+              <option value="طلب تخصيص">طلب تخصيص</option>
+              <option value="تقرير خطأ">تقرير خطأ</option>
+              <option value="تعاون">تعاون</option>
+            </select>
           </div>
-        </div>
+          <div class="form-group">
+            <label for="message">رسالتك *</label>
+            <textarea id="message" name="body" placeholder="اكتب رسالتك هنا..." rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">
+            إرسال الرسالة 🚀
+          </button>
+        </form>
       </div>
 
-      <!-- مصنع المحتوى -->
-      <div class="project-card fade-on-scroll" data-tech="jekyll github-actions python">
-        <div class="project-image">
-          <div style="height:220px; background:linear-gradient(135deg, #2d6a4f, #1a3a5c); display:flex; align-items:center; justify-content:center; position:relative;">
-            <div style="text-align:center; color:#fdf6ec;">
-              <div style="font-size:3rem; margin-bottom:8px;">🏭</div>
-              <div style="font-family:'Playfair Display', serif; font-size:1.2rem; font-weight:700;">Content Factory</div>
-              <div style="font-size:0.8rem; opacity:0.8; margin-top:4px;">مصنع المحتوى</div>
-            </div>
-            <div class="project-overlay">
-              <a href="{{ '/' | relative_url }}" class="btn btn-primary btn-sm">🌐 زيارة</a>
-              <a href="https://github.com/selghribi-blip/selghribi-blip.github.io" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">💻 كود</a>
-            </div>
-          </div>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">مصنع المحتوى 🏭</h3>
-          <p style="font-size:0.9rem; color:#5a5a5a; margin-bottom:12px;">
-            مدونة تقنية عربية مع أتمتة كاملة عبر GitHub Actions — مجاني 100%
-          </p>
-          <div class="project-tech">
-            <span class="tech-tag">Jekyll</span>
-            <span class="tech-tag">GitHub Actions</span>
-            <span class="tech-tag">Python</span>
-            <span class="tech-tag">SCSS</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="text-align:center; margin-top:40px;" class="fade-on-scroll">
-      <a href="{{ '/pages/portfolio' | relative_url }}" class="btn btn-secondary btn-lg">
-        عرض جميع المشاريع →
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ -->
-<!-- الشهادات | Testimonials                                       -->
-<!-- ============================================================ -->
-<section class="section" id="testimonials">
-  <div class="container">
-    <div class="section-title fade-on-scroll">
-      <h2>ماذا يقولون عني؟</h2>
-      <p>آراء العملاء والمتعاملين</p>
-    </div>
-
-    <div class="grid grid-3">
-      <!-- بطاقة شهادة فارغة - جاهزة للتعبئة -->
-      <div class="testimonial-card fade-on-scroll">
-        <p class="testimonial-text">
-          "تصميم احترافي ورائع، تعامل ممتاز وسريع في التسليم. أنصح بالتعامل معه بشدة!"
-        </p>
-        <div class="testimonial-author">
-          <div class="author-avatar-placeholder">م</div>
+      <!-- معلومات التواصل | Contact Info -->
+      <div class="contact-info">
+        <div class="contact-card">
+          <div class="contact-card-icon">📧</div>
           <div>
-            <div class="author-name">محمد — عميل سعيد</div>
-            <div class="author-title">صاحب موقع تجاري</div>
+            <div class="contact-card-label">البريد الإلكتروني — Email</div>
+            <div class="contact-card-val">
+              <a href="mailto:WYNM72627@GMAIL.COM">WYNM72627@GMAIL.COM</a>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="testimonial-card fade-on-scroll">
-        <p class="testimonial-text">
-          "ساعدني في بناء موقعي من الصفر بأسعار معقولة جداً. النتيجة فاقت توقعاتي!"
-        </p>
-        <div class="testimonial-author">
-          <div class="author-avatar-placeholder">س</div>
+        <div class="contact-card">
+          <div class="contact-card-icon">💻</div>
           <div>
-            <div class="author-name">سارة — مدوّنة</div>
-            <div class="author-title">مبدعة محتوى</div>
+            <div class="contact-card-label">GitHub</div>
+            <div class="contact-card-val">
+              <a href="https://github.com/selghribi-blip" target="_blank" rel="noopener">github.com/selghribi-blip</a>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="testimonial-card fade-on-scroll">
-        <p class="testimonial-text">
-          "مطور متميز يفهم احتياجاتك ويعمل بجد لتحقيقها. مشروعنا أصبح أفضل بكثير."
-        </p>
-        <div class="testimonial-author">
-          <div class="author-avatar-placeholder">ع</div>
+        <div class="contact-card">
+          <div class="contact-card-icon">⏰</div>
           <div>
-            <div class="author-name">علي — رائد أعمال</div>
-            <div class="author-title">مؤسس شركة ناشئة</div>
+            <div class="contact-card-label">وقت الرد — Response time</div>
+            <div class="contact-card-val">خلال 24-48 ساعة</div>
           </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">🇲🇦</div>
+          <div>
+            <div class="contact-card-label">الموقع — Location</div>
+            <div class="contact-card-val">المملكة المغربية — Morocco</div>
+          </div>
+        </div>
+
+        <!-- بريد مباشر | Direct mailto -->
+        <div class="contact-direct">
+          <p>تريد التواصل المباشر؟<br>Want to reach us directly?</p>
+          <a href="mailto:WYNM72627@GMAIL.COM?subject=استفسار%20-%20CSV%20Cleaner" class="btn btn-primary">
+            📧 راسلنا الآن — Email Us
+          </a>
         </div>
       </div>
     </div>
@@ -326,6 +577,48 @@ lang: ar
 </section>
 
 <!-- ============================================================ -->
-<!-- قسم الاشتراك بالنشرة | Newsletter Section                    -->
+<!-- الفوتر | Footer                                              -->
 <!-- ============================================================ -->
-{% include newsletter-form.html %}
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <p>© <span id="year"></span> <strong>CSV Cleaner</strong> by <a href="https://github.com/selghribi-blip" target="_blank" rel="noopener">selghribi</a> — صُنع بـ ❤️ في المغرب 🇲🇦</p>
+    <p>
+      <a href="https://github.com/selghribi-blip/selghribi-blip.github.io" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="mailto:WYNM72627@GMAIL.COM">WYNM72627@GMAIL.COM</a>
+    </p>
+  </div>
+</footer>
+
+<!-- ============================================================ -->
+<!-- JavaScript                                                    -->
+<!-- ============================================================ -->
+<script>
+  // تحديث السنة تلقائياً | Auto-update year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var isOpen = this.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-question').forEach(function(b) {
+        b.classList.remove('open');
+        b.setAttribute('aria-expanded', 'false');
+        var ans = b.nextElementSibling;
+        ans.style.maxHeight = null;
+        ans.setAttribute('aria-hidden', 'true');
+      });
+      // Open clicked if it was closed
+      if (!isOpen) {
+        this.classList.add('open');
+        this.setAttribute('aria-expanded', 'true');
+        var answer = this.nextElementSibling;
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        answer.setAttribute('aria-hidden', 'false');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
