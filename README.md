@@ -63,6 +63,8 @@ selghribi-blip.github.io/
 ├── _sass/                         (أنماط CSS)
 ├── assets/                        (ملفات ثابتة)
 ├── pages/                         (صفحات ثابتة)
+├── projects/
+│   └── csv-cleaner/               (أداة تنظيف CSV/XLSX)
 ├── templates/                     (قوالب مجانية)
 ├── scripts/                       (أدوات Python)
 └── .github/
@@ -71,6 +73,15 @@ selghribi-blip.github.io/
     ├── PULL_REQUEST_TEMPLATE.md
     └── FUNDING.yml
 ```
+
+### 🧹 CSV Cleaner
+
+أداة Python لتنظيف ملفات CSV و XLSX (عربي + إنجليزي).
+
+| الرابط | الوصف |
+|--------|-------|
+| [📂 projects/csv-cleaner](https://github.com/selghribi-blip/selghribi-blip.github.io/tree/main/projects/csv-cleaner) | كود الأداة الكامل |
+| [📖 README](https://github.com/selghribi-blip/selghribi-blip.github.io/blob/main/projects/csv-cleaner/README.md) | التوثيق + أمثلة التشغيل |
 
 ---
 
