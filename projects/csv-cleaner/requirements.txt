@@ -1,0 +1,6 @@
+# CSV/Excel Data Cleaner — Python dependencies
+# Install with: pip install -r requirements.txt
+
+streamlit>=1.35.0
+pandas>=2.2.0
+openpyxl>=3.1.0
