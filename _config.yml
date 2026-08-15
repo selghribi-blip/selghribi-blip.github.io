@@ -48,6 +48,18 @@ collections:
     output: true
     permalink: /projects/:name/
 
+# البحث | Algolia Site Search
+# search_key مفتاح بحث فقط (عام) — لا تضع هنا مفتاح Admin API
+# search_key is a public search-only key — never put an Admin API key here.
+# عند تغيير version حدّث قيم integrity في _layouts/default.html
+# When bumping version, update the integrity hashes in _layouts/default.html.
+algolia:
+  app_id: "UOKFCFE2P9"
+  search_key: "72e26b1e40a835929f864eb463bf5fe8"
+  index_name: "artsmoroccan_me_uokfcfe2p9_pages"
+  site_verification: "66F320FFCC865600"
+  version: "1.0.15"
+
 # إعدادات Sass | Sass Settings
 sass:
   sass_dir: _sass

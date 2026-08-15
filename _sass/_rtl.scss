@@ -193,6 +193,17 @@
   }
 }
 
+// صندوق البحث في الهيدر | Header search widget (Algolia SiteSearch)
+.site-search {
+  display: flex;
+  align-items: center;
+  margin-inline-start: $space-3;
+
+  .ss-searchbox-form input {
+    text-align: start;
+  }
+}
+
 // ترتيب الأرقام في العربية | Arabic Numerals
 // unicode-range for Arabic-Indic digits: U+0660-U+0669
 // Note: @font-face with unicode-range is declared in head.html if needed

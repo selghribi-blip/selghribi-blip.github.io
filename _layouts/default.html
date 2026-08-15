@@ -1,34 +1,18 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: 'ar' }}" dir="{{ page.lang | default: 'ar' | replace: 'ar', 'rtl' | replace: 'en', 'ltr' | replace: 'fr', 'ltr' }}">
 <head>
-  
-  <meta name="algolia-site-verification"  content="66F320FFCC865600" />
-  <link rel="stylesheet" href="https://unpkg.com/@algolia/sitesearch@latest/dist/search.min.css" />
-<script src="https://unpkg.com/@algolia/sitesearch@latest/dist/search.min.js"></script>
-  
- {% include head.html %}
+  {% include head.html %}
+
+  <!-- Algolia | البحث -->
+  <meta name="algolia-site-verification" content="{{ site.algolia.site_verification }}">
+  {% if site.algolia.app_id and site.algolia.search_key and site.algolia.index_name %}
+  <link rel="preconnect" href="https://{{ site.algolia.app_id }}-dsn.algolia.net" crossorigin>
+  <link rel="stylesheet" href="https://unpkg.com/@algolia/sitesearch@{{ site.algolia.version }}/dist/search.min.css"
+        integrity="sha256-jdeHWVTToxSxOr5xhAt5P/PV79J3XFnHCQueEHrt8tA=" crossorigin="anonymous">
+  {% endif %}
 </head>
 <body class="{% if page.lang == 'ar' or page.lang == nil %}rtl{% endif %}">
 
-  
-<div id="search"></div>
-<script>
-  SiteSearch.init({
-    container: "#search",
-    applicationId: "UOKFCFE2P9",
-    apiKey: "72e26b1e40a835929f864eb463bf5fe8",
-    indexName: "artsmoroccan_me_uokfcfe2p9_pages",
-    attributes: {
-      primaryText: "content", // the attribute to display in the hits list
-      secondaryText: "title", // the secondary attribute to display in the hits list
-      tertiaryText: "path", // the tertiary attribute to display in the hits list
-      url: "", // the URL of the hit
-      image: "hostname" // the image URL of the hit
-    },
-    darkMode: false,
-  });
-</script>
-  
   <!-- مؤشر تقدم القراءة | Reading Progress -->
   {% if page.layout == 'post' %}
   <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="تقدم القراءة" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
@@ -52,6 +36,33 @@
 
   <!-- سكريبت JS | JavaScript -->
   <script src="{{ '/assets/js/main.js' | relative_url }}" defer></script>
+
+  <!-- بحث Algolia | Algolia Site Search -->
+  {% if site.algolia.app_id and site.algolia.search_key and site.algolia.index_name %}
+  <script src="https://unpkg.com/@algolia/sitesearch@{{ site.algolia.version }}/dist/search.min.js" defer
+          integrity="sha256-HpBdjqiuGmA8jGCLlRjB2R/bYfsGtUPhkt0B3I+wrTU=" crossorigin="anonymous"></script>
+  <script>
+    window.addEventListener('load', function () {
+      if (typeof SiteSearch === 'undefined' || !document.querySelector('#search')) return;
+      SiteSearch.init({
+        container: '#search',
+        applicationId: {{ site.algolia.app_id | jsonify }},
+        apiKey: {{ site.algolia.search_key | jsonify }},
+        indexName: {{ site.algolia.index_name | jsonify }},
+        attributes: {
+          primaryText: 'title',
+          secondaryText: 'description',
+          tertiaryText: 'path',
+          url: 'url',
+          image: 'image'
+        },
+        placeholder: 'ابحث في الموقع…',
+        openResultsInNewTab: false,
+        darkMode: false
+      });
+    });
+  </script>
+  {% endif %}
 
 </body>
 </html>

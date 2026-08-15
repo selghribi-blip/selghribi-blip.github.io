@@ -28,6 +28,11 @@
         تواصل معي
       </a>
 
+      <!-- البحث | Search -->
+      {% if site.algolia.app_id and site.algolia.search_key and site.algolia.index_name %}
+      <div id="search" class="site-search"></div>
+      {% endif %}
+
       <!-- تبديل اللغة | Language Toggle -->
       <div class="lang-toggle" style="margin-inline-start: 8px;">
         <button data-lang="ar" class="active" aria-label="العربية">AR</button>
