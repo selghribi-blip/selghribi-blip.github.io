@@ -3,10 +3,10 @@ layout: default
 ---
 
 <!-- تخطيط المقالات | Post Layout -->
-<article class="post" lang="{{ page.lang | default: 'ar' }}" dir="{{ page.lang | default: 'ar' | replace: 'ar', 'rtl' | replace: 'en', 'ltr' }}">
+<article class="post" {% include lang-attrs.html lang=page.lang %}>
 
   <!-- رأس المقالة | Post Header -->
-  <header class="post-header {% if page.lang == 'ar' or page.lang == nil %}arabic{% endif %}">
+  <header class="post-header {% include rtl-class.html lang=page.lang %}">
 
     <!-- التصنيف | Category -->
     {% if page.categories %}
@@ -58,7 +58,7 @@ layout: default
   {% endif %}
 
   <!-- محتوى المقالة | Post Content -->
-  <div class="post-content {% if page.lang == 'ar' or page.lang == nil %}arabic{% endif %}">
+  <div class="post-content {% include rtl-class.html lang=page.lang %}">
     {{ content }}
   </div>
 

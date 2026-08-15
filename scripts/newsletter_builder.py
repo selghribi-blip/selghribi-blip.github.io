@@ -13,91 +13,37 @@ newsletter_builder.py
 
 import argparse
 import os
-import re
-import sys
 from datetime import datetime, timedelta
-from pathlib import Path
 
-
-def parse_front_matter(filepath: str) -> dict:
-    """تحليل front matter | Parse front matter"""
-    meta = {"_filepath": filepath}
-    try:
-        with open(filepath, encoding="utf-8") as f:
-            content = f.read()
-    except FileNotFoundError:
-        return meta
-
-    if not content.startswith("---"):
-        return meta
-
-    parts = content.split("---", 2)
-    if len(parts) < 3:
-        return meta
-
-    for line in parts[1].strip().split("\n"):
-        match = re.match(r'^(\w+):\s*["\']?(.+?)["\']?\s*$', line)
-        if match:
-            meta[match.group(1)] = match.group(2)
-
-    # محتوى المقالة | Post content
-    meta["_content"] = parts[2].strip()
-    # مقتطف | Excerpt
-    content_lines = [l for l in parts[2].strip().split("\n") if l.strip() and not l.startswith("#")]
-    if content_lines:
-        excerpt = " ".join(content_lines[:3])
-        excerpt = re.sub(r'[*_`\[\]()]', '', excerpt)
-        meta["_excerpt"] = excerpt[:200] + ("..." if len(excerpt) > 200 else "")
-
-    return meta
+from content_lib import (
+    BASE_URL,
+    POSTS_DIR,
+    as_text,
+    build_post_url,
+    clean,
+    die,
+    load_posts,
+)
 
 
 def get_recent_posts(posts_dir: str, days: int) -> list[dict]:
     """جمع المقالات الحديثة | Collect recent posts"""
-    cutoff_date = datetime.now() - timedelta(days=days)
-    posts = []
-
-    for filepath in sorted(Path(posts_dir).glob("*.md"), reverse=True):
-        meta = parse_front_matter(str(filepath))
-
-        # استخراج التاريخ من اسم الملف | Extract date from filename
-        stem = filepath.stem
-        parts = stem.split("-", 3)
-        if len(parts) < 3:
-            continue
-        try:
-            post_date = datetime(int(parts[0]), int(parts[1]), int(parts[2]))
-        except ValueError:
-            continue
-
-        if post_date >= cutoff_date:
-            meta["_date"] = post_date
-            meta["_slug"] = parts[3] if len(parts) > 3 else stem
-            posts.append(meta)
-
-    return posts
+    return load_posts(posts_dir, since_days=days, with_content=True)
 
 
-def build_post_url(meta: dict, base_url: str = "https://artsmoroccan.me") -> str:
-    """بناء رابط المقالة | Build post URL"""
-    date = meta.get("_date", datetime.now())
-    slug = meta.get("_slug", "post")
-    return f"{base_url}/blog/{date.year}/{date.month:02d}/{date.day:02d}/{slug}/"
-
-
-def build_html_newsletter(posts: list[dict], base_url: str = "https://artsmoroccan.me") -> str:
+def build_html_newsletter(posts: list[dict], base_url: str = BASE_URL) -> str:
     """بناء HTML للنشرة | Build newsletter HTML"""
     week_start = (datetime.now() - timedelta(days=7)).strftime("%d %B %Y")
     week_end = datetime.now().strftime("%d %B %Y")
 
     posts_html = ""
     for post in posts:
-        title = post.get("title", "").strip('"\'')
-        description = post.get("description", post.get("_excerpt", "")).strip('"\'')
+        title = clean(post.get("title"))
+        description = clean(post.get("description") or post.get("_excerpt"))
         url = build_post_url(post, base_url)
         date = post.get("_date", datetime.now())
         date_str = date.strftime("%d %B %Y")
-        categories = post.get("categories", "")
+        categories = as_text(post.get("categories"))
 
         posts_html += f"""
     <tr>
@@ -209,12 +155,12 @@ def main():
     )
     parser.add_argument(
         "--posts-dir",
-        default="_posts",
+        default=POSTS_DIR,
         help="مجلد المقالات | Posts directory (default: _posts)"
     )
     parser.add_argument(
         "--base-url",
-        default="https://artsmoroccan.me",
+        default=BASE_URL,
         help="رابط الموقع الأساسي | Base URL"
     )
     parser.add_argument(
@@ -227,8 +173,7 @@ def main():
     print(f"🔍 البحث عن مقالات خلال {args.since} يوم | Looking for posts in last {args.since} days...")
 
     if not os.path.isdir(args.posts_dir):
-        print(f"❌ مجلد المقالات غير موجود | Posts dir not found: {args.posts_dir}")
-        sys.exit(1)
+        die(f"مجلد المقالات غير موجود | Posts dir not found: {args.posts_dir}")
 
     posts = get_recent_posts(args.posts_dir, args.since)
     print(f"📝 وجدت {len(posts)} مقالة | Found {len(posts)} posts")

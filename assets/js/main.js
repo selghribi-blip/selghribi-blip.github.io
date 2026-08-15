@@ -25,18 +25,45 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ======================================================
+// أدوات مشتركة | Shared Helpers
+// ======================================================
+
+/**
+ * تبديل صنف حسب موقع التمرير | Toggle a class based on scroll offset
+ */
+function toggleClassOnScroll(element, className, offset) {
+  if (!element) return;
+
+  const update = () => {
+    element.classList.toggle(className, window.scrollY > offset);
+  };
+
+  window.addEventListener('scroll', update, { passive: true });
+  update(); // تطبيق فوري عند التحميل
+}
+
+/**
+ * تنفيذ مرة واحدة عند ظهور العنصر | Run a callback once per element when it enters the viewport
+ */
+function observeOnce(elements, onVisible, options) {
+  if (!elements.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      onVisible(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, options);
+
+  elements.forEach(el => observer.observe(el));
+}
+
+// ======================================================
 // الهيدر اللاصق | Sticky Header
 // ======================================================
 function initHeader() {
-  const header = document.querySelector('.site-header');
-  if (!header) return;
-
-  const onScroll = () => {
-    header.classList.toggle('scrolled', window.scrollY > 50);
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll(); // تطبيق فوري عند التحميل
+  toggleClassOnScroll(document.querySelector('.site-header'), 'scrolled', 50);
 }
 
 // ======================================================
@@ -96,11 +123,7 @@ function initBackToTop() {
   const btn = document.querySelector('.back-to-top');
   if (!btn) return;
 
-  const toggleVisibility = () => {
-    btn.classList.toggle('visible', window.scrollY > 300);
-  };
-
-  window.addEventListener('scroll', toggleVisibility, { passive: true });
+  toggleClassOnScroll(btn, 'visible', 300);
 
   btn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -133,26 +156,16 @@ function initSmoothScroll() {
 // ======================================================
 function initSkillBars() {
   const skills = document.querySelectorAll('.skill-progress');
-  if (!skills.length) return;
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const progress = entry.target;
-        const width = progress.dataset.width || '0%';
-        progress.style.width = width;
-        observer.unobserve(progress);
-      }
-    });
-  }, { threshold: 0.2 });
 
   skills.forEach(skill => {
     // حفظ العرض الأصلي وتصفير | Save original width and reset
-    const originalWidth = skill.style.width;
-    skill.dataset.width = originalWidth;
+    skill.dataset.width = skill.style.width;
     skill.style.width = '0%';
-    observer.observe(skill);
   });
+
+  observeOnce(skills, (skill) => {
+    skill.style.width = skill.dataset.width || '0%';
+  }, { threshold: 0.2 });
 }
 
 // ======================================================
@@ -307,22 +320,12 @@ function initProjectFilters() {
 // ======================================================
 function initFadeOnScroll() {
   const elements = document.querySelectorAll('.fade-on-scroll');
-  if (!elements.length) return;
+  elements.forEach(el => { el.style.opacity = '0'; });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('fade-in-up');
-        entry.target.style.opacity = '1';
-        observer.unobserve(entry.target);
-      }
-    });
+  observeOnce(elements, (el) => {
+    el.classList.add('fade-in-up');
+    el.style.opacity = '1';
   }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-  elements.forEach(el => {
-    el.style.opacity = '0';
-    observer.observe(el);
-  });
 }
 
 // ======================================================

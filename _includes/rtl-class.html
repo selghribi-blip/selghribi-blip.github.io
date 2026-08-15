@@ -1,0 +1,6 @@
+{%- comment -%}
+rtl-class.html | صنف المحتوى العربي | Arabic content class
+الاستخدام | Usage: <div class="post-content {% include rtl-class.html lang=page.lang %}">
+{%- endcomment -%}
+{%- assign content_lang = include.lang | default: site.lang | default: 'ar' -%}
+{%- if content_lang == 'ar' -%}arabic{%- endif -%}

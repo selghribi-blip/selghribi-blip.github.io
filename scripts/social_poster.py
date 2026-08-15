@@ -14,72 +14,24 @@ social_poster.py
 import argparse
 import json
 import os
-import re
-import sys
 from datetime import datetime
-from pathlib import Path
 
-
-def parse_front_matter(filepath: str) -> dict:
-    """تحليل front matter من ملف Markdown | Parse front matter from Markdown file"""
-    meta = {}
-    try:
-        with open(filepath, encoding="utf-8") as f:
-            content = f.read()
-    except FileNotFoundError:
-        print(f"❌ الملف غير موجود | File not found: {filepath}")
-        return meta
-
-    if not content.startswith("---"):
-        return meta
-
-    parts = content.split("---", 2)
-    if len(parts) < 3:
-        return meta
-
-    for line in parts[1].strip().split("\n"):
-        match = re.match(r'^(\w+):\s*["\']?(.+?)["\']?\s*$', line)
-        if match:
-            meta[match.group(1)] = match.group(2)
-
-    # تحليل tags و categories | Parse tags and categories
-    for array_key in ("tags", "categories"):
-        array_match = re.search(
-            rf'^{array_key}:\s*\[([^\]]+)\]',
-            parts[1],
-            re.MULTILINE
-        )
-        if array_match:
-            items = [t.strip().strip('"\'') for t in array_match.group(1).split(",")]
-            meta[array_key] = items
-
-    return meta
-
-
-def build_post_url(meta: dict, base_url: str = "https://artsmoroccan.me") -> str:
-    """بناء رابط المقالة | Build post URL"""
-    date_str = meta.get("date", datetime.now().strftime("%Y-%m-%d"))
-    try:
-        date_parts = str(date_str).split("-")
-        year, month, day = date_parts[0], date_parts[1], date_parts[2][:2]
-    except (IndexError, ValueError):
-        year = month = day = datetime.now().strftime("%Y %m %d").split()
-        year, month, day = str(year[0]), str(month[0]), str(day[0])
-
-    # استخراج slug من عنوان | Extract slug from title
-    title = meta.get("title", "post").lower()
-    title = re.sub(r'[^\w\s-]', '', title, flags=re.UNICODE)
-    title = re.sub(r'[\s_-]+', '-', title)
-    title = title.strip('-')[:50]
-
-    return f"{base_url}/blog/{year}/{month}/{day}/{title}/"
+from content_lib import (
+    BASE_URL,
+    build_post_url,
+    clean,
+    die,
+    hashtags,
+    parse_front_matter,
+    require_env,
+)
 
 
 def build_twitter_text(meta: dict, url: str) -> str:
     """بناء نص تغريدة | Build tweet text"""
-    title = meta.get("title", "مقالة جديدة").strip('"\'')
-    description = meta.get("description", "").strip('"\'')
-    tags = meta.get("tags", [])
+    title = clean(meta.get("title"), "مقالة جديدة")
+    description = clean(meta.get("description"))
+    tags = hashtags(meta, 4)
 
     # بناء النص | Build text
     text_parts = [f"📝 {title}"]
@@ -89,8 +41,7 @@ def build_twitter_text(meta: dict, url: str) -> str:
 
     # إضافة hashtags | Add hashtags
     if tags:
-        hashtags = " ".join(f"#{tag}" for tag in tags[:4])
-        text_parts.append(f"\n{hashtags}")
+        text_parts.append(f"\n{tags}")
 
     text_parts.append("\n🇲🇦 #Arabic #WebDev #Morocco")
 
@@ -101,9 +52,9 @@ def build_twitter_text(meta: dict, url: str) -> str:
 
 def build_linkedin_text(meta: dict, url: str) -> str:
     """بناء منشور LinkedIn | Build LinkedIn post"""
-    title = meta.get("title", "مقالة جديدة").strip('"\'')
-    description = meta.get("description", "").strip('"\'')
-    tags = meta.get("tags", [])
+    title = clean(meta.get("title"), "مقالة جديدة")
+    description = clean(meta.get("description"))
+    tags = hashtags(meta, 6)
 
     text = f"📝 مقالة جديدة | New Article\n\n"
     text += f"**{title}**\n\n"
@@ -112,8 +63,7 @@ def build_linkedin_text(meta: dict, url: str) -> str:
     text += f"🔗 اقرأ المقالة كاملة: {url}\n\n"
 
     if tags:
-        hashtags = " ".join(f"#{tag}" for tag in tags[:6])
-        text += f"{hashtags}\n"
+        text += f"{tags}\n"
 
     text += "#Arabic #Morocco #WebDevelopment #GitHub #OpenSource"
     return text
@@ -121,23 +71,25 @@ def build_linkedin_text(meta: dict, url: str) -> str:
 
 def post_to_twitter(text: str) -> bool:
     """نشر على Twitter/X | Post to Twitter/X"""
-    api_key = os.environ.get("TWITTER_API_KEY")
-    api_secret = os.environ.get("TWITTER_API_SECRET")
-    access_token = os.environ.get("TWITTER_ACCESS_TOKEN")
-    access_secret = os.environ.get("TWITTER_ACCESS_SECRET")
-
-    if not all([api_key, api_secret, access_token, access_secret]):
-        print("⚠️  متغيرات Twitter غير محددة | Twitter env vars not set")
-        print("   TWITTER_API_KEY, TWITTER_API_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET")
+    env = require_env(
+        [
+            "TWITTER_API_KEY",
+            "TWITTER_API_SECRET",
+            "TWITTER_ACCESS_TOKEN",
+            "TWITTER_ACCESS_SECRET",
+        ],
+        "Twitter",
+    )
+    if env is None:
         return False
 
     try:
         import tweepy  # type: ignore
         client = tweepy.Client(
-            consumer_key=api_key,
-            consumer_secret=api_secret,
-            access_token=access_token,
-            access_token_secret=access_secret,
+            consumer_key=env["TWITTER_API_KEY"],
+            consumer_secret=env["TWITTER_API_SECRET"],
+            access_token=env["TWITTER_ACCESS_TOKEN"],
+            access_token_secret=env["TWITTER_ACCESS_SECRET"],
         )
         response = client.create_tweet(text=text)
         tweet_id = response.data.get("id", "unknown") if response.data else "unknown"
@@ -153,19 +105,15 @@ def post_to_twitter(text: str) -> bool:
 
 def post_to_linkedin(text: str, url: str) -> bool:
     """نشر على LinkedIn"""
-    access_token = os.environ.get("LINKEDIN_ACCESS_TOKEN")
-    user_id = os.environ.get("LINKEDIN_USER_ID")
-
-    if not all([access_token, user_id]):
-        print("⚠️  متغيرات LinkedIn غير محددة | LinkedIn env vars not set")
-        print("   LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID")
+    env = require_env(["LINKEDIN_ACCESS_TOKEN", "LINKEDIN_USER_ID"], "LinkedIn")
+    if env is None:
         return False
 
     try:
         import urllib.request
 
         payload = json.dumps({
-            "author": f"urn:li:person:{user_id}",
+            "author": f"urn:li:person:{env['LINKEDIN_USER_ID']}",
             "lifecycleState": "PUBLISHED",
             "specificContent": {
                 "com.linkedin.ugc.ShareContent": {
@@ -186,7 +134,7 @@ def post_to_linkedin(text: str, url: str) -> bool:
             "https://api.linkedin.com/v2/ugcPosts",
             data=payload,
             headers={
-                "Authorization": f"Bearer {access_token}",
+                "Authorization": f"Bearer {env['LINKEDIN_ACCESS_TOKEN']}",
                 "Content-Type": "application/json",
                 "X-Restli-Protocol-Version": "2.0.0",
             },
@@ -243,7 +191,7 @@ def main():
     )
     parser.add_argument(
         "--base-url",
-        default="https://artsmoroccan.me",
+        default=BASE_URL,
         help="رابط الموقع الأساسي | Base site URL",
     )
     parser.add_argument(
@@ -254,8 +202,7 @@ def main():
     args = parser.parse_args()
 
     if not os.path.exists(args.post):
-        print(f"❌ الملف غير موجود | File not found: {args.post}")
-        sys.exit(1)
+        die(f"الملف غير موجود | File not found: {args.post}")
 
     meta = parse_front_matter(args.post)
     url = build_post_url(meta, args.base_url)

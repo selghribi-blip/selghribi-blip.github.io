@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: 'ar' }}" dir="{{ page.lang | default: 'ar' | replace: 'ar', 'rtl' | replace: 'en', 'ltr' | replace: 'fr', 'ltr' }}">
+<html {% include lang-attrs.html lang=page.lang %}>
 <head>
   
   <meta name="algolia-site-verification"  content="66F320FFCC865600" />

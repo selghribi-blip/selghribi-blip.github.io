@@ -17,8 +17,8 @@ layout: default
     </header>
 
     <!-- محتوى الصفحة | Page Content -->
-    <div class="page-content {% if page.lang == 'ar' or page.lang == nil %}arabic{% endif %}"
-         {% if page.lang %}lang="{{ page.lang }}" dir="{{ page.lang | replace: 'ar', 'rtl' | replace: 'en', 'ltr' }}"{% endif %}>
+    <div class="page-content {% include rtl-class.html lang=page.lang %}"
+         {% include lang-attrs.html lang=page.lang %}>
       {{ content }}
     </div>
 
