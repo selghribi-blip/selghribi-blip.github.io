@@ -110,6 +110,8 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: $space-6;
+  display: block;
+  overflow-x: auto;
 
   th {
     background: $deep-blue;
