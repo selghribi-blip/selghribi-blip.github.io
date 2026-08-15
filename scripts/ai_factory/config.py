@@ -9,6 +9,15 @@ from typing import List
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
+# وحدة Adsterra 300x250 الافتراضية داخل المقال | Default Adsterra 300x250 in-article unit
+DEFAULT_IN_ARTICLE_AD = (
+    '<div style="text-align:center;overflow:hidden;margin:12px auto;">'
+    "<script>atOptions = {'key' : '821b89004c042c614100d52b799e6a33', "
+    "'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {}};</script>"
+    '<script src="https://www.highperformanceformat.com/821b89004c042c614100d52b799e6a33/invoke.js">'
+    "</script></div>"
+)
+
 
 def _env(name: str, default: str = "") -> str:
     return os.environ.get(name, default).strip()
@@ -30,7 +39,7 @@ class AdSnippets:
     def from_env(cls) -> "AdSnippets":
         return cls(
             header=_env("ADSTERRA_HEADER"),
-            in_article=_env("ADSTERRA_IN_ARTICLE"),
+            in_article=_env("ADSTERRA_IN_ARTICLE", DEFAULT_IN_ARTICLE_AD),
             footer=_env("ADSTERRA_FOOTER"),
         )
 
