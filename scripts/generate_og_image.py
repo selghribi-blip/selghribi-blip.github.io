@@ -10,56 +10,22 @@ generate_og_image.py
 
 import argparse
 import os
-import sys
 from pathlib import Path
 
-# الألوان المستوحاة من Arts Moroccan | Colors inspired by Arts Moroccan
-COLORS = {
-    "deep_blue": (26, 58, 92),
-    "terracotta": (192, 103, 74),
-    "gold": (212, 168, 67),
-    "emerald": (45, 106, 79),
-    "cream": (253, 246, 236),
-    "dark_text": (44, 44, 44),
-    "white": (255, 255, 255),
-}
+from content_lib import (
+    COLORS,
+    POSTS_DIR,
+    SITE_NAME,
+    clean,
+    die,
+    parse_front_matter,
+    parse_post_filename,
+)
 
 # إعدادات الصورة | Image settings
 OG_WIDTH = 1200
 OG_HEIGHT = 630
 OUTPUT_DIR = "assets/images/og"
-
-
-def parse_front_matter(filepath: str) -> dict:
-    """تحليل front matter من ملف Markdown | Parse front matter from Markdown file"""
-    meta = {}
-    with open(filepath, encoding="utf-8") as f:
-        content = f.read()
-
-    if not content.startswith("---"):
-        return meta
-
-    parts = content.split("---", 2)
-    if len(parts) < 3:
-        return meta
-
-    import re
-    for line in parts[1].strip().split("\n"):
-        match = re.match(r'^(\w+):\s*["\']?(.+?)["\']?\s*$', line)
-        if match:
-            meta[match.group(1)] = match.group(2)
-
-    return meta
-
-
-def get_slug_from_filename(filepath: str) -> str:
-    """استخراج slug من اسم الملف | Extract slug from filename"""
-    name = Path(filepath).stem
-    # إزالة التاريخ من بداية اسم الملف | Remove date prefix
-    parts = name.split("-", 3)
-    if len(parts) >= 4:
-        return parts[3]
-    return name
 
 
 def generate_og_image(post_path: str, output_dir: str = OUTPUT_DIR) -> str | None:
@@ -75,8 +41,8 @@ def generate_og_image(post_path: str, output_dir: str = OUTPUT_DIR) -> str | Non
         return None
 
     meta = parse_front_matter(post_path)
-    title = meta.get("title", "مقالة جديدة").strip('"\'')
-    slug = get_slug_from_filename(post_path)
+    title = clean(meta.get("title"), "مقالة جديدة")
+    _, slug = parse_post_filename(post_path)
 
     # إنشاء مجلد الإخراج | Create output directory
     os.makedirs(output_dir, exist_ok=True)
@@ -146,8 +112,7 @@ def generate_og_image(post_path: str, output_dir: str = OUTPUT_DIR) -> str | Non
     draw.text((padding, title_y), title_text, font=font_title, fill=COLORS["cream"])
 
     # كتابة اسم الموقع | Write site name
-    site_name = "selghribi.dev | artsmoroccan.me"
-    draw.text((padding, OG_HEIGHT - 80), site_name, font=font_site, fill=COLORS["gold"])
+    draw.text((padding, OG_HEIGHT - 80), SITE_NAME, font=font_site, fill=COLORS["gold"])
 
     # حفظ الصورة | Save image
     img.save(output_path, "PNG", optimize=True)
@@ -155,7 +120,7 @@ def generate_og_image(post_path: str, output_dir: str = OUTPUT_DIR) -> str | Non
     return output_path
 
 
-def generate_all_og_images(posts_dir: str = "_posts", output_dir: str = OUTPUT_DIR) -> int:
+def generate_all_og_images(posts_dir: str = POSTS_DIR, output_dir: str = OUTPUT_DIR) -> int:
     """إنشاء صور OG لجميع المقالات | Generate OG images for all posts"""
     posts = list(Path(posts_dir).glob("*.md"))
     count = 0
@@ -180,12 +145,11 @@ def main():
         print(f"✅ تم إنشاء {count} صورة | Generated {count} images")
     elif args.post:
         if not os.path.exists(args.post):
-            print(f"❌ الملف غير موجود | File not found: {args.post}")
-            sys.exit(1)
+            die(f"الملف غير موجود | File not found: {args.post}")
         generate_og_image(args.post, args.output)
     else:
         parser.print_help()
-        sys.exit(1)
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

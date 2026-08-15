@@ -10,25 +10,10 @@ new_post.py
 
 import argparse
 import os
-import re
 import sys
 from datetime import datetime
-from pathlib import Path
 
-
-def slugify(text: str) -> str:
-    """
-    تحويل النص إلى slug صالح لأسماء الملفات
-    Convert text to a valid filename slug
-    """
-    # إزالة الأحرف الخاصة | Remove special characters
-    text = text.lower().strip()
-    text = re.sub(r'[\s_]+', '-', text)
-    text = re.sub(r'[^\w-]', '', text, flags=re.UNICODE)
-    text = re.sub(r'-+', '-', text)
-    text = text.strip('-')
-    # إذا كان النص عربياً، أضف slug بالإنجليزية | If Arabic, prompt for English slug
-    return text[:60]  # حد أقصى 60 حرف | Max 60 chars
+from content_lib import POSTS_DIR, slugify
 
 
 def get_available_categories() -> list[str]:
@@ -60,7 +45,7 @@ def create_post_file(
     categories: list[str],
     tags: list[str],
     description: str,
-    posts_dir: str = "_posts",
+    posts_dir: str = POSTS_DIR,
 ) -> str:
     """إنشاء ملف المقالة | Create post file"""
     date = datetime.now()
@@ -211,7 +196,7 @@ def main():
     parser.add_argument("--category", help="التصنيف | Category")
     parser.add_argument("--tags", help="الوسوم مفصولة بفاصلة | Comma-separated tags")
     parser.add_argument("--description", help="وصف مختصر | Short description")
-    parser.add_argument("--posts-dir", default="_posts", help="مجلد المقالات | Posts directory")
+    parser.add_argument("--posts-dir", default=POSTS_DIR, help="مجلد المقالات | Posts directory")
     args = parser.parse_args()
 
     # تحديد وضع التشغيل | Determine operation mode

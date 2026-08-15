@@ -1,0 +1,7 @@
+{%- comment -%}
+lang-attrs.html | سمات اللغة والاتجاه | Language + direction attributes
+الاستخدام | Usage: <div {% include lang-attrs.html lang=page.lang %}>
+{%- endcomment -%}
+{%- assign content_lang = include.lang | default: site.lang | default: 'ar' -%}
+{%- if content_lang == 'ar' -%}{%- assign dir = 'rtl' -%}{%- else -%}{%- assign dir = 'ltr' -%}{%- endif -%}
+lang="{{ content_lang }}" dir="{{ dir }}"

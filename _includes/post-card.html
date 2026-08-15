@@ -1,0 +1,48 @@
+<!-- post-card.html | بطاقة مقالة مشتركة | Shared post card -->
+<!-- المعاملات | Params: post, heading, heading_style, excerpt_length,
+     show_lang, read_more, extra_class -->
+{% assign card_post = include.post %}
+{% assign heading = include.heading | default: 'h3' %}
+{% assign excerpt_length = include.excerpt_length | default: 120 %}
+{% assign read_more = include.read_more | default: 'اقرأ المزيد ←' %}
+
+<article class="post-card {{ include.extra_class }}" lang="{{ card_post.lang | default: 'ar' }}">
+  <!-- صورة الغلاف | Cover -->
+  <div class="post-card-image" aria-hidden="true">
+    {% if card_post.image %}
+    <img src="{{ card_post.image }}" alt="{{ card_post.title }}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
+    {% else %}
+    🏺
+    {% endif %}
+  </div>
+
+  <div class="post-card-body">
+    <!-- التصنيف | Category -->
+    {% if card_post.categories.first %}
+    <span class="post-card-category">{{ card_post.categories.first }}</span>
+    {% endif %}
+    {% if include.show_lang and card_post.lang %}
+    <span class="lang-badge lang-badge-{{ card_post.lang }}" style="margin-inline-start:8px;">{{ card_post.lang }}</span>
+    {% endif %}
+
+    <!-- العنوان | Title -->
+    <{{ heading }} class="post-card-title" {% if include.heading_style %}style="{{ include.heading_style }}"{% endif %}>
+      <a href="{{ card_post.url | relative_url }}">{{ card_post.title }}</a>
+    </{{ heading }}>
+
+    <!-- المقتطف | Excerpt -->
+    <p class="post-card-excerpt">
+      {{ card_post.description | default: card_post.excerpt | strip_html | truncate: excerpt_length }}
+    </p>
+
+    <!-- الفوتر | Footer -->
+    <div class="post-card-footer">
+      <time datetime="{{ card_post.date | date_to_xmlschema }}" style="display:flex; align-items:center; gap:4px;">
+        📅 {{ card_post.date | date: "%d %B %Y" }}
+      </time>
+      <a href="{{ card_post.url | relative_url }}" class="post-card-read-more">
+        {{ read_more }}
+      </a>
+    </div>
+  </div>
+</article>
