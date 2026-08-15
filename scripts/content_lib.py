@@ -126,7 +126,13 @@ def parse_post_filename(filepath: str) -> tuple[datetime | None, str]:
 
 
 def post_slug(meta: dict) -> str:
-    """slug المقالة من اسم الملف أو العنوان | Post slug from filename or title"""
+    """
+    slug المقالة كما يحسبه Jekyll | Post slug the way Jekyll resolves it
+    الأولوية | Precedence: front matter slug, filename, title
+    """
+    slug = clean(meta.get("slug"))
+    if slug:
+        return slug
     filepath = meta.get("_filepath")
     if filepath:
         _, slug = parse_post_filename(filepath)
@@ -136,18 +142,21 @@ def post_slug(meta: dict) -> str:
 
 
 def post_date(meta: dict) -> datetime:
-    """تاريخ المقالة من اسم الملف أو front matter | Post date from filename or front matter"""
-    filepath = meta.get("_filepath")
-    if filepath:
-        date, _ = parse_post_filename(filepath)
-        if date:
-            return date
+    """
+    تاريخ المقالة كما يحسبه Jekyll | Post date the way Jekyll resolves it
+    الأولوية | Precedence: front matter date, filename, today
+    """
     date_str = clean(meta.get("date"))
     if date_str:
         try:
             return datetime.strptime(date_str[:10], "%Y-%m-%d")
         except ValueError:
             pass
+    filepath = meta.get("_filepath")
+    if filepath:
+        date, _ = parse_post_filename(filepath)
+        if date:
+            return date
     return datetime.now()
 
 
@@ -171,12 +180,11 @@ def load_posts(
     posts = []
 
     for filepath in sorted(Path(posts_dir).glob("*.md"), reverse=True):
-        date, slug = parse_post_filename(str(filepath))
-        if cutoff is not None and (date is None or date < cutoff):
-            continue
         meta = parse_front_matter(str(filepath), with_content=with_content)
-        meta["_date"] = date or post_date(meta)
-        meta["_slug"] = slug
+        meta["_date"] = post_date(meta)
+        meta["_slug"] = post_slug(meta)
+        if cutoff is not None and meta["_date"] < cutoff:
+            continue
         posts.append(meta)
 
     return posts
