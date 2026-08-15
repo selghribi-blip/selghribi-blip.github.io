@@ -72,3 +72,9 @@ feed:
 
 # اللغة الافتراضية | Default Language
 lang: ar
+
+# الإعلانات | Ads
+# ضع أكواد الشبكة في _includes/ads/*.html ثم اجعل enabled: true
+# Paste network snippets into _includes/ads/*.html then flip enabled to true
+ads:
+  enabled: true

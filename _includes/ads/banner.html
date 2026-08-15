@@ -1,0 +1,18 @@
+{%- comment -%}
+بانر أعلى المحتوى | Banner above the content (e.g. Adsterra 728x90 / 320x50).
+الصق كود الوحدة داخل الشرط. Paste the ad unit script inside the condition.
+{%- endcomment -%}
+{%- if site.ads.enabled -%}
+<div class="ad-slot ad-slot-top" aria-label="إعلان" style="text-align:center;overflow:hidden;margin:12px auto;">
+<script>
+  atOptions = {
+    'key' : '6e99b8f1f383eaef3e00cf87ecfb7604',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/6e99b8f1f383eaef3e00cf87ecfb7604/invoke.js"></script>
+</div>
+{%- endif -%}

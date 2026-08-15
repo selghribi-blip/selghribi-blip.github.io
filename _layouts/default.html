@@ -7,6 +7,7 @@
 <script src="https://unpkg.com/@algolia/sitesearch@latest/dist/search.min.js"></script>
   
  {% include head.html %}
+  {% include ads/head.html %}
 </head>
 <body class="{% if page.lang == 'ar' or page.lang == nil %}rtl{% endif %}">
 
@@ -42,7 +43,9 @@
 
     <!-- المحتوى الرئيسي | Main Content -->
     <main class="site-main" id="main-content" tabindex="-1">
+      {% include ads/banner.html %}
       {{ content }}
+      {% include ads/footer.html %}
     </main>
 
     <!-- الفوتر | Footer -->
