@@ -1,0 +1,80 @@
+# ai-content-factory.yml
+# توليد ونشر المحتوى تلقائياً | Generate AI content and publish it to the blog(s)
+# يعمل يومياً + يدوياً | Runs daily and on demand
+
+name: 🏭 AI Content Factory
+
+on:
+  schedule:
+    - cron: '17 6 * * *'  # 06:17 UTC daily
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'عدد المواضيع | Number of topics'
+        required: false
+        default: '1'
+      targets:
+        description: 'أهداف النشر | Publish targets'
+        required: false
+        default: 'jekyll,blogger'
+        type: choice
+        options:
+          - jekyll
+          - blogger
+          - jekyll,blogger
+      dry_run:
+        description: 'تشغيل تجريبي بدون نشر | Generate without publishing'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: ai-content-factory
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    name: 🧠 Generate and publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: 🏭 Run the factory
+        env:
+          PYTHONPATH: scripts
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          BLOGGER_BLOG_ID: ${{ secrets.BLOGGER_BLOG_ID }}
+          BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
+          BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
+          BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
+          ADSTERRA_HEADER: ${{ vars.ADSTERRA_HEADER }}
+          ADSTERRA_IN_ARTICLE: ${{ vars.ADSTERRA_IN_ARTICLE }}
+          ADSTERRA_FOOTER: ${{ vars.ADSTERRA_FOOTER }}
+        run: |
+          python -m ai_factory \
+            --count "${{ github.event.inputs.count || '1' }}" \
+            --targets "${{ github.event.inputs.targets || 'jekyll,blogger' }}" \
+            ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}
+
+      - name: 📤 Commit new content
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add _posts ai-pages scripts/ai_factory/state.json
+          if git diff --cached --quiet; then
+            echo "no new content"
+            exit 0
+          fi
+          git commit -m "chore(ai-factory): publish generated content"
+          git push

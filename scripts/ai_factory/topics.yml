@@ -1,0 +1,109 @@
+# قائمة المواضيع | Topic queue for the AI content factory.
+#
+# كل موضوع | Each topic:
+#   keyword    : الكلمة المفتاحية الأساسية | primary search keyword
+#   language   : ar | en | fr
+#   angle      : زاوية المقالة ونية البحث | search intent / angle
+#   audience   : الجمهور المستهدف | target reader
+#   categories : تصنيفات Jekyll | Jekyll categories
+#   geo        : السوق المستهدف (للتوثيق ولتقدير CPM) | target market, documentation only
+#   mode       : article (مقالة Markdown) | page (صفحة HTML كاملة بأسلوب DeepSite)
+#
+# النظام ينشر المواضيع بالترتيب ويتجاهل ما نُشر سابقاً (scripts/ai_factory/state.json).
+# The runner walks this list in order and skips topics already published.
+
+- keyword: "best free AI writing tools for small business"
+  language: en
+  angle: "hands-on comparison, pricing tiers, when the free tier stops being enough"
+  audience: "solo founders and small business owners in the US and UK"
+  categories: [tools, automation]
+  geo: US
+  mode: article
+
+- keyword: "how to reduce cloud hosting costs for a small website"
+  language: en
+  angle: "practical cost audit checklist with concrete levers and trade-offs"
+  audience: "indie developers running side projects"
+  categories: [tools, automation]
+  geo: US
+  mode: article
+
+- keyword: "static site vs wordpress for a business blog"
+  language: en
+  angle: "decision framework: speed, cost, SEO, maintenance burden"
+  audience: "marketers choosing a publishing stack"
+  categories: [tools, design]
+  geo: CA
+  mode: article
+
+- keyword: "github actions ci cd tutorial for beginners"
+  language: en
+  angle: "build a first pipeline step by step, then harden it"
+  audience: "junior developers"
+  categories: [tutorial, automation]
+  geo: US
+  mode: article
+
+- keyword: "self hosted automation with n8n"
+  language: en
+  angle: "when self-hosting beats SaaS, plus a realistic maintenance checklist"
+  audience: "technical operators automating their own business"
+  categories: [automation, tools]
+  geo: DE
+  mode: article
+
+- keyword: "أفضل أدوات الذكاء الاصطناعي المجانية للطلاب"
+  language: ar
+  angle: "مقارنة عملية مع حدود الاستخدام المجاني وبدائل لكل أداة"
+  audience: "طلاب جامعات عرب"
+  categories: [tools, career]
+  geo: MA
+  mode: article
+
+- keyword: "كيف تنشئ مدونة مجانية على GitHub Pages"
+  language: ar
+  angle: "دليل خطوة بخطوة من الصفر حتى نطاق مخصص وHTTPS"
+  audience: "مبتدئون يريدون موقعاً بدون تكلفة استضافة"
+  categories: [tutorial, github]
+  geo: MA
+  mode: article
+
+- keyword: "الربح من المدونات العربية في 2026"
+  language: ar
+  angle: "مصادر الدخل الواقعية، الأرقام المتوقعة، والأخطاء التي تُفقد الحساب"
+  audience: "أصحاب مدونات عربية جديدة"
+  categories: [career, opinion]
+  geo: SA
+  mode: article
+
+- keyword: "أتمتة المحتوى باستخدام الذكاء الاصطناعي"
+  language: ar
+  angle: "بناء خط إنتاج محتوى مع مراجعة بشرية، وحدود ما يسمح به محركات البحث"
+  audience: "صنّاع محتوى ومطورون"
+  categories: [automation, python]
+  geo: EG
+  mode: article
+
+- keyword: "python web scraping best practices"
+  language: en
+  angle: "robots.txt, rate limiting, caching, and staying maintainable"
+  audience: "python developers building data pipelines"
+  categories: [python, tutorial]
+  geo: UK
+  mode: article
+
+- keyword: "AI productivity toolkit landing page"
+  language: en
+  angle: "single-page product site for a fictional AI productivity toolkit"
+  audience: "knowledge workers evaluating AI tools"
+  categories: [design, project]
+  geo: US
+  mode: page
+
+- keyword: "صفحة تعريفية بأدوات الذكاء الاصطناعي للمطورين"
+  language: ar
+  angle: "صفحة هبوط عربية تعرض أدوات تطوير مدعومة بالذكاء الاصطناعي"
+  audience: "مطورون عرب"
+  categories: [design, project]
+  geo: MA
+  mode: page

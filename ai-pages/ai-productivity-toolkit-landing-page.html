@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniFlow AI — The Operating System for Knowledge Workers</title>
+    <meta name="description" content="Stop drowning in tabs, transcripts, and drafts. OmniFlow is your all-in-one AI productivity toolkit that automates research, writing, and task management.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            900: '#065f46',
+                        },
+                        darkBg: '#0b0f19',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-effect {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(11, 15, 25, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 antialiased selection:bg-emerald-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-darkBg/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-darkBg font-bold text-xl shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-white">OmniFlow<span class="text-emerald-400">.ai</span></span>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#features" class="hover:text-white transition">Features</a>
+                <a href="#toolkit" class="hover:text-white transition">Toolkit</a>
+                <a href="#testimonials" class="hover:text-white transition">Testimonials</a>
+                <a href="#pricing" class="hover:text-white transition">Pricing</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <a href="#pricing" class="hidden sm:inline-block text-sm font-medium text-slate-300 hover:text-white transition px-4 py-2">Sign In</a>
+                <a href="#pricing" class="bg-emerald-500 hover:bg-emerald-600 text-darkBg font-semibold text-sm px-5 py-2.5 rounded-xl transition shadow-lg shadow-emerald-500/20">
+                    Get Started Free
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 md:pt-44 md:pb-32 overflow-hidden">
+        <div class="glow-effect top-10 left-1/2 -translate-x-1/2"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+            
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-emerald-400 text-xs md:text-sm font-medium mb-8 animate-pulse">
+                <i class="fa-solid fa-sparkles"></i>
+                <span>Introducing OmniFlow 3.0 — Powered by Advanced Multi-Model AI</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight max-w-4xl mx-auto leading-[1.1]">
+                Stop Drowning in Tabs. <br class="hidden sm:inline">
+                <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Reclaim 15+ Hours a Week.</span>
+            </h1>
+
+            <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
+                The all-in-one AI productivity toolkit for modern knowledge workers. Automate research, synthesize messy meeting transcripts, and draft high-impact content in seconds.
+            </p>
+
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#pricing" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-darkBg font-bold px-8 py-4 rounded-xl transition shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-3 text-base">
+                    <span>Start 14-Day Free Trial</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <a href="#features" class="w-full sm:w-auto glass-panel hover:bg-white/5 text-slate-200 font-medium px-8 py-4 rounded-xl transition flex items-center justify-center gap-3 text-base">
+                    <i class="fa-regular fa-circle-play text-emerald-400"></i>
+                    <span>Watch 2-Min Demo</span>
+                </a>
+            </div>
+
+            <p class="mt-4 text-xs text-slate-500">No credit card required • Cancel anytime • Free plan available</p>
+
+            <!-- Product UI Preview -->
+            <div class="mt-16 relative max-w-5xl mx-auto rounded-2xl glass-panel p-2 md:p-4 shadow-2xl border border-slate-700/50">
+                <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent z-10 pointer-events-none"></div>
+                <div class="rounded-xl overflow-hidden bg-slate-900 border border-slate-800">
+                    <!-- Browser Header Bar -->
+                    <div class="bg-slate-950 px-4 py-3 flex items-center justify-between border-b border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-rose-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-amber-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+                        </div>
+                        <div class="text-xs text-slate-400 bg-slate-900 px-4 py-1 rounded-md border border-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-lock text-emerald-400 text-[10px]"></i>
+                            <span>app.omniflow.ai/workspace</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-400 text-xs">
+                            <i class="fa-solid fa-cloud-arrow-down text-emerald-400"></i>
+                            <span class="hidden sm:inline">Synced</span>
+                        </div>
+                    </div>
+                    <!-- Mock App UI -->
+                    <div class="p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                        <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Quick Capture</span>
+                                <i class="fa-solid fa-microphone text-slate-400"></i>
+                            </div>
+                            <p class="text-sm text-slate-300 font-medium">"Summarize the Q3 Product Strategy sync and extract action items for Engineering."</p>
+                            <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                                <span>Voice note • 42s</span>
+                                <span class="text-emerald-400 font-semibold">Processing...</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800 md:col-span-2">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Generated Synthesis</span>
+                                <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/20">Ready to Export</span>
+                            </div>
+                            <div class="space-y-2 text-sm text-slate-300">
+                                <p class="font-semibold text-white">✨ Key Takeaways: Q3 Roadmap Pivot</p>
+                                <p class="text-slate-400 text-xs leading-relaxed">1. Prioritize native integrations over experimental features to reduce churn.<br>2. Engineering lead Sarah to deliver API docs by Thursday.<br>3. Marketing campaign scheduled for launch on Oct 12.</p>
+                            </div>
+                            <div class="mt-4 flex gap-2">
+                                <span class="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">Notion</span>
+                                <span class="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">Slack</span>
+                                <span class="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">Linear</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Social Proof / Logos -->
+    <section class="py-12 border-y border-slate-800/60 bg-slate-950/40">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-xs font-semibold tracking-widest uppercase text-slate-500 mb-8">
+                Trusted by high-performers at world-class companies
+            </p>
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition duration-300">
+                <span class="text-xl font-bold tracking-tighter text-slate-300"><i class="fa-brands fa-stripe mr-2"></i> STRIPE</span>
+                <span class="text-xl font-bold tracking-tighter text-slate-300"><i class="fa-brands fa-figma mr-2"></i> FIGMA</span>
+                <span class="text-xl font-bold tracking-tighter text-slate-300"><i class="fa-brands fa-linear mr-2"></i> LINEAR</span>
+                <span class="text-xl font-bold tracking-tighter text-slate-300"><i class="fa-brands fa-notion mr-2"></i> NOTION</span>
+                <span class="text-xl font-bold tracking-tighter text-slate-300"><i class="fa-brands fa-github mr-2"></i> GITHUB</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-emerald-400 font-semibold text-sm uppercase tracking-widest mb-3">Built for Knowledge Workers</h2>
+                <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Everything you need to think faster and build better.</h3>
+                <p class="mt-4 text-slate-400 text-base">Stop switching context between 10 different AI tools. OmniFlow unites your workflow under one lightning-fast assistant.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass-panel p-8 rounded-2xl relative group hover:border-emerald-500/50 transition duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl font-bold mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Context-Aware Memory</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">OmniFlow indexes your documents, past chats, and notes securely, giving you personalized answers tailored to your exact projects.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-panel p-8 rounded-2xl relative group hover:border-emerald-500/50 transition duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center text-xl font-bold mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Universal Action Engine</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">Highlight text anywhere on your screen or web browser to instantly rewrite, translate, summarize, or extract actionable tasks.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-panel p-8 rounded-2xl relative group hover:border-emerald-500/50 transition duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl font-bold mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Enterprise-Grade Privacy</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">Your data is never used to train public models. Fully encrypted in transit and at rest with strict SOC 2 Type II compliance.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Toolkit Showcase Section -->
+    <section id="toolkit" class="py-24 bg-slate-950/60 border-y border-slate-800/60">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-emerald-400 font-semibold text-sm uppercase tracking-widest mb-3">The OmniFlow Suite</h2>
+                    <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-6">Four powerful tools engineered for peak productivity.</h3>
+                    <p class="text-slate-400 text-base mb-8">Designed by researchers, PMs, and software engineers who were tired of bloated software. Every tool launches in milliseconds.</p>
+
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold text-base">Smart Doc Writer</h4>
+                                <p class="text-slate-400 text-sm mt-1">Draft PRDs, blog posts, and emails in your unique professional voice.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-headphones"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold text-base">Meeting Transcriber & Summarizer</h4>
+                                <p class="text-slate-400 text-sm mt-1">Join Zoom or Google Meet automatically, record notes, and assign tasks to Linear.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold text-base">Deep Web Researcher</h4>
+                                <p class="text-slate-400 text-sm mt-1">Scrape dozens of web sources instantly to compile comprehensive market reports.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Card -->
+                <div class="glass-panel p-6 sm:p-8 rounded-3xl relative">
+                    <div class="absolute -top-4 -right-4 bg-emerald-500 text-darkBg text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+                        ⚡ 10x Speed
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <span class="text-sm font-medium text-white">Draft Q3 Financial Overview</span>
+                            </div>
+                            <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">Completed</span>
+                        </div>
+
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <span class="text-sm font-medium text-white">Analyze 42 customer interview transcripts</span>
+                            </div>
+                            <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-1 rounded">Completed</span>
+                        </div>
+
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center animate-spin">
+                                    <i class="fa-solid fa-spinner"></i>
+                                </div>
+                                <span class="text-sm font-medium text-white">Generate investor pitch deck structure</span>
+                            </div>
+                            <span class="text-xs text-amber-400 bg-amber-500/10 px-2 py-1 rounded">In Progress</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-emerald-400 font-semibold text-sm uppercase tracking-widest mb-3">Loved by Professionals</h2>
+                <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Hear from knowledge workers who saved hours every week.</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="glass-panel p-8 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex text-amber-400 text-sm gap-1 mb-4">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-slate-300 text-sm leading-relaxed">"OmniFlow has completely replaced my messy notes app, chatgpt tabs, and transcription tools. It saves me at least 10 hours a week on research and writing."</p>
+                    </div>
+                    <div class="mt-8 flex items-center gap-3 pt-4 border-t border-slate-800">
+                        <img src="https://placehold.co/48x48/1e293b/10b981?text=JD" alt="Jane Doe" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <h4 class="text-sm font-semibold text-white">Jane Doe</h4>
+                            <p class="text-xs text-slate-400">Senior Product Manager at FintechCorp</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="glass-panel p-8 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex text-amber-400 text-sm gap-1 mb-4">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-slate-300 text-sm leading-relaxed">"The meeting summarizer alone is worth 10x the price. It captures nuance and spits out exact action items that actually sync with Linear."</p>
+                    </div>
+                    <div class="mt-8 flex items-center gap-3 pt-4 border-t border-slate-800">
+                        <img src="https://placehold.co/48x48/1e293b/10b981?text=MS" alt="Mark Smith" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <h4 class="text-sm font-semibold text-white">Mark Smith</h4>
+                            <p class="text-xs text-slate-400">Engineering Lead at CloudScale</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="glass-panel p-8 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex text-amber-400 text-sm gap-1 mb-4">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-slate-300 text-sm leading-relaxed">"As a researcher, writing literature reviews used to take days. With OmniFlow's deep research toolkit, I can synthesize dozens of papers in under an hour."</p>
+                    </div>
+                    <div class="mt-8 flex items-center gap-3 pt-4 border-t border-slate-800">
+                        <img src="https://placehold.co/48x48/1e293b/10b981?text=EC" alt="Elena Chen" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <h4 class="text-sm font-semibold text-white">Dr. Elena Chen</h4>
+                            <p class="text-xs text-slate-400">Lead AI Researcher</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 bg-slate-950/60 border-y border-slate-800/60 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-emerald-400 font-semibold text-sm uppercase tracking-widest mb-3">Simple & Transparent Pricing</h2>
+                <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Invest in your focus. Cancel anytime.</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Free / Starter Plan -->
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-xl font-bold text-white">Starter</h4>
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-slate-300">Free Forever</span>
+                        </div>
+                        <p class="text-slate-400 text-sm mb-6">Essential AI productivity tools for individuals starting out.</p>
+                        <div class="text-3xl sm:text-4xl font-extrabold text-white mb-6">$0 <span class="text-sm font-normal text-slate-400">/ month</span></div>
+
+                        <ul class="space-y-4 text-sm text-slate-300 mb-8">
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> 50 AI queries per day</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Basic web research assistant</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Document summarization</li>
+                            <li class="flex items-center gap-3 text-slate-500"><i class="fa-solid fa-xmark text-slate-600"></i> Unlimited meeting notes</li>
+                        </ul>
+                    </div>
+
+                    <a href="#" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3.5 rounded-xl transition text-center text-sm">
+                        Get Started Free
+                    </a>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between border-emerald-500/50 bg-gradient-to-b from-emerald-950/10 via-transparent to-transparent relative shadow-2xl">
+                    <div class="absolute -top-3 right-8 bg-emerald-500 text-darkBg text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                        Most Popular
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-xl font-bold text-white">Pro Professional</h4>
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400">14-Day Trial</span>
+                        </div>
+                        <p class="text-slate-400 text-sm mb-6">Unlimited AI power for knowledge workers and power users.</p>
+                        <div class="text-3xl sm:text-4xl font-extrabold text-white mb-6">$24 <span class="text-sm font-normal text-slate-400">/ month</span></div>
+
+                        <ul class="space-y-4 text-sm text-slate-300 mb-8">
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Unlimited AI queries & synthesis</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Automatic Meeting Transcriber (Zoom/Meet)</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Advanced Deep Web Researcher</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Integrations with Notion, Slack, Linear</li>
+                        </ul>
+                    </div>
+
+                    <a href="#" class="w-full bg-emerald-500 hover:bg-emerald-600 text-darkBg font-bold py-3.5 rounded-xl transition text-center text-sm shadow-lg shadow-emerald-500/20">
+                        Start 14-Day Free Trial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-24">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-emerald-400 font-semibold text-sm uppercase tracking-widest mb-3">Got Questions?</h2>
+                <h3 class="text-3xl font-bold text-white tracking-tight">Frequently Asked Questions</h3>
+            </div>
+
+            <div class="space-y-6">
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h4 class="text-white font-semibold text-base mb-2">Is my data secure and private?</h4>
+                    <p class="text-slate-400 text-sm">Yes. We use strict enterprise encryption and never use your personal or corporate documents to train public models. Your data remains strictly yours.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h4 class="text-white font-semibold text-base mb-2">Can I cancel my subscription at any time?</h4>
+                    <p class="text-slate-400 text-sm">Absolutely. You can cancel with 1 click from your account dashboard. No annoying cancellation flows or hidden fees.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h4 class="text-white font-semibold text-base mb-2">What apps does OmniFlow integrate with?</h4>
+                    <p class="text-slate-400 text-sm">OmniFlow seamlessly connects with Notion, Slack, Linear, Google Workspace, GitHub, and major web browsers via our Chrome extension.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 py-16 text-slate-400 text-sm">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-darkBg font-bold">
+                        <i class="fa-solid fa-bolt-lightning text-sm"></i>
+                    </div>
+                    <span class="text-lg font-bold text-white">OmniFlow<span class="text-emerald-400">.ai</span></span>
+                </div>
+                <p class="text-xs text-slate-500 leading-relaxed">The AI operating system designed to help knowledge workers reclaim their focus and ship faster.</p>
+            </div>
+
+            <div>
+                <h4 class="text-white font-semibold text-sm mb-4">Product</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#features" class="hover:text-white transition">Features</a></li>
+                    <li><a href="#toolkit" class="hover:text-white transition">Toolkit</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition">Pricing</a></li>
+                    <li><a href="#" class="hover:text-white transition">Changelog</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-semibold text-sm mb-4">Company</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="#" class="hover:text-white transition">Careers <span class="bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded text-[10px] ml-1">We're hiring</span></a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-semibold text-sm mb-4">Stay Updated</h4>
+                <p class="text-xs text-slate-500 mb-3">Get productivity tips and AI workflow strategies directly in your inbox.</p>
+                <form class="flex gap-2" onsubmit="event.preventDefault(); alert('Thank you for subscribing!');">
+                    <input type="email" placeholder="Enter your email" required class="bg-slate-900 border border-slate-800 px-3 py-2 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
+                    <button type="submit" class="bg-emerald-500 text-darkBg px-4 py-2 rounded-lg text-xs font-bold hover:bg-emerald-600 transition">Join</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600">
+            <p>&copy; 2025 OmniFlow AI, Inc. All rights reserved.</p>
+            <div class="flex gap-6 mt-4 sm:mt-0">
+                <a href="#" class="hover:text-slate-400 transition"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="hover:text-slate-400 transition"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#" class="hover:text-slate-400 transition"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
