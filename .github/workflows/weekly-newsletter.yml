@@ -48,8 +48,12 @@ jobs:
 
       # بناء النشرة | Build newsletter
       - name: 📰 Build newsletter HTML
+        env:
+          DAYS: ${{ github.event.inputs.days || '7' }}
         run: |
-          DAYS="${{ github.event.inputs.days || '7' }}"
+          case "$DAYS" in
+            ''|*[!0-9]*) echo "❌ عدد أيام غير صالح | Invalid days value"; exit 1 ;;
+          esac
           python scripts/newsletter_builder.py \
             --since "$DAYS" \
             --output newsletter_output.html \
@@ -70,10 +74,14 @@ jobs:
           EMAIL_API_KEY: ${{ secrets.EMAIL_API_KEY }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_LIST_ID: ${{ secrets.EMAIL_LIST_ID }}
+          DAYS: ${{ github.event.inputs.days || '7' }}
         run: |
+          case "$DAYS" in
+            ''|*[!0-9]*) echo "❌ عدد أيام غير صالح | Invalid days value"; exit 1 ;;
+          esac
           if [ -n "$EMAIL_API_KEY" ]; then
             python scripts/newsletter_builder.py \
-              --since "${{ github.event.inputs.days || '7' }}" \
+              --since "$DAYS" \
               --output newsletter_output.html \
               --send
             echo "✅ تم إرسال النشرة | Newsletter sent"
@@ -83,9 +91,11 @@ jobs:
 
       # ملخص | Summary
       - name: 📊 Job summary
+        env:
+          DAYS: ${{ github.event.inputs.days || '7' }}
         run: |
           echo "## 📬 نتيجة النشرة الأسبوعية | Weekly Newsletter Result" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **التاريخ | Date:** $(date +'%Y-%m-%d')" >> $GITHUB_STEP_SUMMARY
-          echo "- **الأيام المغطاة | Days covered:** ${{ github.event.inputs.days || '7' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **الأيام المغطاة | Days covered:** $DAYS" >> $GITHUB_STEP_SUMMARY
           echo "- **الحالة | Status:** ✅ تم البناء بنجاح | Build successful" >> $GITHUB_STEP_SUMMARY

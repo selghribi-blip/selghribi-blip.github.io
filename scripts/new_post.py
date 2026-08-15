@@ -31,6 +31,12 @@ def slugify(text: str) -> str:
     return text[:60]  # حد أقصى 60 حرف | Max 60 chars
 
 
+def yaml_quote(text: str) -> str:
+    """تهريب النص لقيمة YAML بين علامتي تنصيص | Escape text for a quoted YAML value"""
+    text = re.sub(r'\s+', ' ', str(text)).strip()
+    return text.replace('\\', '\\\\').replace('"', '\\"')
+
+
 def get_available_categories() -> list[str]:
     """الحصول على التصنيفات المتاحة | Get available categories"""
     return [
@@ -75,17 +81,17 @@ def create_post_file(
             print("إلغاء | Cancelled")
             sys.exit(0)
 
-    categories_str = "[" + ", ".join(categories) + "]"
-    tags_str = "[" + ", ".join(tags) + "]"
+    categories_str = "[" + ", ".join(f'"{yaml_quote(c)}"' for c in categories) + "]"
+    tags_str = "[" + ", ".join(f'"{yaml_quote(t)}"' for t in tags) + "]"
 
     content = f"""---
 layout: post
-title: "{title}"
-title_en: "{title_en}"
+title: "{yaml_quote(title)}"
+title_en: "{yaml_quote(title_en)}"
 date: {date_str}
 categories: {categories_str}
 tags: {tags_str}
-description: "{description}"
+description: "{yaml_quote(description)}"
 image: /assets/images/og/{slug}.png
 lang: {lang}
 read_time: 5

@@ -12,6 +12,7 @@ newsletter_builder.py
 """
 
 import argparse
+import html
 import os
 import re
 import sys
@@ -92,12 +93,14 @@ def build_html_newsletter(posts: list[dict], base_url: str = "https://artsmorocc
 
     posts_html = ""
     for post in posts:
-        title = post.get("title", "").strip('"\'')
-        description = post.get("description", post.get("_excerpt", "")).strip('"\'')
-        url = build_post_url(post, base_url)
+        title = html.escape(post.get("title", "").strip('"\''))
+        description = html.escape(
+            post.get("description", post.get("_excerpt", "")).strip('"\'')[:200]
+        )
+        url = html.escape(build_post_url(post, base_url), quote=True)
         date = post.get("_date", datetime.now())
         date_str = date.strftime("%d %B %Y")
-        categories = post.get("categories", "")
+        categories = html.escape(str(post.get("categories", ""))[:30])
 
         posts_html += f"""
     <tr>
@@ -105,11 +108,11 @@ def build_html_newsletter(posts: list[dict], base_url: str = "https://artsmorocc
         <table width="100%" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td style="background: #ffffff; border-radius: 12px; padding: 24px; border: 1px solid #e8ddd0;">
-              {"<p style='font-size:12px; color:#c0674a; text-transform:uppercase; margin:0 0 8px;'>" + categories[:30] + "</p>" if categories else ""}
+              {"<p style='font-size:12px; color:#c0674a; text-transform:uppercase; margin:0 0 8px;'>" + categories + "</p>" if categories else ""}
               <h2 style="margin:0 0 12px; font-size:20px; color:#1a3a5c; font-family:Georgia,serif;">
                 <a href="{url}" style="color:#1a3a5c; text-decoration:none;">{title}</a>
               </h2>
-              <p style="margin:0 0 16px; color:#5a5a5a; font-size:15px; line-height:1.7;">{description[:200]}...</p>
+              <p style="margin:0 0 16px; color:#5a5a5a; font-size:15px; line-height:1.7;">{description}...</p>
               <p style="margin:0; font-size:13px; color:#888;">📅 {date_str}</p>
               <br>
               <a href="{url}"

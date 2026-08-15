@@ -49,15 +49,21 @@ jobs:
       # اكتشاف الملفات الجديدة | Detect new files
       - name: 🔍 Detect new post files
         id: detect
+        env:
+          INPUT_POST_PATH: ${{ github.event.inputs.post_path }}
         run: |
           # الحصول على قائمة الملفات المضافة في آخر commit
-          if [ "${{ github.event.inputs.post_path }}" != "" ]; then
-            NEW_POSTS="${{ github.event.inputs.post_path }}"
+          if [ -n "$INPUT_POST_PATH" ]; then
+            NEW_POSTS="$INPUT_POST_PATH"
           else
             NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- '_posts/*.md' || echo "")
           fi
 
-          echo "new_posts=${NEW_POSTS}" >> $GITHUB_OUTPUT
+          {
+            echo "new_posts<<POSTS_EOF"
+            echo "$NEW_POSTS"
+            echo "POSTS_EOF"
+          } >> "$GITHUB_OUTPUT"
 
           if [ -n "$NEW_POSTS" ]; then
             echo "has_new_posts=true" >> $GITHUB_OUTPUT
@@ -102,11 +108,16 @@ jobs:
           TWITTER_ACCESS_SECRET: ${{ secrets.TWITTER_ACCESS_SECRET }}
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_USER_ID: ${{ secrets.LINKEDIN_USER_ID }}
+          PLATFORM: ${{ github.event.inputs.platform || 'all' }}
+          NEW_POSTS: ${{ needs.detect-new-posts.outputs.new_posts }}
         run: |
-          PLATFORM="${{ github.event.inputs.platform || 'all' }}"
+          case "$PLATFORM" in
+            twitter|linkedin|all) ;;
+            *) echo "❌ منصة غير صالحة | Invalid platform: $PLATFORM"; exit 1 ;;
+          esac
 
           # نشر كل مقالة جديدة | Post each new article
-          echo "${{ needs.detect-new-posts.outputs.new_posts }}" | while read -r POST; do
+          echo "$NEW_POSTS" | while read -r POST; do
             if [ -n "$POST" ] && [ -f "$POST" ]; then
               echo "📣 نشر: $POST"
               python scripts/social_poster.py --post "$POST" --platform "$PLATFORM"
