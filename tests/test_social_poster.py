@@ -83,11 +83,14 @@ class TestBuildPostUrl:
         url = sp.build_post_url({"title": "T"})
         assert f"/blog/{today.strftime('%Y-%m-%d').replace('-', '/')}/" in url
 
-    def test_malformed_date_still_returns_url(self):
-        # التاريخ غير المكتمل يستخدم المسار الاحتياطي | Incomplete date uses the fallback branch
+    def test_malformed_date_falls_back_to_today(self):
+        # التاريخ غير المكتمل يستخدم تاريخ اليوم | Incomplete date falls back to today
+        today = datetime.now()
         url = sp.build_post_url({"date": "2026", "title": "T"})
-        assert url.startswith("https://artsmoroccan.me/blog/")
-        assert url.endswith("/t/")
+        assert url == (
+            f"https://artsmoroccan.me/blog/{today.strftime('%Y')}/"
+            f"{today.strftime('%m')}/{today.strftime('%d')}/t/"
+        )
 
 
 class TestBuildTwitterText:

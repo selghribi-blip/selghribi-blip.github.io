@@ -140,6 +140,19 @@ pytest
 pytest --cov --cov-report=term-missing
 ```
 
+اختبارات وحدة لـ `assets/js/main.js` موجودة في `tests/js/` وتعمل بـ Vitest + jsdom:
+
+```bash
+# تثبيت الاعتمادات | Install dependencies
+npm install
+
+# تشغيل الاختبارات | Run tests
+npm test
+
+# تشغيل مع تقرير التغطية | Run with coverage report
+npm run test:coverage
+```
+
 تُشغَّل الاختبارات تلقائياً على كل PR عبر `quality-check.yml`.
 
 ---

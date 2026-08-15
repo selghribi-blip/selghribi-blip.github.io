@@ -1,0 +1,15 @@
+{
+  "name": "selghribi-github-io",
+  "private": true,
+  "description": "أدوات تطوير واختبار للواجهة | Frontend dev & test tooling for artsmoroccan.me",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.10",
+    "jsdom": "^26.1.0",
+    "vitest": "^4.1.10"
+  }
+}

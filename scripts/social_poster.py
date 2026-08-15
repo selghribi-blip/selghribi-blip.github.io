@@ -63,8 +63,8 @@ def build_post_url(meta: dict, base_url: str = "https://artsmoroccan.me") -> str
         date_parts = str(date_str).split("-")
         year, month, day = date_parts[0], date_parts[1], date_parts[2][:2]
     except (IndexError, ValueError):
-        year = month = day = datetime.now().strftime("%Y %m %d").split()
-        year, month, day = str(year[0]), str(month[0]), str(day[0])
+        now = datetime.now()
+        year, month, day = now.strftime("%Y"), now.strftime("%m"), now.strftime("%d")
 
     # استخراج slug من عنوان | Extract slug from title
     title = meta.get("title", "post").lower()

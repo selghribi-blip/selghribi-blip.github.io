@@ -28,3 +28,4 @@ htmlcov/
 
 # Node (if any)
 node_modules/
+coverage/
