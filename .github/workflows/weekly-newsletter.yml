@@ -49,6 +49,7 @@ jobs:
       # بناء النشرة | Build newsletter
       - name: 📰 Build newsletter HTML
         run: |
+          set -euo pipefail
           DAYS="${{ github.event.inputs.days || '7' }}"
           python scripts/newsletter_builder.py \
             --since "$DAYS" \
@@ -71,7 +72,10 @@ jobs:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_LIST_ID: ${{ secrets.EMAIL_LIST_ID }}
         run: |
+          set -euo pipefail
           if [ -n "$EMAIL_API_KEY" ]; then
+            # فشل الإرسال يجب أن يوقف الخطوة لا أن يُعلن نجاحاً
+            # A send failure must fail the step instead of reporting success
             python scripts/newsletter_builder.py \
               --since "${{ github.event.inputs.days || '7' }}" \
               --output newsletter_output.html \
@@ -84,6 +88,7 @@ jobs:
       # ملخص | Summary
       - name: 📊 Job summary
         run: |
+          set -euo pipefail
           echo "## 📬 نتيجة النشرة الأسبوعية | Weekly Newsletter Result" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **التاريخ | Date:** $(date +'%Y-%m-%d')" >> $GITHUB_STEP_SUMMARY

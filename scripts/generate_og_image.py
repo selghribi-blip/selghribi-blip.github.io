@@ -10,6 +10,7 @@ generate_og_image.py
 
 import argparse
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -37,13 +38,12 @@ def parse_front_matter(filepath: str) -> dict:
         content = f.read()
 
     if not content.startswith("---"):
-        return meta
+        raise ValueError(f"لا يوجد front matter | Missing front matter: {filepath}")
 
     parts = content.split("---", 2)
     if len(parts) < 3:
-        return meta
+        raise ValueError(f"front matter غير مكتمل | Unterminated front matter: {filepath}")
 
-    import re
     for line in parts[1].strip().split("\n"):
         match = re.match(r'^(\w+):\s*["\']?(.+?)["\']?\s*$', line)
         if match:
@@ -62,17 +62,17 @@ def get_slug_from_filename(filepath: str) -> str:
     return name
 
 
-def generate_og_image(post_path: str, output_dir: str = OUTPUT_DIR) -> str | None:
+def generate_og_image(post_path: str, output_dir: str = OUTPUT_DIR) -> str:
     """
     إنشاء صورة OG لمقالة | Generate OG image for a post
     يتطلب مكتبة Pillow | Requires Pillow library
     """
     try:
         from PIL import Image, ImageDraw, ImageFont
-    except ImportError:
-        print("❌ مكتبة Pillow غير مثبتة | Pillow not installed")
-        print("   pip install Pillow")
-        return None
+    except ImportError as e:
+        raise RuntimeError(
+            "مكتبة Pillow غير مثبتة | Pillow not installed: pip install Pillow"
+        ) from e
 
     meta = parse_front_matter(post_path)
     title = meta.get("title", "مقالة جديدة").strip('"\'')
@@ -102,22 +102,26 @@ def generate_og_image(post_path: str, output_dir: str = OUTPUT_DIR) -> str | Non
     # محاولة تحميل خط | Try to load font
     font_title = None
     font_site = None
-    try:
-        # البحث عن خط متاح | Find available font
-        font_paths = [
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-            "/System/Library/Fonts/Helvetica.ttc",
-            "C:/Windows/Fonts/arial.ttf",
-        ]
-        for fp in font_paths:
-            if os.path.exists(fp):
-                font_title = ImageFont.truetype(fp, size=64)
-                font_site = ImageFont.truetype(fp, size=32)
-                break
-    except Exception:
-        pass
+    # البحث عن خط متاح | Find available font
+    font_paths = [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/System/Library/Fonts/Helvetica.ttc",
+        "C:/Windows/Fonts/arial.ttf",
+    ]
+    for fp in font_paths:
+        if not os.path.exists(fp):
+            continue
+        try:
+            font_title = ImageFont.truetype(fp, size=64)
+            font_site = ImageFont.truetype(fp, size=32)
+            break
+        except OSError as e:
+            # خط تالف ليس سبباً للفشل، لكن يجب أن يُرى في السجلات
+            # An unusable font is not fatal, but must be visible in the logs
+            print(f"⚠️  تعذر تحميل الخط | Could not load font {fp}: {e}")
 
     if font_title is None:
+        print("⚠️  لم يُوجد خط TrueType، استخدام الخط الافتراضي | No TrueType font found, using default")
         font_title = ImageFont.load_default()
         font_site = ImageFont.load_default()
 
@@ -155,15 +159,26 @@ def generate_og_image(post_path: str, output_dir: str = OUTPUT_DIR) -> str | Non
     return output_path
 
 
-def generate_all_og_images(posts_dir: str = "_posts", output_dir: str = OUTPUT_DIR) -> int:
-    """إنشاء صور OG لجميع المقالات | Generate OG images for all posts"""
-    posts = list(Path(posts_dir).glob("*.md"))
+def generate_all_og_images(posts_dir: str = "_posts", output_dir: str = OUTPUT_DIR) -> tuple[int, list[str]]:
+    """
+    إنشاء صور OG لجميع المقالات | Generate OG images for all posts
+    يعيد عدد الناجح وقائمة الفاشل | Returns success count and failed posts
+    """
+    if not os.path.isdir(posts_dir):
+        raise FileNotFoundError(f"مجلد المقالات غير موجود | Posts dir not found: {posts_dir}")
+
+    posts = sorted(Path(posts_dir).glob("*.md"))
     count = 0
+    failed = []
     for post in posts:
-        result = generate_og_image(str(post), output_dir)
-        if result:
+        try:
+            generate_og_image(str(post), output_dir)
             count += 1
-    return count
+        except (OSError, ValueError) as e:
+            # متابعة بقية المقالات مع تسجيل الفشل | Keep going, but record the failure
+            print(f"❌ فشل إنشاء صورة لـ | Failed to generate image for {post}: {e}")
+            failed.append(str(post))
+    return count, failed
 
 
 def main():
@@ -176,13 +191,24 @@ def main():
     args = parser.parse_args()
 
     if args.all:
-        count = generate_all_og_images(output_dir=args.output)
+        try:
+            count, failed = generate_all_og_images(output_dir=args.output)
+        except (FileNotFoundError, RuntimeError) as e:
+            print(f"❌ {e}")
+            sys.exit(1)
         print(f"✅ تم إنشاء {count} صورة | Generated {count} images")
+        if failed:
+            print(f"❌ فشل {len(failed)} من المقالات | {len(failed)} posts failed: {', '.join(failed)}")
+            sys.exit(1)
     elif args.post:
         if not os.path.exists(args.post):
             print(f"❌ الملف غير موجود | File not found: {args.post}")
             sys.exit(1)
-        generate_og_image(args.post, args.output)
+        try:
+            generate_og_image(args.post, args.output)
+        except (OSError, ValueError, RuntimeError) as e:
+            print(f"❌ فشل إنشاء الصورة | Failed to generate image: {e}")
+            sys.exit(1)
     else:
         parser.print_help()
         sys.exit(1)

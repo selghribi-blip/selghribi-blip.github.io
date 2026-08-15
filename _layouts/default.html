@@ -13,20 +13,29 @@
   
 <div id="search"></div>
 <script>
-  SiteSearch.init({
-    container: "#search",
-    applicationId: "UOKFCFE2P9",
-    apiKey: "72e26b1e40a835929f864eb463bf5fe8",
-    indexName: "artsmoroccan_me_uokfcfe2p9_pages",
-    attributes: {
-      primaryText: "content", // the attribute to display in the hits list
-      secondaryText: "title", // the secondary attribute to display in the hits list
-      tertiaryText: "path", // the tertiary attribute to display in the hits list
-      url: "", // the URL of the hit
-      image: "hostname" // the image URL of the hit
-    },
-    darkMode: false,
-  });
+  // سكربت البحث خارجي، فقد لا يُحمّل | The search script is third-party and may fail to load
+  if (typeof SiteSearch === "undefined") {
+    console.error("[search] تعذر تحميل SiteSearch | SiteSearch failed to load, search is disabled");
+  } else {
+    try {
+      SiteSearch.init({
+        container: "#search",
+        applicationId: "UOKFCFE2P9",
+        apiKey: "72e26b1e40a835929f864eb463bf5fe8",
+        indexName: "artsmoroccan_me_uokfcfe2p9_pages",
+        attributes: {
+          primaryText: "content", // the attribute to display in the hits list
+          secondaryText: "title", // the secondary attribute to display in the hits list
+          tertiaryText: "path", // the tertiary attribute to display in the hits list
+          url: "", // the URL of the hit
+          image: "hostname" // the image URL of the hit
+        },
+        darkMode: false,
+      });
+    } catch (error) {
+      console.error("[search] فشل تهيئة البحث | SiteSearch init failed", error);
+    }
+  }
 </script>
   
   <!-- مؤشر تقدم القراءة | Reading Progress -->

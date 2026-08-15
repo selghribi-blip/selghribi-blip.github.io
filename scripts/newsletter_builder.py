@@ -22,18 +22,15 @@ from pathlib import Path
 def parse_front_matter(filepath: str) -> dict:
     """تحليل front matter | Parse front matter"""
     meta = {"_filepath": filepath}
-    try:
-        with open(filepath, encoding="utf-8") as f:
-            content = f.read()
-    except FileNotFoundError:
-        return meta
+    with open(filepath, encoding="utf-8") as f:
+        content = f.read()
 
     if not content.startswith("---"):
-        return meta
+        raise ValueError(f"لا يوجد front matter | Missing front matter: {filepath}")
 
     parts = content.split("---", 2)
     if len(parts) < 3:
-        return meta
+        raise ValueError(f"front matter غير مكتمل | Unterminated front matter: {filepath}")
 
     for line in parts[1].strip().split("\n"):
         match = re.match(r'^(\w+):\s*["\']?(.+?)["\']?\s*$', line)
@@ -53,24 +50,28 @@ def parse_front_matter(filepath: str) -> dict:
 
 
 def get_recent_posts(posts_dir: str, days: int) -> list[dict]:
-    """جمع المقالات الحديثة | Collect recent posts"""
+    """
+    جمع المقالات الحديثة | Collect recent posts
+    المقالات المتجاوزة تُسجل كتحذير | Skipped posts are reported as warnings
+    """
     cutoff_date = datetime.now() - timedelta(days=days)
     posts = []
 
     for filepath in sorted(Path(posts_dir).glob("*.md"), reverse=True):
-        meta = parse_front_matter(str(filepath))
-
         # استخراج التاريخ من اسم الملف | Extract date from filename
         stem = filepath.stem
         parts = stem.split("-", 3)
         if len(parts) < 3:
+            print(f"⚠️  اسم ملف بدون تاريخ، تم تجاوزه | Skipping undated filename: {filepath}")
             continue
         try:
             post_date = datetime(int(parts[0]), int(parts[1]), int(parts[2]))
-        except ValueError:
+        except ValueError as e:
+            print(f"⚠️  تاريخ غير صالح، تم تجاوزه | Skipping invalid date in {filepath}: {e}")
             continue
 
         if post_date >= cutoff_date:
+            meta = parse_front_matter(str(filepath))
             meta["_date"] = post_date
             meta["_slug"] = parts[3] if len(parts) > 3 else stem
             posts.append(meta)
@@ -230,21 +231,32 @@ def main():
         print(f"❌ مجلد المقالات غير موجود | Posts dir not found: {args.posts_dir}")
         sys.exit(1)
 
-    posts = get_recent_posts(args.posts_dir, args.since)
+    try:
+        posts = get_recent_posts(args.posts_dir, args.since)
+    except (OSError, ValueError) as e:
+        print(f"❌ تعذر قراءة المقالات | Could not read posts: {e}")
+        sys.exit(1)
     print(f"📝 وجدت {len(posts)} مقالة | Found {len(posts)} posts")
 
     html = build_html_newsletter(posts, args.base_url)
 
-    with open(args.output, "w", encoding="utf-8") as f:
-        f.write(html)
+    try:
+        with open(args.output, "w", encoding="utf-8") as f:
+            f.write(html)
+    except OSError as e:
+        print(f"❌ تعذر كتابة النشرة | Could not write newsletter to {args.output}: {e}")
+        sys.exit(1)
 
     print(f"✅ تم إنشاء النشرة: {args.output}")
 
     if args.send:
-        print("📧 إرسال النشرة... | Sending newsletter...")
-        # يمكن إضافة منطق الإرسال هنا (Mailgun, SendGrid, إلخ)
-        # Sending logic can be added here (Mailgun, SendGrid, etc.)
-        print("⚠️  وظيفة الإرسال تحتاج إعداد API key | Send function needs API key setup")
+        # لا يوجد منطق إرسال بعد (Mailgun, SendGrid, إلخ)، لذا نفشل بوضوح
+        # No sending backend yet, so fail loudly instead of pretending success
+        print(
+            "❌ وظيفة الإرسال غير مُنفذة بعد | --send is not implemented yet: "
+            "النشرة بُنيت لكن لم تُرسل | newsletter was built but not sent"
+        )
+        sys.exit(1)
 
 
 if __name__ == "__main__":
