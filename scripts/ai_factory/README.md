@@ -12,8 +12,11 @@ ad snippets, and publishes to the Jekyll site and/or Blogger.
 pip install -r scripts/requirements.txt
 export PYTHONPATH=scripts
 
-# تشغيل تجريبي: يولّد فقط ولا يكتب شيئاً | generate only, write nothing
+# تشغيل تجريبي: يولّد فعلياً (يحتاج مفتاح) ولا يكتب شيئاً | real generation, no write
 python -m ai_factory --count 1 --targets jekyll --dry-run
+
+# فحص بدون شبكة ولا مفتاح | offline check, no key needed
+python -m ai_factory --list-pending
 
 # نشر على المدونتين | publish to both blogs
 python -m ai_factory --count 2 --targets jekyll,blogger

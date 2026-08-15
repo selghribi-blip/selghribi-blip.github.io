@@ -22,7 +22,11 @@ def build_parser() -> argparse.ArgumentParser:
         default="jekyll",
         help="أهداف النشر مفصولة بفاصلة | comma separated: {0}".format(",".join(PUBLISHERS)),
     )
-    parser.add_argument("--dry-run", action="store_true", help="بدون كتابة أو نشر | generate only")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="يولّد فعلياً لكن لا يكتب ولا ينشر (يحتاج مفتاح) | real generation, no write/publish",
+    )
     parser.add_argument("--draft", action="store_true", help="نشر كمسودة على Blogger | Blogger draft")
     parser.add_argument("--list-pending", action="store_true", help="عرض المواضيع المتبقية | list queue")
     parser.add_argument("--verbose", action="store_true")
@@ -43,7 +47,11 @@ def main(argv=None) -> int:
         return 0
 
     if not settings.has_llm:
-        print("error: set GOOGLE_API_KEY (or OPENROUTER_API_KEY) first", file=sys.stderr)
+        print(
+            "error: set GOOGLE_API_KEY (or OPENROUTER_API_KEY) first; "
+            "--dry-run also needs it because it still calls the model",
+            file=sys.stderr,
+        )
         return 2
 
     targets = [target.strip() for target in args.targets.split(",") if target.strip()]
