@@ -16,6 +16,9 @@ permalink: /pages/blog/
   <a href="{{ '/feed.xml' | relative_url }}" class="btn btn-secondary btn-sm" style="font-size:0.8rem;">
     📡 RSS Feed
   </a>
+     <!-- google adsens علامات إثبات الملكية (Meta Tags) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3339195895891530"
+     crossorigin="anonymous"></script>
 </div>
 
 {% if site.posts.size > 0 %}
