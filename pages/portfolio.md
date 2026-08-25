@@ -16,7 +16,9 @@ permalink: /pages/portfolio/
     <button class="btn btn-secondary btn-sm filter-btn" data-filter="python">Python</button>
   </div>
 </div>
-
+   <!-- google adsens علامات إثبات الملكية (Meta Tags) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3339195895891530"
+     crossorigin="anonymous"></script>
 <div class="grid grid-2">
 
   <!-- Arts Moroccan -->
