@@ -12,7 +12,9 @@ permalink: /pages/services/
     كل مشروع يُبنى بعناية واهتمام حقيقي.
   </p>
 </div>
-
+   <!-- google adsens علامات إثبات الملكية (Meta Tags) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3339195895891530"
+     crossorigin="anonymous"></script>
 <div class="grid grid-3" style="margin-bottom:64px;">
 
   <!-- الباقة الأساسية -->
