@@ -28,7 +28,9 @@ permalink: /pages/about/
   <div class="skill-header"><span>HTML5 / CSS3</span><span>90%</span></div>
   <div class="skill-bar"><div class="skill-progress" style="width: 90%"></div></div>
 </div>
-
+   <!-- google adsens علامات إثبات الملكية (Meta Tags) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3339195895891530"
+     crossorigin="anonymous"></script>
 <div class="skill-item">
   <div class="skill-header"><span>JavaScript</span><span>75%</span></div>
   <div class="skill-bar"><div class="skill-progress" style="width: 75%"></div></div>
