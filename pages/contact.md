@@ -10,6 +10,9 @@ permalink: /pages/contact/
 
   <!-- فورم التواصل | Contact Form -->
   <div>
+       <!-- google adsens علامات إثبات الملكية (Meta Tags) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3339195895891530"
+     crossorigin="anonymous"></script>
     <h2 style="font-size:1.4rem; margin-bottom:24px;">📩 أرسل لي رسالة</h2>
 
     <!-- يعمل مع Formspree المجاني | Works with free Formspree -->
