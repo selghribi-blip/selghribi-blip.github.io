@@ -5,7 +5,15 @@ description: "مقالات تقنية عربية عن البرمجة، GitHub، 
 lang: ar
 permalink: /pages/blog/
 ---
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCB4TX0X6X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-ZCB4TX0X6X');
+</script>
 <div style="margin-bottom:32px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
   <div style="display:flex; gap:8px; flex-wrap:wrap;">
     <a href="{{ '/pages/blog' | relative_url }}" class="badge badge-primary" style="text-decoration:none;">الكل</a>
