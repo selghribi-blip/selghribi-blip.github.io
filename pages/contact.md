@@ -5,7 +5,15 @@ description: "تواصل معي للمشاريع الحرة، التعاون، �
 lang: ar
 permalink: /pages/contact/
 ---
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCB4TX0X6X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-ZCB4TX0X6X');
+</script>
 <div class="grid grid-2" style="gap:48px; margin-top:16px;">
 
   <!-- فورم التواصل | Contact Form -->
