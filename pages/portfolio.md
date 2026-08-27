@@ -5,7 +5,15 @@ description: "مشاريعي وأعمالي في تطوير الويب والت�
 lang: ar
 permalink: /pages/portfolio/
 ---
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCB4TX0X6X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-ZCB4TX0X6X');
+</script>
 <div style="text-align:center; margin-bottom:32px;">
   <p>فلترة حسب التقنية | Filter by Technology</p>
   <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px;">
