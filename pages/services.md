@@ -5,7 +5,15 @@ description: "خدمات تطوير الويب والتصميم — أسعار �
 lang: ar
 permalink: /pages/services/
 ---
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCB4TX0X6X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-ZCB4TX0X6X');
+</script>
 <div style="text-align:center; margin-bottom:48px;">
   <p style="font-size:1.1rem; color:#5a5a5a; max-width:600px; margin:0 auto;">
     أقدم خدمات احترافية في تطوير الويب والتصميم بأسعار تناسب الجميع.
