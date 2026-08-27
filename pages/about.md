@@ -56,6 +56,15 @@ permalink: /pages/about/
   <div class="skill-bar"><div class="skill-progress" style="width: 72%"></div></div>
 </div>
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCB4TX0X6X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZCB4TX0X6X');
+</script>
 ---
 
 ## 🎓 الرحلة التعليمية
