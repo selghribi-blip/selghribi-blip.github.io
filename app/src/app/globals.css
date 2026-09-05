@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #c0674a;
+}
+
+.text-primary-600 {
+  color: #a85540;
+}
+
+.bg-primary-500 {
+  background-color: #c0674a;
+}
+
+.hover\:bg-primary-600:hover {
+  background-color: #a85540;
+}
+
+.border-primary-500 {
+  border-color: #c0674a;
+}

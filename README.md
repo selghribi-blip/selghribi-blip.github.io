@@ -20,6 +20,7 @@
 
 - [نظرة عامة](#نظرة-عامة)
 - [هيكل المشروع](#هيكل-المشروع)
+- [PDF & Contract Summarizer](#-pdf--contract-summarizer)
 - [التشغيل المحلي](#التشغيل-المحلي)
 - [أدوات الأتمتة](#أدوات-الأتمتة)
 - [كيفية إضافة مقالة جديدة](#كيفية-إضافة-مقالة-جديدة)
@@ -65,6 +66,11 @@ selghribi-blip.github.io/
 ├── pages/                         (صفحات ثابتة)
 ├── templates/                     (قوالب مجانية)
 ├── scripts/                       (أدوات Python)
+├── app/                           (PDF & Contract Summarizer — Next.js)
+│   ├── src/app/                   (App Router pages & API routes)
+│   ├── src/lib/                   (auth, stripe, rate limiter helpers)
+│   ├── .env.example               (environment variable template)
+│   └── README.md                  (deployment guide)
 └── .github/
     ├── workflows/                 (6 workflows أتمتة)
     ├── ISSUE_TEMPLATE/
@@ -74,10 +80,28 @@ selghribi-blip.github.io/
 
 ---
 
+## 📄 PDF & Contract Summarizer
+
+يشمل المشروع تطبيق Next.js لتلخيص ملفات PDF والعقود بالذكاء الاصطناعي.
+
+| الميزة | المجاني | Pro ($9/شهر) |
+|--------|---------|-------------|
+| تلخيص PDF | ✓ (5/يوم) | ✓ غير محدود |
+| وضع العقود | ✗ | ✓ |
+| تسجيل الدخول OAuth | ✓ | ✓ |
+
+**النطاق الموصى به:** `app.artsmoroccan.me`
+
+انشر تطبيق Next.js على [Vercel](https://vercel.com) مع النطاق الفرعي `app.artsmoroccan.me`.
+يبقى موقع Jekyll على النطاق الرئيسي `artsmoroccan.me` عبر GitHub Pages.
+
+راجع [`app/README.md`](./app/README.md) للتفاصيل الكاملة حول الإعداد والنشر.
+
+---
+
 ## 🚀 التشغيل المحلي
 
 ### المتطلبات:
-- Ruby 3.0+
 - Python 3.11+
 - Bundler
 
