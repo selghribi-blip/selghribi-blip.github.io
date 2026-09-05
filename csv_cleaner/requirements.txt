@@ -1,0 +1,7 @@
+# متطلبات أداة تنظيف CSV/Excel | CSV/Excel Cleaner Requirements
+# تثبيت | Install: pip install -r csv_cleaner/requirements.txt
+
+streamlit>=1.32.0
+pandas>=2.0.0
+openpyxl>=3.1.0
+xlrd>=2.0.1
