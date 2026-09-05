@@ -1,0 +1,228 @@
+/* Minimal global styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  color: #1a1a2e;
+  background: #f8f9fa;
+}
+
+a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn--primary {
+  background: #0070f3;
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: #0051bb;
+}
+
+.btn--secondary {
+  background: transparent;
+  border-color: #0070f3;
+  color: #0070f3;
+}
+
+.btn--secondary:hover {
+  background: #e6f0ff;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.site-header {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.site-header nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.site-header__logo {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #1a1a2e;
+}
+
+.site-header__nav {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.site-footer {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 4rem;
+}
+
+/* ── Home page ───────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding: 5rem 2rem 3rem;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: #4b5563;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.hero__cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.home-pricing-snapshot {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Pricing page ────────────────────────────────────────── */
+.pricing-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.pricing-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.pricing-hero h1 {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.pricing-card {
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pricing-card--highlighted {
+  border-color: #0070f3;
+  box-shadow: 0 4px 24px rgba(0, 112, 243, 0.12);
+}
+
+.pricing-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.pricing-card__amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.pricing-card__period {
+  color: #6b7280;
+}
+
+.pricing-card__description {
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+
+.pricing-card__features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.pricing-card__features li {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.pricing-card__footer {
+  margin-top: auto;
+}
+
+.pricing-card__footer .btn {
+  width: 100%;
+  text-align: center;
+}
+
+/* ── FAQ ─────────────────────────────────────────────────── */
+.pricing-faq {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.pricing-faq h2 {
+  margin-bottom: 1.5rem;
+}
+
+.pricing-faq details {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.pricing-faq summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.pricing-faq details p {
+  margin-top: 0.75rem;
+  color: #4b5563;
+}
