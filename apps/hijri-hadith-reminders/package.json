@@ -1,0 +1,30 @@
+{
+  "name": "hijri-hadith-reminders",
+  "version": "1.0.0",
+  "description": "تطبيق التذكير بالأحاديث النبوية حسب التاريخ الهجري",
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "cd client && npm install && npm run build",
+    "heroku-postbuild": "npm run build",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm start",
+    "seed": "cd server && node seed.js"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.29.4",
+    "moment-hijri": "^2.1.2",
+    "mongoose": "^8.0.3"
+  }
+}

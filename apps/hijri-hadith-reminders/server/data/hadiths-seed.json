@@ -1,0 +1,102 @@
+[
+  {
+    "text": "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى.",
+    "source": "صحيح البخاري ومسلم",
+    "narrator": "عمر بن الخطاب رضي الله عنه",
+    "category": "العبادة",
+    "hijriMonth": null,
+    "hijriDay": null,
+    "tags": ["نية", "أعمال", "إخلاص"],
+    "isPlaceholder": true
+  },
+  {
+    "text": "لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه.",
+    "source": "صحيح البخاري ومسلم",
+    "narrator": "أنس بن مالك رضي الله عنه",
+    "category": "الأخلاق",
+    "hijriMonth": null,
+    "hijriDay": null,
+    "tags": ["أخوة", "محبة", "إيمان"],
+    "isPlaceholder": true
+  },
+  {
+    "text": "الطهور شطر الإيمان.",
+    "source": "صحيح مسلم",
+    "narrator": "أبو مالك الأشعري رضي الله عنه",
+    "category": "الصحة",
+    "hijriMonth": null,
+    "hijriDay": null,
+    "tags": ["طهارة", "نظافة", "إيمان"],
+    "isPlaceholder": true
+  },
+  {
+    "text": "خيركم من تعلّم القرآن وعلّمه.",
+    "source": "صحيح البخاري",
+    "narrator": "عثمان بن عفان رضي الله عنه",
+    "category": "العلم",
+    "hijriMonth": null,
+    "hijriDay": null,
+    "tags": ["قرآن", "تعليم", "فضل"],
+    "isPlaceholder": true
+  },
+  {
+    "text": "أفضل الصيام بعد رمضان شهر الله المحرم.",
+    "source": "صحيح مسلم",
+    "narrator": "أبو هريرة رضي الله عنه",
+    "category": "العبادة",
+    "hijriMonth": 1,
+    "hijriDay": null,
+    "tags": ["صيام", "محرم", "فضل"],
+    "isPlaceholder": true
+  },
+  {
+    "text": "من صام رمضان إيماناً واحتساباً غُفر له ما تقدم من ذنبه.",
+    "source": "صحيح البخاري ومسلم",
+    "narrator": "أبو هريرة رضي الله عنه",
+    "category": "العبادة",
+    "hijriMonth": 9,
+    "hijriDay": null,
+    "tags": ["رمضان", "صيام", "مغفرة"],
+    "isPlaceholder": true
+  },
+  {
+    "text": "ما نقصت صدقة من مال.",
+    "source": "صحيح مسلم",
+    "narrator": "أبو هريرة رضي الله عنه",
+    "category": "الرزق",
+    "hijriMonth": null,
+    "hijriDay": null,
+    "tags": ["صدقة", "مال", "بركة"],
+    "isPlaceholder": true
+  },
+  {
+    "text": "الصبر ضياء.",
+    "source": "صحيح مسلم",
+    "narrator": "أبو مالك الأشعري رضي الله عنه",
+    "category": "الصبر",
+    "hijriMonth": null,
+    "hijriDay": null,
+    "tags": ["صبر", "نور", "فضيلة"],
+    "isPlaceholder": true
+  },
+  {
+    "text": "الدعاء هو العبادة.",
+    "source": "سنن الترمذي",
+    "narrator": "النعمان بن بشير رضي الله عنه",
+    "category": "الدعاء",
+    "hijriMonth": null,
+    "hijriDay": null,
+    "tags": ["دعاء", "عبادة", "تضرع"],
+    "isPlaceholder": true
+  },
+  {
+    "text": "خير الناس أنفعهم للناس.",
+    "source": "المعجم الأوسط للطبراني",
+    "narrator": "جابر بن عبد الله رضي الله عنه",
+    "category": "الأخلاق",
+    "hijriMonth": null,
+    "hijriDay": null,
+    "tags": ["نفع", "خدمة", "أخلاق"],
+    "isPlaceholder": true
+  }
+]
