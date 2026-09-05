@@ -22,3 +22,7 @@ __pycache__/
 
 # Node (if any)
 node_modules/
+
+# Email Extractor extension — build artifacts / deps
+extensions/email-extractor/node_modules/
+extensions/email-extractor/package-lock.json
