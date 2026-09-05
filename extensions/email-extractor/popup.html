@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Extractor</title>
+  <!--
+    styles.css is a bundled, self-contained stylesheet (no remote resources).
+    This keeps the extension compliant with Chrome Web Store CSP requirements.
+  -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header-gradient p-4" style="padding-bottom: 0.75rem;">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <!-- Email icon -->
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m2 7 10 7 10-7"/>
+        </svg>
+        <span class="font-bold text-white text-base">Email Extractor</span>
+      </div>
+      <!-- Status badge -->
+      <span id="statusBadge" class="status-badge status-idle">
+        <span id="statusDot">●</span>
+        <span id="statusText">Idle</span>
+      </span>
+    </div>
+    <p class="text-white mt-1" style="font-size:0.72rem; opacity:0.85;">
+      Extract &amp; export emails from the current page
+    </p>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="p-4 flex flex-col gap-3">
+
+    <!-- Options row -->
+    <div class="flex items-center gap-2" style="font-size:0.8rem; color:#475569;">
+      <label class="flex items-center gap-1" style="cursor:pointer; user-select:none;">
+        <input type="checkbox" id="includeMailto" checked
+               style="accent-color:#059669; width:14px; height:14px;" />
+        Include <code style="background:#f1f5f9;padding:0 3px;border-radius:3px;">mailto:</code> links
+      </label>
+      <label class="flex items-center gap-1" style="cursor:pointer; user-select:none;">
+        <input type="checkbox" id="filterFalsePositives" checked
+               style="accent-color:#059669; width:14px; height:14px;" />
+        Filter placeholders
+      </label>
+    </div>
+
+    <!-- Scan button -->
+    <button id="btnScan" class="btn-primary w-full" style="padding:0.6rem 1rem; font-size:0.875rem;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <span id="btnScanLabel">Scan Page</span>
+      <span id="btnScanSpinner" class="spinner hidden"></span>
+    </button>
+
+    <!-- Results panel (hidden until first scan) -->
+    <section id="resultsPanel" class="hidden flex-col gap-2">
+
+      <!-- Count + action buttons -->
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <span class="font-semibold text-sm text-slate-700">Found</span>
+          <span id="emailCount" class="count-chip">0</span>
+          <span class="font-semibold text-sm text-slate-700">email(s)</span>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button id="btnCopy" class="btn-copy" disabled title="Copy all to clipboard">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy
+          </button>
+          <button id="btnDownload" class="btn-download" disabled title="Download as CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            CSV
+          </button>
+          <button id="btnClear" class="btn-clear" title="Clear results">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Email list container -->
+      <div id="emailListContainer"
+           class="border border-slate-200 rounded-lg bg-white overflow-y-auto"
+           style="max-height:200px;">
+        <!-- Empty state (shown when no emails found) -->
+        <div id="emptyState" class="empty-state hidden">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8"
+               stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4m0 4h.01"/>
+          </svg>
+          <span style="font-size:0.8rem;">No email addresses found on this page.</span>
+        </div>
+        <!-- Dynamic list -->
+        <ul id="emailList" class="email-list"></ul>
+      </div>
+
+    </section>
+
+    <!-- Error message -->
+    <div id="errorMsg" class="hidden border border-red-200 bg-red-50 rounded-md px-4 py-2"
+         style="font-size:0.8rem; color:#dc2626;">
+      <strong>Error:</strong> <span id="errorText"></span>
+    </div>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="border-b border-slate-200 px-4 py-2 bg-slate-50"
+          style="border-top:1px solid #e2e8f0; border-bottom:none; font-size:0.7rem; color:#94a3b8; text-align:center;">
+    Email Extractor v1.0 &mdash; Manifest V3
+  </footer>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
