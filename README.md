@@ -21,6 +21,7 @@
 - [نظرة عامة](#نظرة-عامة)
 - [هيكل المشروع](#هيكل-المشروع)
 - [التشغيل المحلي](#التشغيل-المحلي)
+- [مشروع CSV/Excel Cleaner](#-مشروع-csvexcel-cleaner)
 - [أدوات الأتمتة](#أدوات-الأتمتة)
 - [كيفية إضافة مقالة جديدة](#كيفية-إضافة-مقالة-جديدة)
 - [المساهمة](#المساهمة)
@@ -63,6 +64,11 @@ selghribi-blip.github.io/
 ├── _sass/                         (أنماط CSS)
 ├── assets/                        (ملفات ثابتة)
 ├── pages/                         (صفحات ثابتة)
+│   └── csv-cleaner.md             (صفحة تسويق أداة التنظيف)
+├── projects/                      (مشاريع Python/Streamlit)
+│   └── csv-cleaner/
+│       ├── app.py                 (تطبيق Streamlit — عربي + English)
+│       └── requirements.txt       (مكتبات Python المطلوبة)
 ├── templates/                     (قوالب مجانية)
 ├── scripts/                       (أدوات Python)
 └── .github/
@@ -90,6 +96,38 @@ bundle exec jekyll serve --livereload
 
 # الموقع يعمل على | Site available at:
 # http://localhost:4000
+```
+
+---
+
+## 🧹 مشروع CSV/Excel Cleaner
+
+أداة **Streamlit** لتنظيف ملفات CSV و Excel — واجهة ثنائية اللغة (عربي + English).
+
+### المزايا | Features:
+- حذف الصفوف الفارغة والمكررة | Remove empty & duplicate rows
+- قصّ المسافات الزائدة | Trim extra spaces
+- معاينة قبل/بعد التنظيف | Before/after preview
+- تنزيل الملف المنظّف CSV أو Excel | Download as CSV or Excel
+- تقرير تفصيلي بالتغييرات | Detailed change report
+
+### التشغيل على Windows | Run on Windows:
+
+```bash
+# انتقل إلى مجلد المشروع | Go to project folder
+cd projects\csv-cleaner
+
+# ثبّت المكتبات | Install dependencies
+pip install -r requirements.txt
+
+# شغّل التطبيق | Run the app
+streamlit run app.py
+# ثم افتح | Then open: http://localhost:8501
+```
+
+### صفحة التسويق | Marketing page:
+```
+pages/csv-cleaner.md  →  /pages/csv-cleaner/
 ```
 
 ---
