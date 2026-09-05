@@ -23,6 +23,7 @@
 - [التشغيل المحلي](#التشغيل-المحلي)
 - [أدوات الأتمتة](#أدوات-الأتمتة)
 - [كيفية إضافة مقالة جديدة](#كيفية-إضافة-مقالة-جديدة)
+- [PDF & Contract Summarizer — Micro-SaaS](#-pdf--contract-summarizer--micro-saas)
 - [المساهمة](#المساهمة)
 - [الدعم المالي](#الدعم-المالي)
 
@@ -150,6 +151,33 @@ lang: ar
 
 محتوى المقالة هنا...
 ```
+
+---
+
+## 💳 PDF & Contract Summarizer — Micro-SaaS
+
+A Next.js 14 app for summarizing PDFs and contracts with AI, available at [`apps/pdf-contract-summarizer/`](apps/pdf-contract-summarizer/).
+
+### Stripe Pricing
+
+| Plan | Price | Included | Overage |
+|------|-------|----------|---------|
+| **Free** | $0/month | 5 summaries/month | — |
+| **Pro** | **$19/month** | **200 summaries/month** | **$0.05 per extra summary** |
+
+### Required Stripe Setup
+
+Create one **Pro Plan** product in Stripe with **two prices**:
+
+1. **Pro Base** — Recurring, $19.00/month (fixed)
+   → Set as `STRIPE_PRICE_PRO_BASE`
+
+2. **Pro Overage** — Recurring, metered, $0.05/unit, **Sum** aggregation
+   → Set as `STRIPE_PRICE_PRO_OVERAGE_METERED`
+
+The checkout session sends **both price IDs** so subscribers pay the flat $19 base fee plus metered overage for any summaries beyond 200/month.
+
+Full setup guide: [`apps/pdf-contract-summarizer/README.md`](apps/pdf-contract-summarizer/README.md)
 
 ---
 
