@@ -20,5 +20,12 @@ __pycache__/
 *.egg-info/
 .env
 
+# Automation OS – runtime-generated logs and exports (keep directory stubs)
+automation-os/logs/*.log
+automation-os/logs/*.jsonl
+automation-os/logs/*.csv
+automation-os/logs/supervisord.pid
+automation-os/storage/tiktok_exports/*.csv
+
 # Node (if any)
 node_modules/

@@ -1,0 +1,17 @@
+{
+  "name": "Automation OS",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "Automation Dashboard",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "pip install --upgrade pip && pip install requests supervisor && mkdir -p /workspaces/${REPO_NAME}/automation-os/logs /workspaces/${REPO_NAME}/automation-os/storage/tiktok_exports",
+  "remoteEnv": {
+    "REPO_NAME": "selghribi-blip.github.io",
+    "PYTHONPATH": "/workspaces/selghribi-blip.github.io/automation-os"
+  },
+  "postStartCommand": "mkdir -p /workspaces/${REPO_NAME}/automation-os/logs /workspaces/${REPO_NAME}/automation-os/storage/tiktok_exports && supervisord -c /workspaces/${REPO_NAME}/.devcontainer/supervisord.conf"
+}
