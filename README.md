@@ -21,6 +21,9 @@
 - [نظرة عامة](#نظرة-عامة)
 - [هيكل المشروع](#هيكل-المشروع)
 - [التشغيل المحلي](#التشغيل-المحلي)
+- [🧹 CSV Cleaner — Landing Page](#-csv-cleaner--landing-page)
+- [🚀 نشر على GitHub Pages (خطوة بخطوة)](#-نشر-على-github-pages-خطوة-بخطوة)
+- [🌐 ربط دومين مجاني من GitHub Student Pack](#-ربط-دومين-مجاني-من-github-student-pack)
 - [أدوات الأتمتة](#أدوات-الأتمتة)
 - [كيفية إضافة مقالة جديدة](#كيفية-إضافة-مقالة-جديدة)
 - [المساهمة](#المساهمة)
@@ -91,6 +94,115 @@ bundle exec jekyll serve --livereload
 # الموقع يعمل على | Site available at:
 # http://localhost:4000
 ```
+
+---
+
+## 🧹 CSV Cleaner — Landing Page
+
+صفحة تسويقية مستقلة لأداة **Arabic/English CSV Cleaner** مبنية بـ HTML/CSS/JS خالص (بدون أطر ثقيلة).  
+A standalone product landing page for the **Arabic/English CSV Cleaner** tool — pure HTML/CSS/JS.
+
+| المعلومة | القيمة |
+|----------|--------|
+| 📄 الملف / File | `pages/csv-cleaner.html` |
+| 🌐 الرابط / URL | `https://artsmoroccan.me/csv-cleaner/` |
+| 🐍 كود الأداة / Tool code | `projects/csv-cleaner/` |
+
+### أقسام الصفحة / Page Sections
+- **Hero** — المشكلة والحل + زر CTA للتحميل
+- **Features** — 6 مزايا رئيسية
+- **Pricing** — Free ($0) و Pro ($9 one-time)
+- **Contact** — نموذج بسيط (mailto) + روابط التواصل
+- **FAQ** — 6 أسئلة شائعة مع accordion
+
+---
+
+## 🚀 نشر على GitHub Pages (خطوة بخطوة)
+
+### الطريقة 1 — النشر التلقائي (المستودع الحالي)
+
+> المستودع الحالي مُعدّ مسبقًا مع `deploy.yml` ينشر على Pages تلقائيًا عند كل push على `main`.
+
+1. تأكد من أن اسم المستودع هو `USERNAME.github.io` (مثال: `selghribi-blip.github.io`)
+2. اذهب إلى **Settings → Pages** في GitHub
+3. في قسم **Source** اختر: `Deploy from a branch` → Branch: `main` → Folder: `/ (root)`
+4. انقر **Save** — الموقع سيكون جاهزًا خلال دقيقة على `https://USERNAME.github.io`
+
+### الطريقة 2 — إنشاء مستودع جديد للصفحة
+
+```bash
+# 1. أنشئ مستودع جديد بالاسم: username.github.io
+git init my-landing-page
+cd my-landing-page
+
+# 2. انسخ ملف الصفحة
+cp /path/to/csv-cleaner.html index.html
+
+# 3. أضف وارفع
+git add .
+git commit -m "Add landing page"
+git remote add origin https://github.com/USERNAME/USERNAME.github.io.git
+git push -u origin main
+
+# 4. فعّل Pages من Settings → Pages → Source: main / root
+```
+
+### الطريقة 3 — نشر صفحة فرعية (كما في هذا المستودع)
+
+```bash
+# الملف في: pages/csv-cleaner.html
+# Front matter في رأس الملف يضبط الـ permalink:
+# ---
+# layout: none
+# permalink: /csv-cleaner/
+# ---
+
+# بعد push على main سيكون الرابط:
+# https://artsmoroccan.me/csv-cleaner/
+```
+
+---
+
+## 🌐 ربط دومين مجاني من GitHub Student Pack
+
+> GitHub Student Pack يتيح دومين `.me` مجاني لسنة عبر **Namecheap** أو دومين `.tech` عبر **get.tech**.
+
+### خطوات ربط الدومين بـ GitHub Pages
+
+**الخطوة 1 — احصل على الدومين المجاني**
+1. اذهب إلى [education.github.com/pack](https://education.github.com/pack)
+2. ابحث عن **Namecheap** أو **get.tech**
+3. سجّل دومينك المجاني (مثال: `myname.me`)
+
+**الخطوة 2 — اضبط DNS في Namecheap**
+
+اذهب إلى **Dashboard → Manage → Advanced DNS** وأضف السجلات التالية:
+
+| Type | Host | Value | TTL |
+|------|------|-------|-----|
+| `A` | `@` | `185.199.108.153` | Auto |
+| `A` | `@` | `185.199.109.153` | Auto |
+| `A` | `@` | `185.199.110.153` | Auto |
+| `A` | `@` | `185.199.111.153` | Auto |
+| `CNAME` | `www` | `USERNAME.github.io` | Auto |
+
+**الخطوة 3 — أضف الدومين في GitHub Pages**
+1. اذهب إلى **Settings → Pages → Custom domain**
+2. أدخل دومينك (مثال: `myname.me`) وانقر **Save**
+3. انتظر 10–30 دقيقة حتى ينتشر DNS
+4. فعّل **Enforce HTTPS** بعد ظهور الخيار
+
+**الخطوة 4 — أضف ملف CNAME**
+
+```bash
+# في جذر المستودع أنشئ ملف CNAME (بدون امتداد):
+echo "myname.me" > CNAME
+git add CNAME
+git commit -m "Add custom domain"
+git push
+```
+
+> ✅ الموقع سيعمل الآن على `https://myname.me` بشهادة SSL مجانية.
 
 ---
 
