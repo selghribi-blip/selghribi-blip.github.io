@@ -22,3 +22,9 @@ __pycache__/
 
 # Node (if any)
 node_modules/
+
+# PDF Contract Summarizer app
+apps/pdf-contract-summarizer/node_modules/
+apps/pdf-contract-summarizer/.next/
+apps/pdf-contract-summarizer/dev.db
+apps/pdf-contract-summarizer/*.db
