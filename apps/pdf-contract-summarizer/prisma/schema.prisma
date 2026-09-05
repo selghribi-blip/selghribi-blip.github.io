@@ -1,0 +1,149 @@
+// prisma/schema.prisma
+// PDF & Contract Summarizer – database schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // Use PostgreSQL in production; override with DATABASE_URL env var.
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// Auth (NextAuth Prisma Adapter)
+// ─────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─────────────────────────────────────────────
+// User (extended with subscription fields)
+// ─────────────────────────────────────────────
+
+/// Subscription plan enum
+enum Plan {
+  FREE
+  PRO
+}
+
+/// Subscription status (mirrors Stripe subscription statuses)
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  UNPAID
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+
+  // ── Subscription ────────────────────────────
+  plan                  Plan               @default(FREE)
+  subscriptionStatus    SubscriptionStatus @default(ACTIVE)
+  stripeCustomerId      String?            @unique
+  stripeSubscriptionId  String?            @unique
+  currentPeriodEnd      DateTime?
+  /// Item ID for the metered overage price (used to report usage records)
+  stripeMeteredItemId   String?
+
+  // ── Relations ───────────────────────────────
+  accounts          Account[]
+  sessions          Session[]
+  dailyCounters     UsageCounterDaily[]
+  monthlyCounters   UsageCounterMonthly[]
+  overageEvents     OverageUsageEvent[]
+}
+
+// ─────────────────────────────────────────────
+// Usage counters
+// ─────────────────────────────────────────────
+
+/// Daily usage counter (Free plan: max 3/day, keyed by UTC date e.g. "2026-03-14")
+model UsageCounterDaily {
+  id      String @id @default(cuid())
+  userId  String
+  /// UTC date key – format: YYYY-MM-DD
+  dateKey String
+  count   Int    @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dateKey])
+}
+
+/// Monthly usage counter (Pro plan: 200 included/month, keyed by UTC month e.g. "2026-03")
+model UsageCounterMonthly {
+  id       String @id @default(cuid())
+  userId   String
+  /// UTC month key – format: YYYY-MM
+  monthKey String
+  count    Int    @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, monthKey])
+}
+
+// ─────────────────────────────────────────────
+// Overage billing events (Stripe metered usage)
+// ─────────────────────────────────────────────
+
+/// One row per overage summary reported to Stripe Usage Records API.
+/// idempotencyKey prevents double-reporting on retries.
+model OverageUsageEvent {
+  id                      String   @id @default(cuid())
+  userId                  String
+  /// Billing month this overage belongs to (e.g. "2026-03")
+  monthKey                String
+  /// Stripe Subscription Item ID for the metered price
+  stripeSubscriptionItemId String
+  /// Idempotency key sent to Stripe (stored to prevent duplicates)
+  idempotencyKey          String   @unique
+  createdAt               DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, monthKey])
+}
