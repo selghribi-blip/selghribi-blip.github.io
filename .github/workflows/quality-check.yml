@@ -45,6 +45,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    outputs:
+      lint_outcome: ${{ steps.markdownlint.outcome }}
 
     steps:
       # استنساخ الكود | Checkout
@@ -52,7 +54,11 @@ jobs:
         uses: actions/checkout@v4
 
       # فحص تنسيق Markdown | Check Markdown format
+      # التحذيرات لا توقف الـ workflow، لكن نتيجتها تُنقل إلى تعليق PR
+      # Warnings do not block the workflow, but their real outcome is reported
       - name: 🔍 Lint Markdown files
+        id: markdownlint
+        continue-on-error: true
         uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: |
@@ -66,7 +72,12 @@ jobs:
               "MD041": false,
               "MD007": { "indent": 2 }
             }
-        continue-on-error: true  # لا يوقف الـ workflow عند وجود تحذيرات
+
+      - name: 📝 Report Markdown lint outcome
+        if: steps.markdownlint.outcome != 'success'
+        run: |
+          OUTCOME="${{ steps.markdownlint.outcome }}"
+          echo "::warning title=Markdown lint::فحص Markdown لم ينجح | outcome: $OUTCOME"
 
   # ============================================================
   # فحص YAML | YAML Check
@@ -76,6 +87,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    outputs:
+      lint_outcome: ${{ steps.yamllint.outcome }}
 
     steps:
       # استنساخ الكود | Checkout
@@ -84,6 +97,8 @@ jobs:
 
       # فحص ملفات YAML | Check YAML files
       - name: 🔍 Lint YAML files
+        id: yamllint
+        continue-on-error: true
         uses: ibiqlik/action-yamllint@v3
         with:
           file_or_dir: '.github/workflows/'
@@ -94,7 +109,12 @@ jobs:
                 max: 120
               truthy:
                 allowed-values: ['true', 'false', 'on', 'off', 'yes', 'no']
-        continue-on-error: true
+
+      - name: 📝 Report YAML lint outcome
+        if: steps.yamllint.outcome != 'success'
+        run: |
+          OUTCOME="${{ steps.yamllint.outcome }}"
+          echo "::warning title=YAML lint::فحص YAML لم ينجح | outcome: $OUTCOME"
 
   # ============================================================
   # التعليق على PR | PR Comment
@@ -114,8 +134,10 @@ jobs:
         with:
           script: |
             const buildResult = '${{ needs.build-check.result }}';
-            const mdResult = '${{ needs.markdown-check.result }}';
-            const yamlResult = '${{ needs.yaml-check.result }}';
+            // نتيجة الفحص الفعلية، لا نتيجة الـ job المُتجاوزة بـ continue-on-error
+            // The lint step outcome, not the job result masked by continue-on-error
+            const mdResult = '${{ needs.markdown-check.outputs.lint_outcome || needs.markdown-check.result }}';
+            const yamlResult = '${{ needs.yaml-check.outputs.lint_outcome || needs.yaml-check.result }}';
 
             const emoji = (r) => r === 'success' ? '✅' : r === 'failure' ? '❌' : '⚠️';
 
@@ -132,7 +154,7 @@ jobs:
             ---
             *تم الفحص تلقائياً بـ GitHub Actions | Auto-checked by GitHub Actions*`;
 
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,

@@ -16,26 +16,27 @@ import json
 import os
 import re
 import sys
+import urllib.error
+import urllib.request
 from datetime import datetime
-from pathlib import Path
+
+
+class PostingError(Exception):
+    """خطأ في النشر | Raised when publishing to a platform fails"""
 
 
 def parse_front_matter(filepath: str) -> dict:
     """تحليل front matter من ملف Markdown | Parse front matter from Markdown file"""
     meta = {}
-    try:
-        with open(filepath, encoding="utf-8") as f:
-            content = f.read()
-    except FileNotFoundError:
-        print(f"❌ الملف غير موجود | File not found: {filepath}")
-        return meta
+    with open(filepath, encoding="utf-8") as f:
+        content = f.read()
 
     if not content.startswith("---"):
-        return meta
+        raise ValueError(f"لا يوجد front matter | Missing front matter: {filepath}")
 
     parts = content.split("---", 2)
     if len(parts) < 3:
-        return meta
+        raise ValueError(f"front matter غير مكتمل | Unterminated front matter: {filepath}")
 
     for line in parts[1].strip().split("\n"):
         match = re.match(r'^(\w+):\s*["\']?(.+?)["\']?\s*$', line)
@@ -58,13 +59,11 @@ def parse_front_matter(filepath: str) -> dict:
 
 def build_post_url(meta: dict, base_url: str = "https://artsmoroccan.me") -> str:
     """بناء رابط المقالة | Build post URL"""
-    date_str = meta.get("date", datetime.now().strftime("%Y-%m-%d"))
-    try:
-        date_parts = str(date_str).split("-")
-        year, month, day = date_parts[0], date_parts[1], date_parts[2][:2]
-    except (IndexError, ValueError):
-        year = month = day = datetime.now().strftime("%Y %m %d").split()
-        year, month, day = str(year[0]), str(month[0]), str(day[0])
+    date_str = str(meta.get("date", datetime.now().strftime("%Y-%m-%d")))
+    date_parts = date_str.split("-")
+    if len(date_parts) < 3:
+        raise ValueError(f"تاريخ المقالة غير صالح | Invalid post date: {date_str!r}")
+    year, month, day = date_parts[0], date_parts[1], date_parts[2][:2]
 
     # استخراج slug من عنوان | Extract slug from title
     title = meta.get("title", "post").lower()
@@ -120,7 +119,11 @@ def build_linkedin_text(meta: dict, url: str) -> str:
 
 
 def post_to_twitter(text: str) -> bool:
-    """نشر على Twitter/X | Post to Twitter/X"""
+    """
+    نشر على Twitter/X | Post to Twitter/X
+    يعيد False فقط عند عدم التهيئة | Returns False only when not configured,
+    ويرفع PostingError عند فشل النشر | raises PostingError when publishing fails
+    """
     api_key = os.environ.get("TWITTER_API_KEY")
     api_secret = os.environ.get("TWITTER_API_SECRET")
     access_token = os.environ.get("TWITTER_ACCESS_TOKEN")
@@ -133,6 +136,10 @@ def post_to_twitter(text: str) -> bool:
 
     try:
         import tweepy  # type: ignore
+    except ImportError as e:
+        raise PostingError("tweepy غير مثبت | tweepy not installed: pip install tweepy") from e
+
+    try:
         client = tweepy.Client(
             consumer_key=api_key,
             consumer_secret=api_secret,
@@ -140,19 +147,19 @@ def post_to_twitter(text: str) -> bool:
             access_token_secret=access_secret,
         )
         response = client.create_tweet(text=text)
-        tweet_id = response.data.get("id", "unknown") if response.data else "unknown"
-        print(f"✅ Twitter: https://twitter.com/i/web/status/{tweet_id}")
-        return True
-    except ImportError:
-        print("❌ tweepy غير مثبت | tweepy not installed: pip install tweepy")
-        return False
     except Exception as e:
-        print(f"❌ خطأ في Twitter | Twitter error: {e}")
-        return False
+        raise PostingError(f"خطأ في Twitter | Twitter error: {e}") from e
+
+    tweet_id = response.data.get("id", "unknown") if response.data else "unknown"
+    print(f"✅ Twitter: https://twitter.com/i/web/status/{tweet_id}")
+    return True
 
 
 def post_to_linkedin(text: str, url: str) -> bool:
-    """نشر على LinkedIn"""
+    """
+    نشر على LinkedIn | Post to LinkedIn
+    نفس اصطلاح post_to_twitter | Same contract as post_to_twitter
+    """
     access_token = os.environ.get("LINKEDIN_ACCESS_TOKEN")
     user_id = os.environ.get("LINKEDIN_USER_ID")
 
@@ -161,50 +168,63 @@ def post_to_linkedin(text: str, url: str) -> bool:
         print("   LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID")
         return False
 
+    payload = json.dumps({
+        "author": f"urn:li:person:{user_id}",
+        "lifecycleState": "PUBLISHED",
+        "specificContent": {
+            "com.linkedin.ugc.ShareContent": {
+                "shareCommentary": {"text": text},
+                "shareMediaCategory": "ARTICLE",
+                "media": [{
+                    "status": "READY",
+                    "originalUrl": url,
+                }],
+            }
+        },
+        "visibility": {
+            "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+        },
+    }).encode("utf-8")
+
+    req = urllib.request.Request(
+        "https://api.linkedin.com/v2/ugcPosts",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+            "X-Restli-Protocol-Version": "2.0.0",
+        },
+        method="POST",
+    )
+
     try:
-        import urllib.request
-
-        payload = json.dumps({
-            "author": f"urn:li:person:{user_id}",
-            "lifecycleState": "PUBLISHED",
-            "specificContent": {
-                "com.linkedin.ugc.ShareContent": {
-                    "shareCommentary": {"text": text},
-                    "shareMediaCategory": "ARTICLE",
-                    "media": [{
-                        "status": "READY",
-                        "originalUrl": url,
-                    }],
-                }
-            },
-            "visibility": {
-                "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-            },
-        }).encode("utf-8")
-
-        req = urllib.request.Request(
-            "https://api.linkedin.com/v2/ugcPosts",
-            data=payload,
-            headers={
-                "Authorization": f"Bearer {access_token}",
-                "Content-Type": "application/json",
-                "X-Restli-Protocol-Version": "2.0.0",
-            },
-            method="POST",
-        )
         with urllib.request.urlopen(req, timeout=30) as response:
             print(f"✅ LinkedIn: منشور بنجاح | Posted successfully (status: {response.status})")
             return True
-    except Exception as e:
-        print(f"❌ خطأ في LinkedIn | LinkedIn error: {e}")
-        return False
+    except urllib.error.HTTPError as e:
+        # جسم الرد يحمل سبب الرفض | The response body carries the rejection reason
+        body = e.read().decode("utf-8", errors="replace")[:500]
+        raise PostingError(
+            f"خطأ في LinkedIn | LinkedIn error: HTTP {e.code} {e.reason}: {body}"
+        ) from e
+    except urllib.error.URLError as e:
+        raise PostingError(f"خطأ في LinkedIn | LinkedIn error: {e.reason}") from e
 
 
 def log_posting(post_path: str, platforms: list[str], success: dict) -> None:
-    """تسجيل عمليات النشر | Log posting operations"""
+    """
+    تسجيل عمليات النشر | Log posting operations
+    السجل ثانوي ولا يفشل العملية، لكن أي مشكلة تُطبع
+    Logging is best-effort, but problems are always reported
+    """
     log_dir = ".github/logs"
-    os.makedirs(log_dir, exist_ok=True)
     log_file = os.path.join(log_dir, "social_posts.json")
+
+    try:
+        os.makedirs(log_dir, exist_ok=True)
+    except OSError as e:
+        print(f"⚠️  تعذر إنشاء مجلد السجل | Could not create log dir {log_dir}: {e}")
+        return
 
     # قراءة السجل الموجود | Read existing log
     logs = []
@@ -212,8 +232,12 @@ def log_posting(post_path: str, platforms: list[str], success: dict) -> None:
         try:
             with open(log_file, encoding="utf-8") as f:
                 logs = json.load(f)
-        except (json.JSONDecodeError, OSError):
+        except (json.JSONDecodeError, OSError) as e:
+            print(f"⚠️  سجل النشر غير قابل للقراءة، سيُعاد إنشاءه | Log unreadable, recreating: {e}")
             logs = []
+    if not isinstance(logs, list):
+        print("⚠️  سجل النشر ليس قائمة، سيُعاد إنشاءه | Log is not a list, recreating")
+        logs = []
 
     # إضافة سجل جديد | Add new log entry
     entry = {
@@ -224,8 +248,12 @@ def log_posting(post_path: str, platforms: list[str], success: dict) -> None:
     }
     logs.append(entry)
 
-    with open(log_file, "w", encoding="utf-8") as f:
-        json.dump(logs, f, ensure_ascii=False, indent=2)
+    try:
+        with open(log_file, "w", encoding="utf-8") as f:
+            json.dump(logs, f, ensure_ascii=False, indent=2)
+    except OSError as e:
+        print(f"⚠️  تعذر كتابة السجل | Could not write log {log_file}: {e}")
+        return
 
     print(f"📝 تم تسجيل عملية النشر في: {log_file}")
 
@@ -257,31 +285,52 @@ def main():
         print(f"❌ الملف غير موجود | File not found: {args.post}")
         sys.exit(1)
 
-    meta = parse_front_matter(args.post)
-    url = build_post_url(meta, args.base_url)
+    try:
+        meta = parse_front_matter(args.post)
+        url = build_post_url(meta, args.base_url)
+    except (OSError, ValueError) as e:
+        print(f"❌ تعذر قراءة المقالة | Could not read post: {e}")
+        sys.exit(1)
 
     print(f"📄 المقالة | Post: {args.post}")
     print(f"🔗 الرابط | URL: {url}")
     print()
 
     platforms = ["twitter", "linkedin"] if args.platform == "all" else [args.platform]
-    success = {}
+    posters = {
+        "twitter": (build_twitter_text, lambda text: post_to_twitter(text)),
+        "linkedin": (build_linkedin_text, lambda text: post_to_linkedin(text, url)),
+    }
+    success: dict[str, bool] = {}
+    errors: dict[str, str] = {}
 
     for platform in platforms:
-        if platform == "twitter":
-            text = build_twitter_text(meta, url)
-            print(f"--- Twitter ---\n{text}\n")
-            if not args.dry_run:
-                success["twitter"] = post_to_twitter(text)
-
-        elif platform == "linkedin":
-            text = build_linkedin_text(meta, url)
-            print(f"--- LinkedIn ---\n{text[:200]}...\n")
-            if not args.dry_run:
-                success["linkedin"] = post_to_linkedin(text, url)
+        build_text, post = posters[platform]
+        text = build_text(meta, url)
+        preview = text if platform == "twitter" else f"{text[:200]}..."
+        print(f"--- {platform} ---\n{preview}\n")
+        if args.dry_run:
+            continue
+        try:
+            success[platform] = post(text)
+        except PostingError as e:
+            # جمع الأخطاء لمحاولة بقية المنصات ثم الفشل في النهاية
+            # Collect errors so other platforms are still attempted, then fail
+            print(f"❌ {e}")
+            success[platform] = False
+            errors[platform] = str(e)
 
     if not args.dry_run and success:
         log_posting(args.post, platforms, success)
+
+    if errors:
+        failed = ", ".join(errors)
+        print(f"❌ فشل النشر على | Failed to post to: {failed}")
+        sys.exit(1)
+
+    if not args.dry_run and not any(success.values()):
+        print("❌ لم يتم النشر على أي منصة | No platform was configured, nothing was posted")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

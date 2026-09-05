@@ -70,7 +70,7 @@ def create_post_file(
 
     if os.path.exists(filepath):
         print(f"⚠️  الملف موجود مسبقاً | File already exists: {filepath}")
-        overwrite = input("هل تريد الكتابة فوقه؟ (y/N) | Overwrite? (y/N): ")
+        overwrite = prompt("هل تريد الكتابة فوقه؟ (y/N) | Overwrite? (y/N): ")
         if overwrite.lower() != 'y':
             print("إلغاء | Cancelled")
             sys.exit(0)
@@ -132,24 +132,33 @@ console.log("Hello from selghribi!");
     return filepath
 
 
+def prompt(message: str) -> str:
+    """قراءة مدخل مع إنهاء نطيف | Read input, exiting cleanly on EOF/interrupt"""
+    try:
+        return input(message).strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\nإلغاء | Cancelled")
+        sys.exit(1)
+
+
 def interactive_mode() -> dict:
     """وضع التفاعلي لإدخال معلومات المقالة | Interactive mode for post info"""
     print("\n🏭 مصنع المحتوى — إنشاء مقالة جديدة | Content Factory — Create New Post")
     print("=" * 60)
 
     # العنوان | Title
-    title = input("\n📝 عنوان المقالة بالعربية | Arabic title: ").strip()
+    title = prompt("\n📝 عنوان المقالة بالعربية | Arabic title: ")
     if not title:
         print("❌ العنوان مطلوب | Title is required")
         sys.exit(1)
 
-    title_en = input("📝 عنوان المقالة بالإنجليزية | English title: ").strip()
+    title_en = prompt("📝 عنوان المقالة بالإنجليزية | English title: ")
     if not title_en:
         title_en = title  # استخدام العنوان العربي إذا لم يُدخل الإنجليزي
 
     # الـ Slug
     default_slug = slugify(title_en or title)
-    slug_input = input(f"🔗 slug (الافتراضي: {default_slug}): ").strip()
+    slug_input = prompt(f"🔗 slug (الافتراضي: {default_slug}): ")
     slug = slugify(slug_input) if slug_input else default_slug
     if not slug:
         slug = "new-post-" + datetime.now().strftime("%Y%m%d%H%M%S")
@@ -157,35 +166,51 @@ def interactive_mode() -> dict:
     # اللغة | Language
     langs = get_available_languages()
     print(f"\n🌐 اللغة | Language: {', '.join(f'{i+1}.{l}' for i, l in enumerate(langs))}")
-    lang_input = input("اختر رقم اللغة (الافتراضي: 1 = ar): ").strip()
-    try:
-        lang_idx = int(lang_input) - 1
-        lang = langs[lang_idx] if 0 <= lang_idx < len(langs) else "ar"
-    except (ValueError, IndexError):
-        lang = "ar"
+    lang_input = prompt("اختر رقم اللغة (الافتراضي: 1 = ar): ")
+    lang = "ar"
+    if lang_input:
+        try:
+            lang_idx = int(lang_input) - 1
+        except ValueError:
+            print(f"⚠️  اختيار غير صالح، استخدام ar | Invalid choice {lang_input!r}, using ar")
+        else:
+            if 0 <= lang_idx < len(langs):
+                lang = langs[lang_idx]
+            else:
+                print(f"⚠️  رقم خارج النطاق، استخدام ar | Out-of-range choice {lang_input}, using ar")
 
     # التصنيفات | Categories
     cats = get_available_categories()
     print(f"\n📂 التصنيفات المتاحة | Available categories:")
     for i, cat in enumerate(cats, 1):
         print(f"   {i}. {cat}")
-    cats_input = input("اختر أرقام التصنيفات مفصولة بفاصلة (مثال: 1,3) | Choose numbers: ").strip()
-    try:
-        indices = [int(x.strip()) - 1 for x in cats_input.split(",") if x.strip()]
-        categories = [cats[i] for i in indices if 0 <= i < len(cats)]
-    except (ValueError, IndexError):
-        categories = []
+    cats_input = prompt("اختر أرقام التصنيفات مفصولة بفاصلة (مثال: 1,3) | Choose numbers: ")
+    categories = []
+    for raw in cats_input.split(","):
+        raw = raw.strip()
+        if not raw:
+            continue
+        try:
+            index = int(raw) - 1
+        except ValueError:
+            print(f"⚠️  تجاوز اختيار غير صالح | Ignoring invalid category {raw!r}")
+            continue
+        if 0 <= index < len(cats):
+            categories.append(cats[index])
+        else:
+            print(f"⚠️  تجاوز رقم خارج النطاق | Ignoring out-of-range category {raw}")
     if not categories:
+        print("ℹ️  لم يُختر تصنيف، استخدام tutorial | No category selected, using tutorial")
         categories = ["tutorial"]
 
     # الوسوم | Tags
-    tags_input = input("\n🏷️  الوسوم مفصولة بفاصلة | Tags (comma-separated): ").strip()
+    tags_input = prompt("\n🏷️  الوسوم مفصولة بفاصلة | Tags (comma-separated): ")
     tags = [t.strip() for t in tags_input.split(",") if t.strip()] if tags_input else []
     if not tags:
         tags = categories[:]  # استخدام التصنيفات كوسوم افتراضية
 
     # الوصف | Description
-    description = input("\n📄 وصف مختصر | Short description: ").strip()
+    description = prompt("\n📄 وصف مختصر | Short description: ")
     if not description:
         description = title
 
@@ -235,17 +260,25 @@ def main():
         tags = data["tags"]
         description = data["description"]
 
+    if not slug:
+        print("❌ تعذر استخراج slug من العنوان | Could not derive a slug, pass --slug")
+        sys.exit(1)
+
     # إنشاء الملف | Create file
-    filepath = create_post_file(
-        title=title,
-        title_en=title_en,
-        slug=slug,
-        lang=lang,
-        categories=categories,
-        tags=tags,
-        description=description,
-        posts_dir=args.posts_dir,
-    )
+    try:
+        filepath = create_post_file(
+            title=title,
+            title_en=title_en,
+            slug=slug,
+            lang=lang,
+            categories=categories,
+            tags=tags,
+            description=description,
+            posts_dir=args.posts_dir,
+        )
+    except OSError as e:
+        print(f"❌ تعذر إنشاء المقالة | Could not create post: {e}")
+        sys.exit(1)
 
     print(f"\n✅ تم إنشاء المقالة | Post created: {filepath}")
     print(f"\n📋 الخطوات التالية | Next steps:")

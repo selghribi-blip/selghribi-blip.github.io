@@ -50,11 +50,14 @@ jobs:
       - name: 🔍 Detect new post files
         id: detect
         run: |
+          set -euo pipefail
           # الحصول على قائمة الملفات المضافة في آخر commit
+          # فشل git يجب أن يوقف الوركفلو لا أن يبدو كـ"لا توجد مقالات"
+          # A git failure must fail the workflow instead of looking like "no new posts"
           if [ "${{ github.event.inputs.post_path }}" != "" ]; then
             NEW_POSTS="${{ github.event.inputs.post_path }}"
           else
-            NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- '_posts/*.md' || echo "")
+            NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- '_posts/*.md')
           fi
 
           echo "new_posts=${NEW_POSTS}" >> $GITHUB_OUTPUT
@@ -103,17 +106,21 @@ jobs:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_USER_ID: ${{ secrets.LINKEDIN_USER_ID }}
         run: |
+          set -uo pipefail
           PLATFORM="${{ github.event.inputs.platform || 'all' }}"
 
-          # نشر كل مقالة جديدة | Post each new article
-          echo "${{ needs.detect-new-posts.outputs.new_posts }}" | while read -r POST; do
+          # نشر كل مقالة جديدة، مع الفشل إن فشلت أي منها
+          # Post each new article, failing the step if any of them failed
+          FAILED=""
+          while read -r POST; do
             if [ -n "$POST" ] && [ -f "$POST" ]; then
               echo "📣 نشر: $POST"
-              python scripts/social_poster.py --post "$POST" --platform "$PLATFORM"
+              python scripts/social_poster.py --post "$POST" --platform "$PLATFORM" || FAILED="$FAILED $POST"
             fi
-          done
+          done <<< "${{ needs.detect-new-posts.outputs.new_posts }}"
 
-      # تسجيل نتيجة النشر | Log posting result
-      - name: 📝 Log result
-        if: always()
-        run: echo "✅ اكتملت عملية النشر الاجتماعي | Social posting completed"
+          if [ -n "$FAILED" ]; then
+            echo "❌ فشل نشر | Failed to share:$FAILED"
+            exit 1
+          fi
+          echo "✅ اكتملت عملية النشر الاجتماعي | Social posting completed"

@@ -53,19 +53,21 @@ jobs:
       # إنشاء صور OG | Generate OG images
       - name: 🖼️ Generate OG images
         run: |
+          set -euo pipefail
           if [ "${{ github.event.inputs.generate_all }}" == "true" ]; then
             echo "🖼️ إنشاء لجميع المقالات | Generating for all posts..."
             python scripts/generate_og_image.py --all --output assets/images/og
           else
             # الحصول على المقالات الجديدة فقط | Get only new posts
-            NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- '_posts/*.md' || echo "")
+            NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- '_posts/*.md')
             if [ -n "$NEW_POSTS" ]; then
-              echo "$NEW_POSTS" | while read -r POST; do
+              # فشل أي مقالة يجب أن يوقف الخطوة | A failure on any post must fail the step
+              while read -r POST; do
                 if [ -f "$POST" ]; then
                   echo "🖼️ إنشاء صورة لـ: $POST"
                   python scripts/generate_og_image.py --post "$POST" --output assets/images/og
                 fi
-              done
+              done <<< "$NEW_POSTS"
             else
               echo "ℹ️  لا توجد مقالات جديدة | No new posts"
             fi
@@ -75,6 +77,7 @@ jobs:
       - name: 🔍 Check for new images
         id: check-changes
         run: |
+          set -euo pipefail
           if git diff --quiet HEAD -- assets/images/og/; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
             echo "ℹ️  لا توجد صور جديدة | No new images"
@@ -88,6 +91,7 @@ jobs:
       - name: 💾 Commit OG images
         if: steps.check-changes.outputs.has_changes == 'true'
         run: |
+          set -euo pipefail
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions Bot"
           git add assets/images/og/
@@ -98,6 +102,8 @@ jobs:
 
       # ملخص | Summary
       - name: 📊 Job summary
+        if: always()
         run: |
           echo "## 🖼️ نتيجة إنشاء صور OG | OG Images Generation Result" >> $GITHUB_STEP_SUMMARY
-          ls assets/images/og/ | wc -l | xargs -I{} echo "- **عدد الصور | Total images:** {}" >> $GITHUB_STEP_SUMMARY
+          TOTAL=$(find assets/images/og -type f -name '*.png' | wc -l)
+          echo "- **عدد الصور | Total images:** $TOTAL" >> $GITHUB_STEP_SUMMARY

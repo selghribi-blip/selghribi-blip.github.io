@@ -12,16 +12,31 @@
 // تهيئة التطبيق | App Initialization
 // ======================================================
 document.addEventListener('DOMContentLoaded', () => {
-  initHeader();
-  initMenuToggle();
-  initReadingProgress();
-  initBackToTop();
-  initSmoothScroll();
-  initSkillBars();
-  initNewsletterForm();
-  initLangToggle();
-  initProjectFilters();
-  initFadeOnScroll();
+  [
+    initHeader,
+    initMenuToggle,
+    initReadingProgress,
+    initBackToTop,
+    initSmoothScroll,
+    initSkillBars,
+    initNewsletterForm,
+    initLangToggle,
+    initProjectFilters,
+    initFadeOnScroll,
+  ].forEach(init => {
+    // فشل ميزة واحدة لا يوقف بقية الميزات | One broken feature must not take down the rest
+    try {
+      init();
+    } catch (error) {
+      console.error(`[main.js] فشل تهيئة | init failed: ${init.name}`, error);
+    }
+  });
+
+  try {
+    initCopyButtons();
+  } catch (error) {
+    console.error('[main.js] فشل تهيئة | init failed: initCopyButtons', error);
+  }
 });
 
 // ======================================================
@@ -200,14 +215,16 @@ async function handleNewsletterSubmit(e) {
         showFormMessage(form, '✅ تم الاشتراك بنجاح! شكراً لك | Successfully subscribed! Thank you', 'success');
         form.reset();
       } else {
-        throw new Error('Submission failed');
+        const details = await response.text().catch(() => '');
+        throw new Error(`Newsletter submission failed: HTTP ${response.status} ${response.statusText} ${details}`.trim());
       }
     } else {
       // وضع تجريبي | Demo mode
       showFormMessage(form, '✅ تم الاشتراك بنجاح! | Successfully subscribed!', 'success');
       form.reset();
     }
-  } catch {
+  } catch (error) {
+    console.error('[main.js] فشل الاشتراك بالنشرة | newsletter subscription failed', error);
     showFormMessage(form, '❌ حدث خطأ، حاول مرة أخرى | An error occurred, please try again', 'error');
   } finally {
     if (submitBtn) {
@@ -256,15 +273,30 @@ function initLangToggle() {
   });
 
   // تطبيق اللغة المحفوظة | Apply saved language
-  const savedLang = localStorage.getItem('preferred-lang') || 'ar';
+  const savedLang = readStoredLang() || 'ar';
   setLanguage(savedLang);
   buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === savedLang));
+}
+
+// localStorage يرفع خطأً عند حجب التخزين، ولا يجب أن يعطل تبديل اللغة
+// localStorage throws when storage is blocked; that must not break the toggle
+function readStoredLang() {
+  try {
+    return localStorage.getItem('preferred-lang');
+  } catch (error) {
+    console.warn('[main.js] تعذر قراءة اللغة المحفوظة | could not read stored language', error);
+    return null;
+  }
 }
 
 function setLanguage(lang) {
   document.documentElement.setAttribute('lang', lang);
   document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-  localStorage.setItem('preferred-lang', lang);
+  try {
+    localStorage.setItem('preferred-lang', lang);
+  } catch (error) {
+    console.warn('[main.js] تعذر حفظ اللغة | could not persist language', error);
+  }
 
   // إظهار/إخفاء المحتوى حسب اللغة | Show/hide content by language
   document.querySelectorAll('[data-lang-show]').forEach(el => {
@@ -328,20 +360,28 @@ function initFadeOnScroll() {
 // ======================================================
 // نسخ للحافظة | Copy to Clipboard
 // ======================================================
-document.querySelectorAll('.copy-btn').forEach(btn => {
-  btn.addEventListener('click', async () => {
-    const target = btn.dataset.copy;
-    const el = target ? document.querySelector(target) : btn.previousElementSibling;
-    if (!el) return;
+function initCopyButtons() {
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const target = btn.dataset.copy;
+      const el = target ? document.querySelector(target) : btn.previousElementSibling;
+      if (!el) {
+        console.error('[main.js] لا يوجد عنصر للنسخ | no element to copy from', target);
+        return;
+      }
 
-    const text = el.textContent || el.value || '';
-    try {
-      await navigator.clipboard.writeText(text);
+      const text = el.textContent || el.value || '';
       const original = btn.textContent;
-      btn.textContent = '✓ تم النسخ';
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = '✓ تم النسخ';
+      } catch (error) {
+        // النسخ يفشل دون https أو بدون إذن، فيجب إخبار المستخدم
+        // Clipboard access fails without https/permission, so tell the user
+        console.error('[main.js] فشل النسخ للحافظة | clipboard copy failed', error);
+        btn.textContent = '✗ تعذر النسخ';
+      }
       setTimeout(() => { btn.textContent = original; }, 2000);
-    } catch {
-      // fallback
-    }
+    });
   });
-});
+}
