@@ -1,0 +1,50 @@
+// Prisma schema for PDF & Contract Summarizer
+// Run `npx prisma generate` after changing this file.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ── Users ────────────────────────────────────────────────────────────────────
+
+model User {
+  id             String        @id @default(cuid())
+  email          String        @unique
+  name           String?
+  image          String?
+  // "free" | "pro"
+  plan           String        @default("free")
+  stripeCustomerId   String?   @unique
+  stripeSubId        String?   @unique
+  stripeSubStatus    String?   // "active" | "canceled" | …
+
+  usageRecords   UsageRecord[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+// ── Usage tracking ───────────────────────────────────────────────────────────
+
+// One row per (user, plan, period).
+// Free plan  → period = UTC date   e.g. "2026-03-14"
+// Pro  plan  → period = UTC month  e.g. "2026-03"
+model UsageRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  // "free" | "pro"
+  planType  String
+  // "YYYY-MM-DD" for free, "YYYY-MM" for pro
+  period    String
+  count     Int      @default(0)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, planType, period])
+}

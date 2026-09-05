@@ -39,6 +39,7 @@
 | 🐍 **Python Scripts** | أدوات لإنشاء المحتوى وصور OG وإدارة النشرة |
 | 📱 **RTL Support** | دعم كامل للغة العربية |
 | 💰 **قنوات الدخل** | GitHub Sponsors + Ko-fi + Gumroad |
+| 📄 **PDF & Contract Summarizer** | Micro-SaaS: تلخيص PDF بالذكاء الاصطناعي (Next.js + Stripe) |
 
 ---
 
@@ -65,6 +66,11 @@ selghribi-blip.github.io/
 ├── pages/                         (صفحات ثابتة)
 ├── templates/                     (قوالب مجانية)
 ├── scripts/                       (أدوات Python)
+├── apps/
+│   └── pdf-contract-summarizer/   (Micro-SaaS: PDF & Contract Summarizer)
+│       ├── README.md              (وثائق كاملة + حدود الخطط)
+│       ├── prisma/schema.prisma   (User + UsageRecord)
+│       └── src/lib/quota.ts       (Free: 3/day | Pro: 200/month)
 └── .github/
     ├── workflows/                 (6 workflows أتمتة)
     ├── ISSUE_TEMPLATE/
@@ -150,6 +156,21 @@ lang: ar
 
 محتوى المقالة هنا...
 ```
+
+---
+
+## 📄 PDF & Contract Summarizer (Micro-SaaS)
+
+مشروع Micro-SaaS داخل `apps/pdf-contract-summarizer/` — تطبيق تلخيص PDF وعقود بالذكاء الاصطناعي مبني بـ **Next.js + Tailwind + Prisma + Stripe**.
+
+### حدود الخطط:
+
+| الخطة | الحد | الفترة | وضع التلخيص |
+|-------|------|--------|------------|
+| **Free** | 3 تلخيصات | يومياً (UTC) | عام فقط |
+| **Pro** | **200 تلخيصات** | شهرياً (UTC) | عام + عقود ✨ |
+
+راجع [`apps/pdf-contract-summarizer/README.md`](apps/pdf-contract-summarizer/README.md) للتفاصيل الكاملة.
 
 ---
 
