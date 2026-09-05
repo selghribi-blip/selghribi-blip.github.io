@@ -65,6 +65,7 @@ exclude:
   - scripts/
   - "*.py"
   - README.md
+  - apps/
 
 # إعدادات الخلاصة | Feed Settings
 feed:

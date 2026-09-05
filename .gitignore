@@ -22,3 +22,12 @@ __pycache__/
 
 # Node (if any)
 node_modules/
+
+# Next.js (apps/pdf-summarizer)
+apps/pdf-summarizer/.next/
+apps/pdf-summarizer/out/
+apps/pdf-summarizer/prisma/*.db
+apps/pdf-summarizer/prisma/*.db-journal
+apps/pdf-summarizer/.env
+apps/pdf-summarizer/.env.local
+apps/pdf-summarizer/next-env.d.ts

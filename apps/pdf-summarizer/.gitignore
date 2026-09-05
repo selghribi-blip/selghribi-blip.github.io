@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Production build
+build/
+
+# Environment files — never commit real secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# SQLite database files
+prisma/*.db
+prisma/*.db-journal
+
+# Prisma generated client (regenerate with prisma generate)
+# Uncomment below if you don't want to commit generated client:
+# node_modules/.prisma/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# TypeScript cache
+*.tsbuildinfo
+next-env.d.ts
