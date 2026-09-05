@@ -19,6 +19,7 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .env
+*.db
 
 # Node (if any)
 node_modules/
