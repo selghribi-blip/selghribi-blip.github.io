@@ -52,8 +52,10 @@ jobs:
 
       # إنشاء صور OG | Generate OG images
       - name: 🖼️ Generate OG images
+        env:
+          GENERATE_ALL: ${{ github.event.inputs.generate_all }}
         run: |
-          if [ "${{ github.event.inputs.generate_all }}" == "true" ]; then
+          if [ "$GENERATE_ALL" == "true" ]; then
             echo "🖼️ إنشاء لجميع المقالات | Generating for all posts..."
             python scripts/generate_og_image.py --all --output assets/images/og
           else
