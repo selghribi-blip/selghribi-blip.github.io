@@ -1,0 +1,111 @@
+// Prisma schema for PDF & Contract Summarizer
+// Models: User, Account, Session, Subscription, UsageCounter, OverageUsageEvent
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Note: SQLite does not support native enums.
+// plan field uses String with values "FREE" | "PRO" enforced at application level.
+
+model User {
+  id               String              @id @default(cuid())
+  name             String?
+  email            String              @unique
+  emailVerified    DateTime?
+  image            String?
+  plan             String              @default("FREE") // "FREE" | "PRO"
+  stripeCustomerId String?             @unique
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  accounts         Account[]
+  sessions         Session[]
+  subscription     Subscription?
+  usageCounters    UsageCounter[]
+  overageEvents    OverageUsageEvent[]
+}
+
+// NextAuth Account model
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+// NextAuth Session model
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// NextAuth VerificationToken model
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Stripe subscription details
+model Subscription {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeSubscriptionId String   @unique
+  // Stripe subscription item ID for the metered (overage) price — used when creating usage records
+  stripeMeteredItemId  String?
+  status               String   // "active" | "canceled" | "past_due" | "trialing" | "incomplete"
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+// Tracks how many summaries a user has used in a given period.
+// periodKey format:
+//   Free plan  → "YYYY-MM-DD" (daily UTC)
+//   Pro plan   → "YYYY-MM"    (monthly UTC)
+model UsageCounter {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  periodKey String   // e.g. "2026-03-14" (free daily) or "2026-03" (pro monthly)
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, periodKey])
+}
+
+// Idempotency log for Stripe metered usage records.
+// One row per overage summary to prevent duplicate billing on retries.
+model OverageUsageEvent {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  idempotencyKey String    @unique // "<userId>:<YYYY-MM>:<summarySeq>"
+  stripeRecordId String?   // Stripe usage_record ID returned after successful report
+  reportedAt     DateTime?
+  createdAt      DateTime  @default(now())
+}
