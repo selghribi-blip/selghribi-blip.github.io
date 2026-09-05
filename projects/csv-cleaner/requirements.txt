@@ -1,0 +1,8 @@
+# متطلبات Python لأداة تنظيف CSV | Python requirements for the CSV Cleaner tool
+# تثبيت | Install:  pip install -r projects/csv-cleaner/requirements.txt
+
+# معالجة البيانات | Data processing
+pandas>=1.5.0
+
+# واجهة المستخدم | Streamlit UI
+streamlit>=1.28.0
