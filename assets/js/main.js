@@ -9,6 +9,12 @@
 'use strict';
 
 // ======================================================
+// ثوابت التطبيق | App Constants
+// ======================================================
+/** Contact email used for mailto links and form recipients */
+const CONTACT_EMAIL = 'WYNM72627@GMAIL.COM';
+
+// ======================================================
 // تهيئة التطبيق | App Initialization
 // ======================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLangToggle();
   initProjectFilters();
   initFadeOnScroll();
+  initContactEmail();
 });
 
 // ======================================================
@@ -345,3 +352,16 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
     }
   });
 });
+
+// ======================================================
+// إعداد روابط البريد الإلكتروني | Contact Email Setup
+// ======================================================
+function initContactEmail() {
+  // Populate any mailto links that have an empty recipient (href="mailto:")
+  document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === 'mailto:' || href.startsWith('mailto:?')) {
+      link.setAttribute('href', href.replace('mailto:', `mailto:${CONTACT_EMAIL}`));
+    }
+  });
+}
