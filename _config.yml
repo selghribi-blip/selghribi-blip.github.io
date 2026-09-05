@@ -65,6 +65,10 @@ exclude:
   - scripts/
   - "*.py"
   - README.md
+  - tests/
+  - package.json
+  - package-lock.json
+  - vitest.config.mjs
 
 # إعدادات الخلاصة | Feed Settings
 feed:
